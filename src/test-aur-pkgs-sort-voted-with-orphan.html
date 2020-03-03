@@ -1,0 +1,4039 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xml:lang="en" lang="en">
+  <head>
+    <title>AUR (en) - Packages</title>
+	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
+	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
+	<link rel='shortcut icon' href='/images/favicon.ico' />
+	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+	<body>
+		<div id="archnavbar" class="anb-aur">
+			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
+			<div id="archnavbarmenu">
+				<ul id="archnavbarlist">
+					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+				</ul>
+			</div>
+		</div><!-- #archnavbar -->
+
+		<div id="content">
+			<div id="lang_sub">
+				<form method="post" action="/packages/?O=0&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">
+					<fieldset>
+						<div>
+							<select name="setlang" id="id_setlang">
+		<option value="ar">العربية</option>
+<option value="ast">Asturianu</option>
+<option value="ca">Català</option>
+<option value="cs">Český</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="en" selected="selected">English</option>
+<option value="el">Ελληνικά</option>
+<option value="es">Español</option>
+<option value="es_419">Español (Latinoamérica)</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="he">עברית</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt_BR">Português (Brasil)</option>
+<option value="pt_PT">Português (Portugal)</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sr">Srpski</option>
+<option value="tr">Türkçe</option>
+<option value="uk">Українська</option>
+<option value="zh_CN">简体中文</option>
+<option value="zh_TW">正體中文</option>
+							</select>
+							<input type="submit" value="Go" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="archdev-navbar">
+				<ul>
+											<li><a href="/">Dashboard</a></li>
+						<li><a href="/packages/">Packages</a></li>
+																		<li><a href="/account/bpetlert/edit/"> My Account</a></li>
+												<li><a href="/logout/">Logout</a></li>
+									</ul>
+			</div><!-- #archdev-navbar -->
+			<!-- Start of main content -->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript">
+function collapseDependsList(list) {
+	list = $(list);
+	// Hide everything past a given limit. Don't do anything if we don't have
+	// enough items, or the link already exists.
+	var limit = 20,
+		linkid = list.attr('id') + 'link',
+		items = list.find('li').slice(limit);
+	if (items.length <= 1 || $('#' + linkid).length > 0) {
+		return;
+	}
+	items.hide();
+	list.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	// add link and wire it up to show the hidden items
+	$('#' + linkid).click(function(event) {
+		event.preventDefault();
+		list.find('li').show();
+		// remove the full <p/> node from the DOM
+		$(this).parent().remove();
+	});
+}
+
+function collapseComment(div) {
+	var linkid = div.attr('id') + 'link',
+		inner = div.find('div'),
+		height = inner.height(),
+		maxheight = 200;
+
+	if (height <= maxheight)
+		return;
+
+	inner.css({ 'overflow': 'hidden', 'height': maxheight + 'px' });
+	inner.addClass('collapsed');
+	inner.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	$('#' + linkid).click(function(event) {
+		var inner = $(this).parent().parent().find('div');
+		var newheight;
+
+		if (inner.hasClass('collapsed')) {
+			inner.css({ 'height': 'auto' });
+			newheight = inner.height();
+			inner.css({ 'height': maxheight });
+			$(this).text('Collapse');
+		} else {
+			newheight = maxheight;
+			$(this).text('Show More…');
+		}
+
+		inner.animate({ 'height': newheight });
+		inner.toggleClass('collapsed');
+		event.preventDefault();
+	});
+}
+
+$(document).ready(function() {
+	collapseDependsList("#pkgdepslist");
+	collapseDependsList("#pkgreqslist");
+	collapseDependsList("#pkgsrcslist");
+	$(".article-content").each(function() {
+		collapseComment($(this));
+	});
+});
+</script>
+
+
+<div id="pkglist-search" class="box filter-criteria">
+<h2>Search Criteria</h2>
+
+<form action='/packages/' method='get'>
+	<p><input type='hidden' name='O' value='0' /></p>
+
+	<fieldset>
+		<legend>Enter search criteria</legend>
+		<div>
+			<label for="id_method">Search by</label>
+			<select name='SeB'>
+												<option value="nd" selected="selected">Name, Description</option>
+																<option value="n">Name Only</option>
+																<option value="b">Package Base</option>
+																<option value="N">Exact Name</option>
+																<option value="B">Exact Package Base</option>
+																<option value="k">Keywords</option>
+																<option value="m">Maintainer</option>
+																<option value="c">Co-maintainer</option>
+																<option value="M">Maintainer, Co-maintainer</option>
+																<option value="s">Submitter</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_q">Keywords</label>
+			<input type='text' name='K' size='30' value="" maxlength='35'  />
+		</div>
+		<div>
+			<label for="id_out_of_date">Out of Date</label>
+			<select name='outdated'>
+												<option value=''>All</option>
+																<option value='on'>Flagged</option>
+																<option value='off'>Not Flagged</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_sort_by">Sort by</label>
+			<select name='SB'>
+												<option value='n'>Name</option>
+																<option value='v'>Votes</option>
+																<option value='p'>Popularity</option>
+																<option value='w' selected="selected">Voted</option>
+																<option value='o'>Notify</option>
+																<option value='m'>Maintainer</option>
+																<option value='l'>Last modified</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_order_by">Sort order</label>
+			<select name='SO'>
+												<option value='a'>Ascending</option>
+																<option value='d' selected="selected">Descending</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_per_page">Per page</label>
+			<select name='PP'>
+												<option value="50">50</option>
+																<option value="100">100</option>
+																<option value="250" selected="selected">250</option>
+											</select>
+		</div>
+		<div>
+			<label>&nbsp;</label>
+			<input type='submit' class='button' name='do_Search' value='Go' />
+			<input type='submit' class='button' name='do_Orphans' value='Orphans' />
+		</div>
+	</fieldset>
+</form>
+</div>
+<div id="pkglist-results" class="box">		<div class="pkglist-stats">
+		<p>
+			62125 packages found.			Page 1 of 249.		</p>
+				<p class="pkglist-nav">
+												<span class="page">1</span>
+																<a class="page" href="/packages/?O=250&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">2</a>
+																<a class="page" href="/packages/?O=500&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">3</a>
+																<a class="page" href="/packages/?O=750&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">4</a>
+																<a class="page" href="/packages/?O=1000&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">5</a>
+																<a class="page" href="/packages/?O=1250&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">6</a>
+																<span class="page">... </span>
+																<a class="page" href="/packages/?O=250&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">Next &rsaquo;</a>
+																<a class="page" href="/packages/?O=62000&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">Last &raquo;</a>
+									</p>
+			</div>
+
+	<form id="pkglist-results-form" method="post" action="/pkgbase/?O=0&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">
+		<table class="results">
+		<thead>
+			<tr>
+								<th>&nbsp;</th>
+								<th><a href="?O=0&amp;SeB=nd&amp;SB=n&amp;SO=a&amp;PP=250&amp;do_Search=Go">Name</a></th>				<th>Version</th>				<th><a href="?O=0&amp;SeB=nd&amp;SB=v&amp;SO=a&amp;PP=250&amp;do_Search=Go">Votes</a></th>				<th><a href="?O=0&amp;SeB=nd&amp;SB=p&amp;SO=a&amp;PP=250&amp;do_Search=Go">Popularity</a><span title="Popularity is calculated as the sum of all votes with each vote being weighted with a factor of 0.98 per day since its creation." class="hover-help"><sup>?</sup></span></th>								<th><a href="?O=0&amp;SeB=nd&amp;SB=w&amp;SO=a&amp;PP=250&amp;do_Search=Go">Voted</a></th>				<th><a href="?O=0&amp;SeB=nd&amp;SB=o&amp;SO=a&amp;PP=250&amp;do_Search=Go">Notify</a></th>								<th>Description</th>				<th><a href="?O=0&amp;SeB=nd&amp;SB=m&amp;SO=a&amp;PP=250&amp;do_Search=Go">Maintainer</a></th>			</tr>
+		</thead>
+		<tbody>
+
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[46784]" value="1" /></td>
+				<td><a href="/packages/zotero/">zotero</a></td>
+		<td>5.0.84-1</td>
+		<td>257</td>
+		<td>3.61</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources.</td>
+		<td>
+						<a href="/account/juanmah" title="View account information for juanmah">juanmah</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[115973]" value="1" /></td>
+				<td><a href="/packages/yay/">yay</a></td>
+		<td>9.4.5-1</td>
+		<td>977</td>
+		<td>59.61</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Yet another yogurt. Pacman wrapper and AUR helper written in go.</td>
+		<td>
+						<a href="/account/jguer" title="View account information for jguer">jguer</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[45336]" value="1" /></td>
+				<td><a href="/packages/yakuake-skin-ethais/">yakuake-skin-ethais</a></td>
+		<td>0.2-1</td>
+		<td>19</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An oxygen-style theme for Yakuake</td>
+		<td>
+						<a href="/account/dieghen89" title="View account information for dieghen89">dieghen89</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[15191]" value="1" /></td>
+				<td><a href="/packages/xmacro/">xmacro</a></td>
+		<td>0.4.6-2</td>
+		<td>67</td>
+		<td>0.20</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Recording and replaying keyboard and mouse events on an X server</td>
+		<td>
+						<a href="/account/mschu" title="View account information for mschu">mschu</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[34344]" value="1" /></td>
+				<td><a href="/packages/winscp/">winscp</a></td>
+		<td>5.15.5-2</td>
+		<td>22</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Free SFTP, SCP and FTP client for Wine</td>
+		<td>
+						<a href="/account/citydweller" title="View account information for citydweller">citydweller</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[78672]" value="1" /></td>
+				<td><a href="/packages/wikiquote-fortune/">wikiquote-fortune</a></td>
+		<td>1.5-1</td>
+		<td>50</td>
+		<td>0.02</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Generate fortune cookies from Wikiquote</td>
+		<td>
+						<a href="/account/maandree" title="View account information for maandree">maandree</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[63429]" value="1" /></td>
+				<td><a href="/packages/wfdb-samples/">wfdb-samples</a></td>
+		<td>10.6.0-1</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Software from PhysioNet for viewing, analyzing, and creating recordings of physiologic signals</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[63429]" value="1" /></td>
+				<td><a href="/packages/wfdb/">wfdb</a></td>
+		<td>10.6.0-1</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Software from PhysioNet for viewing, analyzing, and creating recordings of physiologic signals</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[55569]" value="1" /></td>
+				<td><a href="/packages/webstorm-jre/">webstorm-jre</a></td>
+		<td>2019.3.3b193.6494.34-1</td>
+		<td>162</td>
+		<td>0.53</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">JBR (JetBrains Runtime) for WebStorm - a patched JRE</td>
+		<td>
+						<a href="/account/freswa" title="View account information for freswa">freswa</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[55569]" value="1" /></td>
+				<td><a href="/packages/webstorm/">webstorm</a></td>
+		<td>2019.3.3b193.6494.34-1</td>
+		<td>162</td>
+		<td>0.53</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">JavaScript IDE and HTML editor.</td>
+		<td>
+						<a href="/account/freswa" title="View account information for freswa">freswa</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[99919]" value="1" /></td>
+				<td><a href="/packages/webmin/">webmin</a></td>
+		<td>1.941-1</td>
+		<td>34</td>
+		<td>0.38</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A web-based administration interface for Unix systems</td>
+		<td>
+						<a href="/account/amish" title="View account information for amish">amish</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[98155]" value="1" /></td>
+				<td><a href="/packages/udt/">udt</a></td>
+		<td>4.11-1</td>
+		<td>1</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A protocol built on top of UDP by adding reliability control and congestion control.</td>
+		<td>
+						<a href="/account/duthils" title="View account information for duthils">duthils</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[125119]" value="1" /></td>
+				<td><a href="/packages/ttf-th-sarabun-new/">ttf-th-sarabun-new</a></td>
+		<td>2011.06.25-1</td>
+		<td>4</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Improved Thai SIPA TH SarabunPSK font with free license</td>
+		<td>
+						<a href="/account/Fulmene" title="View account information for Fulmene">Fulmene</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[125122]" value="1" /></td>
+				<td><a href="/packages/ttf-sipa-dip/">ttf-sipa-dip</a></td>
+		<td>1.0-1</td>
+		<td>4</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Thai formal standard fonts from SIPA</td>
+		<td>
+						<a href="/account/Fulmene" title="View account information for Fulmene">Fulmene</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[118570]" value="1" /></td>
+				<td><a href="/packages/ttf-oswald/">ttf-oswald</a></td>
+		<td>4.101-1</td>
+		<td>91</td>
+		<td>1.31</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Sans-serif typeface from Google by Vernon Adams</td>
+		<td>
+						<a href="/account/CommodoreCrunch" title="View account information for CommodoreCrunch">CommodoreCrunch</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[13030]" value="1" /></td>
+				<td><a href="/packages/ttf-ms-fonts/">ttf-ms-fonts</a></td>
+		<td>2.0-10</td>
+		<td>1935</td>
+		<td>10.62</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Core TTF Fonts from Microsoft</td>
+		<td>
+						<a href="/account/birdflesh" title="View account information for birdflesh">birdflesh</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[118574]" value="1" /></td>
+				<td><a href="/packages/ttf-merriweather-sans/">ttf-merriweather-sans</a></td>
+		<td>1.008-1</td>
+		<td>101</td>
+		<td>1.24</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A sans-serif typeface that is pleasant to read on screens by Sorkin Type Co</td>
+		<td>
+						<a href="/account/CommodoreCrunch" title="View account information for CommodoreCrunch">CommodoreCrunch</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[118573]" value="1" /></td>
+				<td><a href="/packages/ttf-merriweather/">ttf-merriweather</a></td>
+		<td>1:2.005-1</td>
+		<td>98</td>
+		<td>1.24</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A typeface that is pleasant to read on screens by Sorkin Type Co</td>
+		<td>
+						<a href="/account/CommodoreCrunch" title="View account information for CommodoreCrunch">CommodoreCrunch</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[7006]" value="1" /></td>
+				<td><a href="/packages/ttf-mathtype/">ttf-mathtype</a></td>
+		<td>6.9-1</td>
+		<td>45</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Fonts supplied with MathType</td>
+		<td>
+						<a href="/account/alexmerry" title="View account information for alexmerry">alexmerry</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[61359]" value="1" /></td>
+				<td><a href="/packages/ttf-impallari-cantora/">ttf-impallari-cantora</a></td>
+		<td>1.001-3</td>
+		<td>66</td>
+		<td>0.44</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Cantora (&#039;Singer&#039; in Spanish) is a friendly semi formal, semi condensed, semi sans serif, from Pablo Impallari</td>
+		<td>
+						<a href="/account/chelqo" title="View account information for chelqo">chelqo</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[118655]" value="1" /></td>
+				<td><a href="/packages/ttf-heuristica/">ttf-heuristica</a></td>
+		<td>1.0.2-3</td>
+		<td>72</td>
+		<td>0.43</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A serif latin &amp; cyrillic font, derived from the &quot;Adobe Utopia&quot; font by Apanov</td>
+		<td>
+						<a href="/account/CommodoreCrunch" title="View account information for CommodoreCrunch">CommodoreCrunch</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[68482]" value="1" /></td>
+				<td><a href="/packages/ttf-envy-code-r/">ttf-envy-code-r</a></td>
+		<td>preview7-6</td>
+		<td>91</td>
+		<td>0.15</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Free scalable coding font by DamienG</td>
+		<td>
+						<a href="/account/gtmanfred" title="View account information for gtmanfred">gtmanfred</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[66790]" value="1" /></td>
+				<td><a href="/packages/ttf-courier-prime/">ttf-courier-prime</a></td>
+		<td>1.203-3</td>
+		<td>76</td>
+		<td>1.03</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Monospace Courier font alternative optimized for screenplays</td>
+		<td>
+						<a href="/account/Rhinoceros" title="View account information for Rhinoceros">Rhinoceros</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[2100]" value="1" /></td>
+				<td><a href="/packages/ttf-computer-modern-fonts/">ttf-computer-modern-fonts</a></td>
+		<td>1-3</td>
+		<td>34</td>
+		<td>0.46</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Computer Modern in TTF</td>
+		<td>
+						<a href="/account/benob" title="View account information for benob">benob</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[39194]" value="1" /></td>
+				<td><a href="/packages/ttf-aller/">ttf-aller</a></td>
+		<td>1.0-4</td>
+		<td>83</td>
+		<td>0.66</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An excellent sans serif font for screen legibility</td>
+		<td>
+						<a href="/account/chmurli" title="View account information for chmurli">chmurli</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[18287]" value="1" /></td>
+				<td><a href="/packages/ttaenc/">ttaenc</a></td>
+		<td>3.4.1-3</td>
+		<td>51</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">TrueAudio lossless compressor for multichannel 8,16 and 24 bits audio data</td>
+		<td>
+						<a href="/account/max-k" title="View account information for max-k">max-k</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[31746]" value="1" /></td>
+				<td><a href="/packages/trafshow/">trafshow</a></td>
+		<td>5.2.3-5</td>
+		<td>15</td>
+		<td>0.35</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Full screen network monitoring</td>
+		<td>
+						<a href="/account/oriba" title="View account information for oriba">oriba</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[51999]" value="1" /></td>
+				<td><a href="/packages/tp_smapi-dkms/">tp_smapi-dkms</a></td>
+		<td>0.43-3</td>
+		<td>62</td>
+		<td>0.02</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">DKMS controlled modules for ThinkPad&#039;s SMAPI functionality</td>
+		<td>
+						<a href="/account/nosada" title="View account information for nosada">nosada</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[104011]" value="1" /></td>
+				<td><a href="/packages/tp-battery-mode/">tp-battery-mode</a></td>
+		<td>1.2.0-2</td>
+		<td>10</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Module to manage the battery mode (lifetime/runtime) of your Thinkpad</td>
+		<td>
+						<a href="/account/dreamingincode" title="View account information for dreamingincode">dreamingincode</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[16384]" value="1" /></td>
+				<td><a href="/packages/tortoisehg-hg/">tortoisehg-hg</a></td>
+		<td>5.1.19182-1</td>
+		<td>60</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Mercurial GUI front end</td>
+		<td>
+						<a href="/account/lacouture" title="View account information for lacouture">lacouture</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[49717]" value="1" /></td>
+				<td><a href="/packages/tortoisehg/">tortoisehg</a></td>
+		<td>5.3.0-0</td>
+		<td>120</td>
+		<td>0.12</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Graphical tools for Mercurial</td>
+		<td>
+						<a href="/account/Misery" title="View account information for Misery">Misery</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[118394]" value="1" /></td>
+				<td><a href="/packages/topal/">topal</a></td>
+		<td>76-1</td>
+		<td>3</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Topal is a glue program that links GnuPG and Alpine</td>
+		<td>
+						<a href="/account/jose1711" title="View account information for jose1711">jose1711</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54097]" value="1" /></td>
+				<td><a href="/packages/tomighty/">tomighty</a></td>
+		<td>0.7.2-2</td>
+		<td>50</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Desktop timer for Pomodoro Technique users</td>
+		<td>
+						<a href="/account/freswa" title="View account information for freswa">freswa</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[71333]" value="1" /></td>
+				<td><a href="/packages/tmuxinator/">tmuxinator</a></td>
+		<td>1.1.4-1</td>
+		<td>69</td>
+		<td>1.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Manage complex tmux sessions easily</td>
+		<td>
+						<a href="/account/lucacesari" title="View account information for lucacesari">lucacesari</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[140724]" value="1" /></td>
+				<td><a href="/packages/thermald/">thermald</a></td>
+		<td>1.9.1-1</td>
+		<td>31</td>
+		<td>2.50</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The Linux Thermal Daemon program from 01.org</td>
+		<td>
+						<a href="/account/francoism90" title="View account information for francoism90">francoism90</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[17267]" value="1" /></td>
+				<td><a href="/packages/textext/">textext</a></td>
+		<td>0.11.0-2</td>
+		<td>72</td>
+		<td>0.04</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An inkscape extension which lets you add LaTeX equations to your drawings</td>
+		<td>
+						<a href="/account/Thermi" title="View account information for Thermi">Thermi</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[43543]" value="1" /></td>
+				<td><a href="/packages/tcptraceroute/">tcptraceroute</a></td>
+		<td>1.5beta7-8</td>
+		<td>84</td>
+		<td>1.62</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A traceroute implementation using TCP packets.</td>
+		<td>
+						<a href="/account/fukawi2" title="View account information for fukawi2">fukawi2</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[100903]" value="1" /></td>
+				<td><a href="/packages/tcpping/">tcpping</a></td>
+		<td>1.7-2</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">test response times using TCP SYN packets</td>
+		<td>
+						<a href="/account/zh99998" title="View account information for zh99998">zh99998</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[14293]" value="1" /></td>
+				<td><a href="/packages/tclkit/">tclkit</a></td>
+		<td>8.6.4-12</td>
+		<td>18</td>
+		<td>0.45</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">single-file executable that provides a complete Tcl and Tk runtime</td>
+		<td>
+						<a href="/account/greyltc" title="View account information for greyltc">greyltc</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[91311]" value="1" /></td>
+				<td><a href="/packages/tcl-vfs/">tcl-vfs</a></td>
+		<td>20150321-2</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">virtual file system for tcl</td>
+		<td>
+						<a href="/account/greyltc" title="View account information for greyltc">greyltc</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[132947]" value="1" /></td>
+				<td><a href="/packages/systemd-kcm/">systemd-kcm</a></td>
+		<td>1.2.1-5</td>
+		<td>17</td>
+		<td>1.32</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Systemd control module for KDE</td>
+		<td>
+						<a href="/account/fordprefect" title="View account information for fordprefect">fordprefect</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[26457]" value="1" /></td>
+				<td><a href="/packages/superlu/">superlu</a></td>
+		<td>5.2.1-9</td>
+		<td>40</td>
+		<td>0.24</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Set of subroutines to solve a sparse linear system</td>
+		<td>
+						<a href="/account/valandil" title="View account information for valandil">valandil</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[126082]" value="1" /></td>
+				<td><a href="/packages/sublime-text2/">sublime-text2</a></td>
+		<td>2.0.2-1</td>
+		<td>558</td>
+		<td>0.12</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Sophisticated text editor for code, html and prose (legacy version)</td>
+		<td>
+						<a href="/account/carstene1ns" title="View account information for carstene1ns">carstene1ns</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[103407]" value="1" /></td>
+				<td><a href="/packages/stlsoft/">stlsoft</a></td>
+		<td>1.9.124-1</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">C++ library providing operating system facades and STL extensions.</td>
+		<td>
+						<a href="/account/marcs" title="View account information for marcs">marcs</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[82931]" value="1" /></td>
+				<td><a href="/packages/statusnotifier/">statusnotifier</a></td>
+		<td>1.0.0-1</td>
+		<td>19</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Library to use KDE&#039;s StatusNotifierItem via GObject</td>
+		<td>
+						<a href="/account/jjacky" title="View account information for jjacky">jjacky</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[40284]" value="1" /></td>
+				<td><a href="/packages/stapler/">stapler</a></td>
+		<td>1.0.0b1-3</td>
+		<td>87</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A small utility making use of the pypdf library to provide a (somewhat) lighter alternative to pdftk</td>
+		<td>
+						<a href="/account/PhCl" title="View account information for PhCl">PhCl</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[90756]" value="1" /></td>
+				<td><a href="/packages/spyder3-git/">spyder3-git</a></td>
+		<td>4.0.0rc3.r1.g2d607299c-1</td>
+		<td>23</td>
+		<td>0.45</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The Scientific Python Development Environment (Python 3 version)</td>
+		<td>
+						<a href="/account/willemw" title="View account information for willemw">willemw</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[146786]" value="1" /></td>
+				<td><a href="/packages/speedtest%2B%2B/">speedtest++</a></td>
+		<td>1.14.r65.262daf8-1</td>
+		<td>3</td>
+		<td>0.89</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Unofficial speedtest.net cli using raw TCP for better accuracy</td>
+		<td>
+						<a href="/account/mrxx" title="View account information for mrxx">mrxx</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[99862]" value="1" /></td>
+				<td><a href="/packages/speedometer/">speedometer</a></td>
+		<td>2.8-4</td>
+		<td>48</td>
+		<td>0.35</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Measure and display the rate of data across a network connection or data being stored in a file</td>
+		<td>
+						<a href="/account/willemw" title="View account information for willemw">willemw</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[14935]" value="1" /></td>
+				<td><a href="/packages/slurm/">slurm</a></td>
+		<td class="flagged">0.4.3-1</td>
+		<td>75</td>
+		<td>0.08</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Monitoring traffic statistics in realtime</td>
+		<td>
+						<a href="/account/keenerd" title="View account information for keenerd">keenerd</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[101775]" value="1" /></td>
+				<td><a href="/packages/sketch/">sketch</a></td>
+		<td>0.3.7-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Small, simple system for producing line drawings of two- or three-dimensional solid objects and scenes</td>
+		<td>
+						<a href="/account/core-problem" title="View account information for core-problem">core-problem</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[136998]" value="1" /></td>
+				<td><a href="/packages/shorten/">shorten</a></td>
+		<td>3.6.1-3</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a fast, low complexity waveform coder (audio compressor) which uses a lossless compression scheme, with support for seek tables, superior to that of mp3</td>
+		<td>
+						<a href="/account/zoe" title="View account information for zoe">zoe</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[78151]" value="1" /></td>
+				<td><a href="/packages/semantik/">semantik</a></td>
+		<td>1.2.4-1</td>
+		<td>10</td>
+		<td>0.94</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">mindmapping-like tool for document generation (reports, thesis, etc)</td>
+		<td>
+						<a href="/account/etaboon" title="View account information for etaboon">etaboon</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[66458]" value="1" /></td>
+				<td><a href="/packages/sddm-git/">sddm-git</a></td>
+		<td>0.18.1.1.g5342323-1</td>
+		<td>42</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The Simple Desktop Display Manager</td>
+		<td>
+						<a href="/account/sir_lucjan" title="View account information for sir_lucjan">sir_lucjan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54679]" value="1" /></td>
+				<td><a href="/packages/scilab/">scilab</a></td>
+		<td>6.0.2-1</td>
+		<td>74</td>
+		<td>1.85</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A scientific software package for numerical computations.</td>
+		<td>
+						<a href="/account/a.kudelin" title="View account information for a.kudelin">a.kudelin</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[127360]" value="1" /></td>
+				<td><a href="/packages/ruby-xdg/">ruby-xdg</a></td>
+		<td>2.2.5-1</td>
+		<td>9</td>
+		<td>0.72</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">XDG provides a module for supporting the XDG Base Directory Standard</td>
+		<td>
+						<a href="/account/lucacesari" title="View account information for lucacesari">lucacesari</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[97121]" value="1" /></td>
+				<td><a href="/packages/ruby-erubis/">ruby-erubis</a></td>
+		<td>2.7.0-4</td>
+		<td>53</td>
+		<td>0.73</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A fast, secure, and very extensible implementation of eRuby.</td>
+		<td>
+						<a href="/account/dude" title="View account information for dude">dude</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[47225]" value="1" /></td>
+				<td><a href="/packages/rstudio-desktop-git/">rstudio-desktop-git</a></td>
+		<td>1.2.5019.r1893-1</td>
+		<td>57</td>
+		<td>0.64</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A powerful and productive integrated development environment (IDE) for R programming language</td>
+		<td>
+						<a href="/account/artemklevtsov" title="View account information for artemklevtsov">artemklevtsov</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[49922]" value="1" /></td>
+				<td><a href="/packages/rstudio-desktop-bin/">rstudio-desktop-bin</a></td>
+		<td>1.2.5033-3</td>
+		<td>276</td>
+		<td>3.16</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An integrated development environment (IDE) for R (binary from RStudio official repository)</td>
+		<td>
+						<a href="/account/Meow" title="View account information for Meow">Meow</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[126576]" value="1" /></td>
+				<td><a href="/packages/rocketchat-desktop/">rocketchat-desktop</a></td>
+		<td>2.17.7-2</td>
+		<td>13</td>
+		<td>0.39</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Rocket.Chat Native Cross-Platform Desktop Application via Electron.</td>
+		<td>
+						<a href="/account/matthias.lisin" title="View account information for matthias.lisin">matthias.lisin</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[125967]" value="1" /></td>
+				<td><a href="/packages/rocketchat-client-bin/">rocketchat-client-bin</a></td>
+		<td>2.17.7-1</td>
+		<td>37</td>
+		<td>0.45</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The Ultimate Open Source Web Chat Platform</td>
+		<td>
+						<a href="/account/buzo" title="View account information for buzo">buzo</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[97342]" value="1" /></td>
+				<td><a href="/packages/rednotebook/">rednotebook</a></td>
+		<td>2.17-1</td>
+		<td>38</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A simple desktop diary.</td>
+		<td>
+						<a href="/account/SanskritFritz" title="View account information for SanskritFritz">SanskritFritz</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[20760]" value="1" /></td>
+				<td><a href="/packages/rar/">rar</a></td>
+		<td>5.8.0-1</td>
+		<td>698</td>
+		<td>0.82</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A command-line port of the rar compression utility</td>
+		<td>
+						<a href="/account/Musikolo" title="View account information for Musikolo">Musikolo</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[37036]" value="1" /></td>
+				<td><a href="/packages/r-mkl/">r-mkl</a></td>
+		<td>3.6.2-3</td>
+		<td>19</td>
+		<td>0.10</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Language and environment for statistical computing and graphics, linked to the Intel(R) MKL.</td>
+		<td>
+						<a href="/account/alexanderp" title="View account information for alexanderp">alexanderp</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[98564]" value="1" /></td>
+				<td><a href="/packages/qwinff/">qwinff</a></td>
+		<td>0.2.1-1</td>
+		<td>23</td>
+		<td>0.09</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Qt4/5 GUI frontend for ffmpeg</td>
+		<td>
+						<a href="/account/lzh9102" title="View account information for lzh9102">lzh9102</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[32312]" value="1" /></td>
+				<td><a href="/packages/quickserve/">quickserve</a></td>
+		<td>2018-2</td>
+		<td>62</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A simple HTTP server for quickly sharing files.</td>
+		<td>
+						<a href="/account/Xyne" title="View account information for Xyne">Xyne</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[32404]" value="1" /></td>
+				<td><a href="/packages/qtgain/">qtgain</a></td>
+		<td>1.0.0-1</td>
+		<td>47</td>
+		<td>0.75</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Simply frontend for mp3gain, vorbisgain and metaflac to replay gain your tracks</td>
+		<td>
+						<a href="/account/AsamK" title="View account information for AsamK">AsamK</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[115329]" value="1" /></td>
+				<td><a href="/packages/qt-at-spi/">qt-at-spi</a></td>
+		<td>0.3.1-5</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Qt plugin that bridges the QAccessible API’s to the AT-SPI 2 protocol, giving blind and visually impaired users access to qt applications.</td>
+		<td>
+						<a href="/account/pvagner" title="View account information for pvagner">pvagner</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[69824]" value="1" /></td>
+				<td><a href="/packages/python3-threaded_servers/">python3-threaded_servers</a></td>
+		<td>2019.7-2</td>
+		<td>80</td>
+		<td>0.25</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Threaded server modules (ThreadedHTTPSServer, ThreadedMulticastServer, Quickserve, Pacserve).</td>
+		<td>
+						<a href="/account/Xyne" title="View account information for Xyne">Xyne</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[117566]" value="1" /></td>
+				<td><a href="/packages/python2-webkit-server/">python2-webkit-server</a></td>
+		<td>1.0-1</td>
+		<td>4</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a Webkit-based, headless web client</td>
+		<td>
+						<a href="/account/BryceGuinta" title="View account information for BryceGuinta">BryceGuinta</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[78401]" value="1" /></td>
+				<td><a href="/packages/python2-vpython/">python2-vpython</a></td>
+		<td>6.11-3</td>
+		<td>24</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Easy-to-use 3D graphics module for Python.</td>
+		<td>
+						<a href="/account/moyamo" title="View account information for moyamo">moyamo</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[48843]" value="1" /></td>
+				<td><a href="/packages/python2-ttfquery/">python2-ttfquery</a></td>
+		<td>1.0.5-1</td>
+		<td>19</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">FontTools-based package for querying system fonts</td>
+		<td>
+						<a href="/account/giniu" title="View account information for giniu">giniu</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[46146]" value="1" /></td>
+				<td><a href="/packages/python2-scimath/">python2-scimath</a></td>
+		<td>4.1.2-1</td>
+		<td>9</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Scientific and Mathematical calculations</td>
+		<td>
+						<a href="/account/giniu" title="View account information for giniu">giniu</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[68186]" value="1" /></td>
+				<td><a href="/packages/python2-quantities/">python2-quantities</a></td>
+		<td>0.11.1-1</td>
+		<td>7</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Support for physical quantities with units, based on numpy</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[96203]" value="1" /></td>
+				<td><a href="/packages/python2-pyvisa/">python2-pyvisa</a></td>
+		<td>1.9.1-1</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Python package with bindings to the &#039;Virtual Instrument Software Architecture&#039; VISA library</td>
+		<td>
+						<a href="/account/alex.forencich" title="View account information for alex.forencich">alex.forencich</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[65968]" value="1" /></td>
+				<td><a href="/packages/python2-pysvn/">python2-pysvn</a></td>
+		<td>1.9.3-1</td>
+		<td>97</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Python2 SVN Extension.</td>
+		<td>
+						<a href="/account/Zeph" title="View account information for Zeph">Zeph</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[58092]" value="1" /></td>
+				<td><a href="/packages/python2-pymc/">python2-pymc</a></td>
+		<td>2.3.7-1</td>
+		<td>4</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Markov chain Monte Carlo for Python</td>
+		<td>
+						<a href="/account/xia0er" title="View account information for xia0er">xia0er</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[48842]" value="1" /></td>
+				<td><a href="/packages/python2-polygon/">python2-polygon</a></td>
+		<td>2.0.8-1</td>
+		<td>18</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Python package that handles polygonal shapes in 2D</td>
+		<td>
+						<a href="/account/giniu" title="View account information for giniu">giniu</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[46667]" value="1" /></td>
+				<td><a href="/packages/python2-mlpy/">python2-mlpy</a></td>
+		<td>3.5.0-1</td>
+		<td>7</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Machine Learning PYthon (mlpy) is a high-performance Python package for predictive modeling.</td>
+		<td>
+						<a href="/account/mschu" title="View account information for mschu">mschu</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[59022]" value="1" /></td>
+				<td><a href="/packages/python2-mahotas/">python2-mahotas</a></td>
+		<td>1.4.9-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A set of functions for image processing in Python</td>
+		<td>
+						<a href="/account/mschu" title="View account information for mschu">mschu</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[74449]" value="1" /></td>
+				<td><a href="/packages/python2-ipython-sql/">python2-ipython-sql</a></td>
+		<td>0.3.9-1</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Issue SQL commands from IPython.</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[128908]" value="1" /></td>
+				<td><a href="/packages/python2-iniparse/">python2-iniparse</a></td>
+		<td>0.4-4</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Better INI parser library for Python</td>
+		<td>
+						<a href="/account/Misery" title="View account information for Misery">Misery</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[75590]" value="1" /></td>
+				<td><a href="/packages/python2-ggplot/">python2-ggplot</a></td>
+		<td class="flagged">0.11.5-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">ggplot for python</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[73694]" value="1" /></td>
+				<td><a href="/packages/python2-dulwich/">python2-dulwich</a></td>
+		<td>0.19.11-1</td>
+		<td>109</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Pure-Python implementation of the Git file formats and protocols</td>
+		<td>
+						<a href="/account/drrossum" title="View account information for drrossum">drrossum</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[117567]" value="1" /></td>
+				<td><a href="/packages/python2-dryscrape/">python2-dryscrape</a></td>
+		<td>1.0-2</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a lightweight Javascript-aware, headless web scraping library for Python</td>
+		<td>
+						<a href="/account/BryceGuinta" title="View account information for BryceGuinta">BryceGuinta</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[55419]" value="1" /></td>
+				<td><a href="/packages/python2-ctypes/">python2-ctypes</a></td>
+		<td>1.0.2-1</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Create and manipulate C data types in Python, call functions in shared libraries</td>
+		<td>
+						<a href="/account/sleduc" title="View account information for sleduc">sleduc</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[19095]" value="1" /></td>
+				<td><a href="/packages/python2-crontab/">python2-crontab</a></td>
+		<td>2.3.8-1</td>
+		<td>27</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Crontab module for read and writing crontab files and accessing the system cron automatically and simply using a direct API.</td>
+		<td>
+						<a href="/account/tadly" title="View account information for tadly">tadly</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[69405]" value="1" /></td>
+				<td><a href="/packages/python2-astropy/">python2-astropy</a></td>
+		<td>2.0.16-2</td>
+		<td>18</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A community python library for astronomy</td>
+		<td>
+						<a href="/account/mboquien" title="View account information for mboquien">mboquien</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[117566]" value="1" /></td>
+				<td><a href="/packages/python-webkit-server/">python-webkit-server</a></td>
+		<td>1.0-1</td>
+		<td>4</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a Webkit-based, headless web client</td>
+		<td>
+						<a href="/account/BryceGuinta" title="View account information for BryceGuinta">BryceGuinta</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[57205]" value="1" /></td>
+				<td><a href="/packages/python-weasyprint/">python-weasyprint</a></td>
+		<td>51-1</td>
+		<td>12</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Converts web documents (HTML, CSS, SVG, ...) to PDF.</td>
+		<td>
+						<a href="/account/cinatic" title="View account information for cinatic">cinatic</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[80405]" value="1" /></td>
+				<td><a href="/packages/python-twitter/">python-twitter</a></td>
+		<td>1.18.0-2</td>
+		<td>16</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An API and command-line toolset for Twitter (twitter.com)</td>
+		<td>
+						<a href="/account/noirscape" title="View account information for noirscape">noirscape</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[44786]" value="1" /></td>
+				<td><a href="/packages/python-tablib/">python-tablib</a></td>
+		<td>1.1.0-1</td>
+		<td>4</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Format-agnostic tabular data library (XLS, JSON, YAML, CSV)</td>
+		<td>
+						<a href="/account/TrialnError" title="View account information for TrialnError">TrialnError</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[62572]" value="1" /></td>
+				<td><a href="/packages/python-scipy-mkl/">python-scipy-mkl</a></td>
+		<td>1.4.1-2</td>
+		<td>27</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">SciPy is open-source software for mathematics, science, and engineering.</td>
+		<td>
+						<a href="/account/petronny" title="View account information for petronny">petronny</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[100423]" value="1" /></td>
+				<td><a href="/packages/python-requests-cache/">python-requests-cache</a></td>
+		<td>0.5.2-1</td>
+		<td>18</td>
+		<td>0.02</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Transparent persistent cache for http://python-requests.org/ library.</td>
+		<td>
+						<a href="/account/simon04" title="View account information for simon04">simon04</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[63411]" value="1" /></td>
+				<td><a href="/packages/python-regex-hg/">python-regex-hg</a></td>
+		<td>182.7dd7e9a48804-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Alternative regular expression module, to replace re.</td>
+		<td>
+						<a href="/account/Foucault" title="View account information for Foucault">Foucault</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[65330]" value="1" /></td>
+				<td><a href="/packages/python-pyzolib/">python-pyzolib</a></td>
+		<td>0.3.4-1</td>
+		<td>18</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The pyzolib package provides basic functionality for the Pyzo environment.</td>
+		<td>
+						<a href="/account/hseara" title="View account information for hseara">hseara</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[96203]" value="1" /></td>
+				<td><a href="/packages/python-pyvisa/">python-pyvisa</a></td>
+		<td>1.9.1-1</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Python package with bindings to the &#039;Virtual Instrument Software Architecture&#039; VISA library</td>
+		<td>
+						<a href="/account/alex.forencich" title="View account information for alex.forencich">alex.forencich</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[92275]" value="1" /></td>
+				<td><a href="/packages/python-pysvn/">python-pysvn</a></td>
+		<td>1.9.11-1</td>
+		<td>63</td>
+		<td>0.07</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The Pythonic interface to Subversion</td>
+		<td>
+						<a href="/account/ad1217" title="View account information for ad1217">ad1217</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[64773]" value="1" /></td>
+				<td><a href="/packages/python-pyramid/">python-pyramid</a></td>
+		<td>1.10.4-1</td>
+		<td>7</td>
+		<td>0.06</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A very general open source Python web framework.</td>
+		<td>
+						<a href="/account/The-Compiler" title="View account information for The-Compiler">The-Compiler</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[19577]" value="1" /></td>
+				<td><a href="/packages/python-pymc/">python-pymc</a></td>
+		<td>2.3.7-1</td>
+		<td>9</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Markov chain Monte Carlo for Python</td>
+		<td>
+						<a href="/account/xia0er" title="View account information for xia0er">xia0er</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[62281]" value="1" /></td>
+				<td><a href="/packages/python-numpy-mkl/">python-numpy-mkl</a></td>
+		<td>1.18.1-1</td>
+		<td>34</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Scientific tools for Python compiled with intel mkl</td>
+		<td>
+						<a href="/account/RunAndTumble" title="View account information for RunAndTumble">RunAndTumble</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[60642]" value="1" /></td>
+				<td><a href="/packages/python-numpy-doc/">python-numpy-doc</a></td>
+		<td>1.15.1-1</td>
+		<td>11</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Documentation for NumPy</td>
+		<td>
+						<a href="/account/migueldvb" title="View account information for migueldvb">migueldvb</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54727]" value="1" /></td>
+				<td><a href="/packages/python-mlpy/">python-mlpy</a></td>
+		<td>3.5.0-1</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Machine Learning PYthon (mlpy) is a high-performance Python package for predictive modeling.</td>
+		<td>
+						<a href="/account/mschu" title="View account information for mschu">mschu</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[33167]" value="1" /></td>
+				<td><a href="/packages/python-lepl/">python-lepl</a></td>
+		<td>5.1.3-1</td>
+		<td>11</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Python3 recursive descent parser, written in Python, which has a a friendly, easy-to-use syntax</td>
+		<td>
+						<a href="/account/mawcomw" title="View account information for mawcomw">mawcomw</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[74449]" value="1" /></td>
+				<td><a href="/packages/python-ipython-sql/">python-ipython-sql</a></td>
+		<td>0.3.9-1</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Issue SQL commands from IPython.</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[82475]" value="1" /></td>
+				<td><a href="/packages/python-imread/">python-imread</a></td>
+		<td class="flagged">0.6.1-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">mahotas-imread: A library to read &amp; write to numpy arrays</td>
+		<td>
+						<a href="/account/davidmcinnis" title="View account information for davidmcinnis">davidmcinnis</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[41632]" value="1" /></td>
+				<td><a href="/packages/python-gmpy/">python-gmpy</a></td>
+		<td>1.17-2</td>
+		<td>18</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Python extension that wraps GMP to provide fast multiprecision arithmetic. Last of the 1.x series, see gmpy2 for new developments.</td>
+		<td>
+						<a href="/account/sleduc" title="View account information for sleduc">sleduc</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[75590]" value="1" /></td>
+				<td><a href="/packages/python-ggplot/">python-ggplot</a></td>
+		<td class="flagged">0.11.5-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">ggplot for python</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[147764]" value="1" /></td>
+				<td><a href="/packages/python-exifread/">python-exifread</a></td>
+		<td>2.2.0-2</td>
+		<td>29</td>
+		<td>0.43</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Python library to extract EXIF data from tiff and jpeg files</td>
+		<td>
+						<a href="/account/notizblock" title="View account information for notizblock">notizblock</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[117567]" value="1" /></td>
+				<td><a href="/packages/python-dryscrape/">python-dryscrape</a></td>
+		<td>1.0-2</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a lightweight Javascript-aware, headless web scraping library for Python</td>
+		<td>
+						<a href="/account/BryceGuinta" title="View account information for BryceGuinta">BryceGuinta</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[19095]" value="1" /></td>
+				<td><a href="/packages/python-crontab/">python-crontab</a></td>
+		<td>2.3.8-1</td>
+		<td>27</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Crontab module for read and writing crontab files and accessing the system cron automatically and simply using a direct API.</td>
+		<td>
+						<a href="/account/tadly" title="View account information for tadly">tadly</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[69238]" value="1" /></td>
+				<td><a href="/packages/python-astropy/">python-astropy</a></td>
+		<td>4.0-1</td>
+		<td>27</td>
+		<td>0.45</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A community python library for astronomy</td>
+		<td>
+						<a href="/account/mboquien" title="View account information for mboquien">mboquien</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[22351]" value="1" /></td>
+				<td><a href="/packages/pystopwatch/">pystopwatch</a></td>
+		<td>2019-1</td>
+		<td>61</td>
+		<td>0.33</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A stopwatch written in Python with a clock and two countdown functions that can minimize to the tray.</td>
+		<td>
+						<a href="/account/Xyne" title="View account information for Xyne">Xyne</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[21610]" value="1" /></td>
+				<td><a href="/packages/pygccxml/">pygccxml</a></td>
+		<td class="flagged">1.9.1-1</td>
+		<td>25</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Simple framework to navigate C++ declarations, using Python classes.</td>
+		<td>
+						<a href="/account/yhfudev" title="View account information for yhfudev">yhfudev</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[21611]" value="1" /></td>
+				<td><a href="/packages/py%2B%2B/">py++</a></td>
+		<td>1.0.0-3</td>
+		<td>17</td>
+		<td>0.42</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Py++ package and Boost.Python library provide a complete solution for interfacing Python and C++</td>
+		<td>
+						<a href="/account/bchretien" title="View account information for bchretien">bchretien</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[102059]" value="1" /></td>
+				<td><a href="/packages/pueue-git/">pueue-git</a></td>
+		<td>v0.1.4.r0.ge5eb58e-1</td>
+		<td>1</td>
+		<td>0.56</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A task manager and scheduler for shell commands</td>
+		<td>
+						<a href="/account/Nukesor" title="View account information for Nukesor">Nukesor</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[23015]" value="1" /></td>
+				<td><a href="/packages/pktstat/">pktstat</a></td>
+		<td>1.8.5-3</td>
+		<td>29</td>
+		<td>0.11</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Real-time interface traffic viewer for curses.</td>
+		<td>
+						<a href="/account/bidulock" title="View account information for bidulock">bidulock</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[60915]" value="1" /></td>
+				<td><a href="/packages/pkgfile-git/">pkgfile-git</a></td>
+		<td>21.38.gaa06367-1</td>
+		<td>42</td>
+		<td>0.02</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a pacman .files metadata explorer</td>
+		<td>
+						<a href="/account/falconindy" title="View account information for falconindy">falconindy</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[52542]" value="1" /></td>
+				<td><a href="/packages/pkgbuilder/">pkgbuilder</a></td>
+		<td>4.3.0-1</td>
+		<td>39</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Python AUR helper/library.</td>
+		<td>
+						<a href="/account/Kwpolska" title="View account information for Kwpolska">Kwpolska</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[78018]" value="1" /></td>
+				<td><a href="/packages/pkgbuild-introspection-git/">pkgbuild-introspection-git</a></td>
+		<td>9-1</td>
+		<td>35</td>
+		<td>0.03</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Tools for generating .SRCINFO files and PKGBUILD data extraction (mkaurball)</td>
+		<td>
+						<a href="/account/falconindy" title="View account information for falconindy">falconindy</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[48372]" value="1" /></td>
+				<td><a href="/packages/pkgbrowser/">pkgbrowser</a></td>
+		<td>0.22-2</td>
+		<td>273</td>
+		<td>0.35</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A utility for browsing pacman databases and the AUR</td>
+		<td>
+						<a href="/account/kachelaqa" title="View account information for kachelaqa">kachelaqa</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[22133]" value="1" /></td>
+				<td><a href="/packages/pixman-git/">pixman-git</a></td>
+		<td>pixman+0.38.4+11+gfd5c0da-1</td>
+		<td>7</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The pixel-manipulation library for X and cairo</td>
+		<td>
+						<a href="/account/shoober420" title="View account information for shoober420">shoober420</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[72516]" value="1" /></td>
+				<td><a href="/packages/photoqt/">photoqt</a></td>
+		<td>1.7.1-13</td>
+		<td>93</td>
+		<td>0.32</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Fast and highly configurable image viewer with a simple and nice interface.</td>
+		<td>
+						<a href="/account/luspi" title="View account information for luspi">luspi</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[39292]" value="1" /></td>
+				<td><a href="/packages/pharo/">pharo</a></td>
+		<td class="flagged">7.0.1-1</td>
+		<td>31</td>
+		<td>0.09</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">a fork of Squeak, an implementation of the object-oriented, dynamically typed, reflective programming language Smalltalk</td>
+		<td>
+						<a href="/account/dundee" title="View account information for dundee">dundee</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[82948]" value="1" /></td>
+				<td><a href="/packages/perl-test-mock-lwp-dispatch/">perl-test-mock-lwp-dispatch</a></td>
+		<td>0.08-2</td>
+		<td>16</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">mocks LWP::UserAgent and dispatches your requests/responses</td>
+		<td>
+						<a href="/account/mbunkus" title="View account information for mbunkus">mbunkus</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[23775]" value="1" /></td>
+				<td><a href="/packages/perl-term-shellui/">perl-term-shellui</a></td>
+		<td>0.92-4</td>
+		<td>152</td>
+		<td>1.32</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A fully-featured shell-like command line environment</td>
+		<td>
+						<a href="/account/mutantmonkey" title="View account information for mutantmonkey">mutantmonkey</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[53087]" value="1" /></td>
+				<td><a href="/packages/perl-regexp-ipv6/">perl-regexp-ipv6</a></td>
+		<td>0.03-1</td>
+		<td>23</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Regular expression for IPv6 addresses</td>
+		<td>
+						<a href="/account/yaroslav" title="View account information for yaroslav">yaroslav</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[10506]" value="1" /></td>
+				<td><a href="/packages/perl-ogg-vorbis-header/">perl-ogg-vorbis-header</a></td>
+		<td>0.10-2</td>
+		<td>37</td>
+		<td>0.02</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An object-oriented interface to Ogg Vorbis</td>
+		<td>
+						<a href="/account/mgd" title="View account information for mgd">mgd</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[10505]" value="1" /></td>
+				<td><a href="/packages/perl-mp4-info/">perl-mp4-info</a></td>
+		<td>1.13-1</td>
+		<td>46</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Fetch info from MPEG-4 files (.mp4, .m4a, .m4p, .3gp)</td>
+		<td>
+						<a href="/account/jnbek" title="View account information for jnbek">jnbek</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[10504]" value="1" /></td>
+				<td><a href="/packages/perl-mp3-tag/">perl-mp3-tag</a></td>
+		<td>1.15-1</td>
+		<td>103</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Module for reading tags of MP3 audio files</td>
+		<td>
+						<a href="/account/guzzisti" title="View account information for guzzisti">guzzisti</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[82949]" value="1" /></td>
+				<td><a href="/packages/perl-lwp-useragent-cached/">perl-lwp-useragent-cached</a></td>
+		<td>0.08-2</td>
+		<td>16</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">LWP::UserAgent with simple caching mechanism</td>
+		<td>
+						<a href="/account/mbunkus" title="View account information for mbunkus">mbunkus</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[33158]" value="1" /></td>
+				<td><a href="/packages/perl-audio-scan/">perl-audio-scan</a></td>
+		<td>1.01-3</td>
+		<td>26</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Fast C metadata and tag reader for all common audio file formats</td>
+		<td>
+						<a href="/account/mbunkus" title="View account information for mbunkus">mbunkus</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[12785]" value="1" /></td>
+				<td><a href="/packages/perl-audio-musepack/">perl-audio-musepack</a></td>
+		<td>1.0.1-1</td>
+		<td>36</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An object-oriented interface to Musepack file information and APE tag fields.</td>
+		<td>
+						<a href="/account/jnbek" title="View account information for jnbek">jnbek</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[76607]" value="1" /></td>
+				<td><a href="/packages/pdf2png/">pdf2png</a></td>
+		<td>0.5-2</td>
+		<td>17</td>
+		<td>0.72</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Convert PDFs to PNG, JPG, and other image formats.</td>
+		<td>
+						<a href="/account/aaditya" title="View account information for aaditya">aaditya</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[61350]" value="1" /></td>
+				<td><a href="/packages/pacnews-git/">pacnews-git</a></td>
+		<td>1.0.r341.87fee7a-1</td>
+		<td>17</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Find .pacnew files and merge them with vimdiff</td>
+		<td>
+						<a href="/account/xrchz" title="View account information for xrchz">xrchz</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[47913]" value="1" /></td>
+				<td><a href="/packages/pacman2aria2/">pacman2aria2</a></td>
+		<td>2012-2</td>
+		<td>54</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Convert pacman download URL lists to reflector-augmented aria2c input lists. Includes powerpill-light.</td>
+		<td>
+						<a href="/account/Xyne" title="View account information for Xyne">Xyne</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[76426]" value="1" /></td>
+				<td><a href="/packages/otf-neris/">otf-neris</a></td>
+		<td>1.00-6</td>
+		<td>39</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A display sans for one paragraph (or shorter) length text: quotes, openings, titles.</td>
+		<td>
+						<a href="/account/bohoomil" title="View account information for bohoomil">bohoomil</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[39506]" value="1" /></td>
+				<td><a href="/packages/optimfrog/">optimfrog</a></td>
+		<td>5.100-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A lossless audio compression program.</td>
+		<td>
+						<a href="/account/sl1pkn07" title="View account information for sl1pkn07">sl1pkn07</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[38999]" value="1" /></td>
+				<td><a href="/packages/openttd-openmsx/">openttd-openmsx</a></td>
+		<td>0.3.1-3</td>
+		<td>51</td>
+		<td>0.19</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Free music set for openttd</td>
+		<td>
+						<a href="/account/BluePeril" title="View account information for BluePeril">BluePeril</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[75589]" value="1" /></td>
+				<td><a href="/packages/openblas-lapack/">openblas-lapack</a></td>
+		<td>0.3.8-2</td>
+		<td>82</td>
+		<td>0.01</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Optimized BLAS library based on GotoBLAS2 1.13 BSD (providing blas, lapack, and cblas)</td>
+		<td>
+						<a href="/account/thrasibule" title="View account information for thrasibule">thrasibule</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[73141]" value="1" /></td>
+				<td><a href="/packages/octopi/">octopi</a></td>
+		<td>0.9.0-4</td>
+		<td>426</td>
+		<td>48.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A powerful Pacman frontend using Qt libs</td>
+		<td>
+						<a href="/account/matmoul" title="View account information for matmoul">matmoul</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[40205]" value="1" /></td>
+				<td><a href="/packages/nvidia-pf/">nvidia-pf</a></td>
+		<td>440.44-4</td>
+		<td>47</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">NVIDIA drivers for linux-pf.</td>
+		<td>
+						<a href="/account/Thaodan" title="View account information for Thaodan">Thaodan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54085]" value="1" /></td>
+				<td><a href="/packages/nodejs-jshint/">nodejs-jshint</a></td>
+		<td>2.11.0-6</td>
+		<td>56</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Static analysis tool for JavaScript</td>
+		<td>
+						<a href="/account/caleb" title="View account information for caleb">caleb</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[114907]" value="1" /></td>
+				<td><a href="/packages/nerd-fonts-complete/">nerd-fonts-complete</a></td>
+		<td class="flagged">2.0.0-5</td>
+		<td>129</td>
+		<td>3.48</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Iconic font aggregator, collection, and patcher. 40+ patched fonts, over 3,600 glyph/icons, includes popular collections such as Font Awesome &amp; fonts such as Hack</td>
+		<td>
+						<a href="/account/glider" title="View account information for glider">glider</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[84532]" value="1" /></td>
+				<td><a href="/packages/nbwmon/">nbwmon</a></td>
+		<td>0.5.2-2</td>
+		<td>12</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">ncurses bandwidth monitor</td>
+		<td>
+						<a href="/account/ryshglene" title="View account information for ryshglene">ryshglene</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[54916]" value="1" /></td>
+				<td><a href="/packages/nas/">nas</a></td>
+		<td>1.9.4-4</td>
+		<td>67</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Network Audio System is a network transparent, client/server audio transport system. Provides libaudio2.so.</td>
+		<td>
+						<a href="/account/dundee" title="View account information for dundee">dundee</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[49787]" value="1" /></td>
+				<td><a href="/packages/mypaint-brushes-deevad/">mypaint-brushes-deevad</a></td>
+		<td>6-2</td>
+		<td>19</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Mypaint brushkit by David Revoy</td>
+		<td>
+						<a href="/account/dracorp" title="View account information for dracorp">dracorp</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[3122]" value="1" /></td>
+				<td><a href="/packages/muttprint/">muttprint</a></td>
+		<td>0.73_4-6</td>
+		<td>57</td>
+		<td>0.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An app to print email from CLI mail clients, mutt in particular</td>
+		<td>
+						<a href="/account/jasonwryan" title="View account information for jasonwryan">jasonwryan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[6552]" value="1" /></td>
+				<td><a href="/packages/moodbar/">moodbar</a></td>
+		<td>1.2-1</td>
+		<td>162</td>
+		<td>0.04</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">moodbar binaries and script for Amarok</td>
+		<td>
+						<a href="/account/fettouhi" title="View account information for fettouhi">fettouhi</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[75413]" value="1" /></td>
+				<td><a href="/packages/modprobed-db/">modprobed-db</a></td>
+		<td>2.41-1</td>
+		<td>217</td>
+		<td>1.37</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Keeps track of EVERY kernel module ever used - useful for those of us who make localmodconfig :)</td>
+		<td>
+						<a href="/account/graysky" title="View account information for graysky">graysky</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[27149]" value="1" /></td>
+				<td><a href="/packages/mendeleydesktop-bundled/">mendeleydesktop-bundled</a></td>
+		<td>1.19.5-1</td>
+		<td>297</td>
+		<td>1.14</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Academic software for managing and sharing research papers.</td>
+		<td>
+						<a href="/account/xgdgsc" title="View account information for xgdgsc">xgdgsc</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[27149]" value="1" /></td>
+				<td><a href="/packages/mendeleydesktop/">mendeleydesktop</a></td>
+		<td>1.19.5-1</td>
+		<td>297</td>
+		<td>1.14</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Academic software for managing and sharing research papers.</td>
+		<td>
+						<a href="/account/xgdgsc" title="View account information for xgdgsc">xgdgsc</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[13076]" value="1" /></td>
+				<td><a href="/packages/med-docs/">med-docs</a></td>
+		<td>4.0.0-5</td>
+		<td>90</td>
+		<td>0.59</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Modelisation et Echanges de Donnees, i.e. Data Modelization and Exchanges - code-aster exchange module linked to hdf5. Without openmpi.</td>
+		<td>
+						<a href="/account/Nim65s" title="View account information for Nim65s">Nim65s</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[13076]" value="1" /></td>
+				<td><a href="/packages/med/">med</a></td>
+		<td>4.0.0-5</td>
+		<td>90</td>
+		<td>0.59</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Modelisation et Echanges de Donnees, i.e. Data Modelization and Exchanges - code-aster exchange module linked to hdf5. Without openmpi.</td>
+		<td>
+						<a href="/account/Nim65s" title="View account information for Nim65s">Nim65s</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[69770]" value="1" /></td>
+				<td><a href="/packages/mcrypt/">mcrypt</a></td>
+		<td>2.6.8-1</td>
+		<td>13</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A replacement for the old unix crypt(1).</td>
+		<td>
+						<a href="/account/aksr" title="View account information for aksr">aksr</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[7763]" value="1" /></td>
+				<td><a href="/packages/luvcview/">luvcview</a></td>
+		<td>1:0.2.6-4</td>
+		<td>75</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Viewer for usb-uvc-cameras</td>
+		<td>
+						<a href="/account/webmeister" title="View account information for webmeister">webmeister</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[103167]" value="1" /></td>
+				<td><a href="/packages/lua53bind/">lua53bind</a></td>
+		<td>0.9.1-6</td>
+		<td>6</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A library that helps you create bindings between C++ and Lua53</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[136898]" value="1" /></td>
+				<td><a href="/packages/lua52-std-_debug/">lua52-std-_debug</a></td>
+		<td>1.0.1-2</td>
+		<td>2</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Lua Debug Hints Library</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[136895]" value="1" /></td>
+				<td><a href="/packages/lua52-std-normalize/">lua52-std-normalize</a></td>
+		<td>2.0.2-4</td>
+		<td>2</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Normalized Lua functions</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[116853]" value="1" /></td>
+				<td><a href="/packages/lua52-posix/">lua52-posix</a></td>
+		<td>34.1.1-2</td>
+		<td>11</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">POSIX bindings for Lua</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[136898]" value="1" /></td>
+				<td><a href="/packages/lua51-std-_debug/">lua51-std-_debug</a></td>
+		<td>1.0.1-2</td>
+		<td>2</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Lua Debug Hints Library</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[136895]" value="1" /></td>
+				<td><a href="/packages/lua51-std-normalize/">lua51-std-normalize</a></td>
+		<td>2.0.2-4</td>
+		<td>2</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Normalized Lua functions</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[116853]" value="1" /></td>
+				<td><a href="/packages/lua51-posix/">lua51-posix</a></td>
+		<td>34.1.1-2</td>
+		<td>11</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">POSIX bindings for Lua</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[136898]" value="1" /></td>
+				<td><a href="/packages/lua-std-_debug/">lua-std-_debug</a></td>
+		<td>1.0.1-2</td>
+		<td>2</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Lua Debug Hints Library</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[136895]" value="1" /></td>
+				<td><a href="/packages/lua-std-normalize/">lua-std-normalize</a></td>
+		<td>2.0.2-4</td>
+		<td>2</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Normalized Lua functions</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[116853]" value="1" /></td>
+				<td><a href="/packages/lua-posix/">lua-posix</a></td>
+		<td>34.1.1-2</td>
+		<td>11</td>
+		<td>0.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">POSIX bindings for Lua</td>
+		<td>
+						<a href="/account/cafehaine" title="View account information for cafehaine">cafehaine</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[97592]" value="1" /></td>
+				<td><a href="/packages/lockrun/">lockrun</a></td>
+		<td>0.6.2-2</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Exclusively run things via lock files</td>
+		<td>
+						<a href="/account/hav3lock" title="View account information for hav3lock">hav3lock</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[50919]" value="1" /></td>
+				<td><a href="/packages/lnav/">lnav</a></td>
+		<td>0.8.5-1</td>
+		<td>37</td>
+		<td>0.50</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A curses-based tool for viewing and analyzing log files</td>
+		<td>
+						<a href="/account/uffe" title="View account information for uffe">uffe</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[50956]" value="1" /></td>
+				<td><a href="/packages/linux-pf-preset-default/">linux-pf-preset-default</a></td>
+		<td class="flagged">5.4.6-1</td>
+		<td>200</td>
+		<td>0.40</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Linux-pf default preset</td>
+		<td>
+						<a href="/account/Thaodan" title="View account information for Thaodan">Thaodan</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[50956]" value="1" /></td>
+				<td><a href="/packages/linux-pf-headers/">linux-pf-headers</a></td>
+		<td class="flagged">5.4.6-1</td>
+		<td>200</td>
+		<td>0.40</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Header files and scripts for building modules for linux-pf kernel.</td>
+		<td>
+						<a href="/account/Thaodan" title="View account information for Thaodan">Thaodan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[50956]" value="1" /></td>
+				<td><a href="/packages/linux-pf/">linux-pf</a></td>
+		<td class="flagged">5.4.6-1</td>
+		<td>200</td>
+		<td>0.40</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">6th Gen Core processors including Skylake.</td>
+		<td>
+						<a href="/account/Thaodan" title="View account information for Thaodan">Thaodan</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[50893]" value="1" /></td>
+				<td><a href="/packages/linux-mainline-headers/">linux-mainline-headers</a></td>
+		<td>5.6rc3-1</td>
+		<td>235</td>
+		<td>2.66</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Headers and scripts for building modules for the Linux Mainline kernel</td>
+		<td>
+						<a href="/account/miffe" title="View account information for miffe">miffe</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[50893]" value="1" /></td>
+				<td><a href="/packages/linux-mainline-docs/">linux-mainline-docs</a></td>
+		<td>5.6rc3-1</td>
+		<td>235</td>
+		<td>2.66</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Documentation for the Linux Mainline kernel</td>
+		<td>
+						<a href="/account/miffe" title="View account information for miffe">miffe</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[50893]" value="1" /></td>
+				<td><a href="/packages/linux-mainline/">linux-mainline</a></td>
+		<td>5.6rc3-1</td>
+		<td>235</td>
+		<td>2.66</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The Linux Mainline kernel and modules</td>
+		<td>
+						<a href="/account/miffe" title="View account information for miffe">miffe</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[29820]" value="1" /></td>
+				<td><a href="/packages/libsquish/">libsquish</a></td>
+		<td>1.15-1</td>
+		<td>28</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">DXT compression library</td>
+		<td>
+						<a href="/account/ducakar" title="View account information for ducakar">ducakar</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[104266]" value="1" /></td>
+				<td><a href="/packages/libmowgli/">libmowgli</a></td>
+		<td>2.1.0-1</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Performance and usability-oriented extensions to C</td>
+		<td>
+						<a href="/account/Madotsuki" title="View account information for Madotsuki">Madotsuki</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[47738]" value="1" /></td>
+				<td><a href="/packages/libmediawiki-git/">libmediawiki-git</a></td>
+		<td>r108.a5cd0ea-1</td>
+		<td>11</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A KDE C++ interface for MediaWiki based web service as wikipedia.org</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[102058]" value="1" /></td>
+				<td><a href="/packages/libkvkontakte-git/">libkvkontakte-git</a></td>
+		<td>r440.fd5dfce-1</td>
+		<td>3</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Library implementing VKontakte.ru API. (GIT version)</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[47396]" value="1" /></td>
+				<td><a href="/packages/libksane-git/">libksane-git</a></td>
+		<td>r410.de6110a-1</td>
+		<td>21</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An image scanning library</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[47394]" value="1" /></td>
+				<td><a href="/packages/libkipi-git/">libkipi-git</a></td>
+		<td>r1162.a6ecdba-1</td>
+		<td>27</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An interface to use kipi-plugins from a KDE application</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[50955]" value="1" /></td>
+				<td><a href="/packages/libkgeomap-git/">libkgeomap-git</a></td>
+		<td>r661.d363e11-1</td>
+		<td>19</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A wrapper around world map components for browsing and arranging photos on a map</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[46205]" value="1" /></td>
+				<td><a href="/packages/libkface-git/">libkface-git</a></td>
+		<td>r780.ec6e823-1</td>
+		<td>19</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Qt/C++ wrapper around LibFace library to perform face recognition and detection over pictures</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[47395]" value="1" /></td>
+				<td><a href="/packages/libkexiv2-git/">libkexiv2-git</a></td>
+		<td>r782.6c196e4-1</td>
+		<td>26</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A library to manipulate pictures metadata</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[46775]" value="1" /></td>
+				<td><a href="/packages/libkdcraw-git/">libkdcraw-git</a></td>
+		<td>r1112.d21e34f-1</td>
+		<td>26</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A C++ interface used to decode RAW picture</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[119371]" value="1" /></td>
+				<td><a href="/packages/libgnomecanvasmm/">libgnomecanvasmm</a></td>
+		<td>2.26.0-4</td>
+		<td>29</td>
+		<td>0.25</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A C++ wrapper for libgnomecanvas.</td>
+		<td>
+						<a href="/account/WoefulDerelict" title="View account information for WoefulDerelict">WoefulDerelict</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[85079]" value="1" /></td>
+				<td><a href="/packages/libgee06/">libgee06</a></td>
+		<td>0.6.8-1</td>
+		<td>98</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">GObject collection library (legacy)</td>
+		<td>
+						<a href="/account/ValHue" title="View account information for ValHue">ValHue</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[82208]" value="1" /></td>
+				<td><a href="/packages/libeb/">libeb</a></td>
+		<td>4.4.3-1</td>
+		<td>7</td>
+		<td>0.07</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A C library for accessing CD-ROM books, supports EB, EBG, EBXA, EBXA-C, S-EBXA and EPWING formats.</td>
+		<td>
+						<a href="/account/aksr" title="View account information for aksr">aksr</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[36703]" value="1" /></td>
+				<td><a href="/packages/libcgroup/">libcgroup</a></td>
+		<td>0.41-2</td>
+		<td>110</td>
+		<td>0.09</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Library that abstracts the control group file system in Linux</td>
+		<td>
+						<a href="/account/eworm" title="View account information for eworm">eworm</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[56211]" value="1" /></td>
+				<td><a href="/packages/libaacplus/">libaacplus</a></td>
+		<td>2.0.2-11</td>
+		<td>51</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">3GPP AAC+ High Efficiency Advanced Audio Codec v2 (HE-AAC+) Encoder Shared Library</td>
+		<td>
+						<a href="/account/justin8" title="View account information for justin8">justin8</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[64703]" value="1" /></td>
+				<td><a href="/packages/lib32-pangox-compat/">lib32-pangox-compat</a></td>
+		<td>0.0.2-2</td>
+		<td>221</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">X Window System font support for Pango (32 bit)</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[99619]" value="1" /></td>
+				<td><a href="/packages/lib32-nss-mdns/">lib32-nss-mdns</a></td>
+		<td>0.14.1-1</td>
+		<td>23</td>
+		<td>0.10</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">glibc plugin providing host name resolution via mDNS</td>
+		<td>
+						<a href="/account/WorMzy" title="View account information for WorMzy">WorMzy</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[55631]" value="1" /></td>
+				<td><a href="/packages/lib32-libxpm/">lib32-libxpm</a></td>
+		<td>3.5.13-2</td>
+		<td>141</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">X11 pixmap library (32-bit)</td>
+		<td>
+						<a href="/account/TheGoliath" title="View account information for TheGoliath">TheGoliath</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[20894]" value="1" /></td>
+				<td><a href="/packages/lib32-libxaw/">lib32-libxaw</a></td>
+		<td>1.0.13-1</td>
+		<td>106</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">X11 Athena Widget library (32 bit)</td>
+		<td>
+						<a href="/account/aaronfischer" title="View account information for aaronfischer">aaronfischer</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[30415]" value="1" /></td>
+				<td><a href="/packages/latexdraw/">latexdraw</a></td>
+		<td>3.3.9-1</td>
+		<td>40</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Create svg graphics and/or pstricks code usable in latex documents.</td>
+		<td>
+						<a href="/account/McLenin" title="View account information for McLenin">McLenin</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[26322]" value="1" /></td>
+				<td><a href="/packages/latex-template-springer/">latex-template-springer</a></td>
+		<td>20191006-3</td>
+		<td>17</td>
+		<td>0.19</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Springer templates for LNCS proceedings (llncs), monographs (svmono), multiauthor volumes (svmult), journals (svjour3), and other lecture notes (svmultln)</td>
+		<td>
+						<a href="/account/shtrom" title="View account information for shtrom">shtrom</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[101747]" value="1" /></td>
+				<td><a href="/packages/kqoauth-git/">kqoauth-git</a></td>
+		<td>0.98.6.g7c31a12-1</td>
+		<td>2</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A library written in C++ for Qt that implements the OAuth 1.0 authentication specification RFC 5849. (GIT version)</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[121223]" value="1" /></td>
+				<td><a href="/packages/kotlin-native-git/">kotlin-native-git</a></td>
+		<td class="flagged">r2571.56c1f2b0-1</td>
+		<td>8</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A LLVM backend for the Kotlin compiler</td>
+		<td>
+						<a href="/account/kyonifer" title="View account information for kyonifer">kyonifer</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[70250]" value="1" /></td>
+				<td><a href="/packages/komodo-edit/">komodo-edit</a></td>
+		<td>11.1.1_18206-1</td>
+		<td>251</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Free &amp; Open-Source counterpart of ActiveState Komodo IDE - XUL based</td>
+		<td>
+						<a href="/account/max-k" title="View account information for max-k">max-k</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[46208]" value="1" /></td>
+				<td><a href="/packages/kipi-plugins-git/">kipi-plugins-git</a></td>
+		<td>r11750.0e0e4f5-1</td>
+		<td>17</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A collection of plugins extending the KDE graphics and image applications as digiKam</td>
+		<td>
+						<a href="/account/Sevenseven" title="View account information for Sevenseven">Sevenseven</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[101473]" value="1" /></td>
+				<td><a href="/packages/kicad-git/">kicad-git</a></td>
+		<td>r12823.223e24f42-1</td>
+		<td>65</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Electronic schematic and printed circuit board (PCB) design tools</td>
+		<td>
+						<a href="/account/nickoe" title="View account information for nickoe">nickoe</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[41169]" value="1" /></td>
+				<td><a href="/packages/kfilebox/">kfilebox</a></td>
+		<td>0.4.10-2</td>
+		<td>133</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">KDE4 Dropbox client (with own daemon)</td>
+		<td>
+						<a href="/account/ava1ar" title="View account information for ava1ar">ava1ar</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[29268]" value="1" /></td>
+				<td><a href="/packages/kdiff3-qt/">kdiff3-qt</a></td>
+		<td>0.9.98-2</td>
+		<td>42</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A file comparator/merge tool (lightweight qt version without KDE dependencies)</td>
+		<td>
+						<a href="/account/el_aur" title="View account information for el_aur">el_aur</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[14357]" value="1" /></td>
+				<td><a href="/packages/kdesudo/">kdesudo</a></td>
+		<td>3.4.2.4-2</td>
+		<td>142</td>
+		<td>0.38</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A SUdo frontend for KDE</td>
+		<td>
+						<a href="/account/Stykers" title="View account information for Stykers">Stykers</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[87910]" value="1" /></td>
+				<td><a href="/packages/kdecoration-git/">kdecoration-git</a></td>
+		<td>r100.31bb399-2</td>
+		<td>12</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Plugin based library to create window decorations</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[72392]" value="1" /></td>
+				<td><a href="/packages/kdeconnect-git/">kdeconnect-git</a></td>
+		<td>1.3.3.r812.4a6a98d8-1</td>
+		<td>160</td>
+		<td>0.09</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Adds communication between KDE and your smartphone</td>
+		<td>
+						<a href="/account/rhssk" title="View account information for rhssk">rhssk</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[59773]" value="1" /></td>
+				<td><a href="/packages/kde-thumbnailer-epub/">kde-thumbnailer-epub</a></td>
+		<td>1.1.9b-1</td>
+		<td>31</td>
+		<td>0.41</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Thumbnailer to show ePub cover previews in KDE file managers.</td>
+		<td>
+						<a href="/account/sora" title="View account information for sora">sora</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[60978]" value="1" /></td>
+				<td><a href="/packages/kde-servicemenus-rootactions/">kde-servicemenus-rootactions</a></td>
+		<td>2.9.1-1</td>
+		<td>132</td>
+		<td>0.93</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Allows admin users to perform several root only actions from dolphin via kdesu/kdesudo</td>
+		<td>
+						<a href="/account/buzo" title="View account information for buzo">buzo</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[65778]" value="1" /></td>
+				<td><a href="/packages/kde-colors-solarized-git/">kde-colors-solarized-git</a></td>
+		<td class="flagged">20131024-3</td>
+		<td>14</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Solarized theme for Kcolorchooser.</td>
+		<td>
+				<span>orphan</span>
+				</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[87057]" value="1" /></td>
+				<td><a href="/packages/kanboard/">kanboard</a></td>
+		<td>1.2.13-1</td>
+		<td>15</td>
+		<td>0.17</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Simple visual task board</td>
+		<td>
+						<a href="/account/PreparationH67" title="View account information for PreparationH67">PreparationH67</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[54678]" value="1" /></td>
+				<td><a href="/packages/jrosetta/">jrosetta</a></td>
+		<td>1.0.4-4</td>
+		<td>29</td>
+		<td>0.01</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Graphical console engine for Swing</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54676]" value="1" /></td>
+				<td><a href="/packages/jlatexmath-fop/">jlatexmath-fop</a></td>
+		<td>1.0.7-1</td>
+		<td>29</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">JLaTeXMath FOP plugin</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[54904]" value="1" /></td>
+				<td><a href="/packages/jgoodies-looks/">jgoodies-looks</a></td>
+		<td>2.8.0-3</td>
+		<td>21</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A Java Swing look and feel library</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54673]" value="1" /></td>
+				<td><a href="/packages/jeuclid-core/">jeuclid-core</a></td>
+		<td>3.1.9-1</td>
+		<td>35</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">MathML renderer for Java</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[54672]" value="1" /></td>
+				<td><a href="/packages/java-skinlf/">java-skinlf</a></td>
+		<td>6.7-5</td>
+		<td>25</td>
+		<td>0.01</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Skinning engine for Swing</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[55401]" value="1" /></td>
+				<td><a href="/packages/java-qdox/">java-qdox</a></td>
+		<td>1.12.1-2</td>
+		<td>20</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A high speed, small footprint parser for extracting class/interface/method definitions from source files complete with JavaDoc @tags</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[80308]" value="1" /></td>
+				<td><a href="/packages/java-freehep-vectorgraphics/">java-freehep-vectorgraphics</a></td>
+		<td>2.4-2</td>
+		<td>17</td>
+		<td>0.22</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A vector graphics package</td>
+		<td>
+						<a href="/account/a.kudelin" title="View account information for a.kudelin">a.kudelin</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54670]" value="1" /></td>
+				<td><a href="/packages/java-flexdock/">java-flexdock</a></td>
+		<td>1.2.4-1</td>
+		<td>33</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Docking framework for Swing</td>
+		<td>
+						<a href="/account/MRWITEK" title="View account information for MRWITEK">MRWITEK</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[32259]" value="1" /></td>
+				<td><a href="/packages/jags/">jags</a></td>
+		<td>4.3.0-1</td>
+		<td>19</td>
+		<td>0.12</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Bayesian hierarchical models using Markov Chain Monte Carlo (MCMC) simulation</td>
+		<td>
+						<a href="/account/migueldvb" title="View account information for migueldvb">migueldvb</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[57802]" value="1" /></td>
+				<td><a href="/packages/jabref-git/">jabref-git</a></td>
+		<td>1:5.0.beta.17.g44fdfa7ea9-1</td>
+		<td>14</td>
+		<td>0.06</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">GUI frontend for BibTeX, written in Java -- built from git</td>
+		<td>
+						<a href="/account/haawda" title="View account information for haawda">haawda</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[59865]" value="1" /></td>
+				<td><a href="/packages/jabref/">jabref</a></td>
+		<td>4.3.1-3</td>
+		<td>185</td>
+		<td>1.01</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">GUI frontend for BibTeX, written in Java</td>
+		<td>
+						<a href="/account/Bevan" title="View account information for Bevan">Bevan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[7971]" value="1" /></td>
+				<td><a href="/packages/ipe/">ipe</a></td>
+		<td>7.2.13-5</td>
+		<td>77</td>
+		<td>0.12</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The extensible drawing editor</td>
+		<td>
+						<a href="/account/foxcub" title="View account information for foxcub">foxcub</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-vtune-profiler/">intel-vtune-profiler</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Performance profiler for serial and parallel performance analysis 2020.0.0.605129</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-tbb_psxe/">intel-tbb_psxe</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel Threading Building Blocks (TBB)</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-openmp/">intel-openmp</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel OpenMP Implementation 19.1.0</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-mpi/">intel-mpi</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel MPI library</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-mkl/">intel-mkl</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel Math Kernel Library (Intel® MKL)</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-ipp/">intel-ipp</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel Integrated Performance Primitives</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-inspector/">intel-inspector</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Memory and thread debugger 2020.0.0.603904</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-fortran-compiler/">intel-fortran-compiler</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel Fortran compiler 19.1.0</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-compiler-base/">intel-compiler-base</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel C/C++ 19.1.0</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-common-libs/">intel-common-libs</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Intel Common Libraries 19.1.0</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[56337]" value="1" /></td>
+				<td><a href="/packages/intel-advisor/">intel-advisor</a></td>
+		<td>2020.0.166-1</td>
+		<td>131</td>
+		<td>1.18</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Threading design and prototyping tool for software architects 2020.0.0.604394</td>
+		<td>
+						<a href="/account/alyst" title="View account information for alyst">alyst</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[62586]" value="1" /></td>
+				<td><a href="/packages/insync/">insync</a></td>
+		<td>3.0.30.40732-1</td>
+		<td>269</td>
+		<td>4.43</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An unofficial Google Drive client that runs on Linux, with support for various desktops</td>
+		<td>
+						<a href="/account/thenaterhood" title="View account information for thenaterhood">thenaterhood</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[76183]" value="1" /></td>
+				<td><a href="/packages/inkslides-git/">inkslides-git</a></td>
+		<td>r35.fe6cb77-1</td>
+		<td>6</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Forked and improved version of inkscapeslide-git</td>
+		<td>
+						<a href="/account/janoliver" title="View account information for janoliver">janoliver</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[90901]" value="1" /></td>
+				<td><a href="/packages/inkscape-open-symbols-git/">inkscape-open-symbols-git</a></td>
+		<td>v1.2.1.r12.g7a991f1-1</td>
+		<td>7</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Open source icon sets to use as Inkscape symbols</td>
+		<td>
+						<a href="/account/ulfwin" title="View account information for ulfwin">ulfwin</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[123269]" value="1" /></td>
+				<td><a href="/packages/inkscape-git/">inkscape-git</a></td>
+		<td>5:1.0+devel.r8.g4c82e78a40-1</td>
+		<td>6</td>
+		<td>0.56</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">An Open Source vector graphics editor, using SVG file format, from git master</td>
+		<td>
+						<a href="/account/haawda" title="View account information for haawda">haawda</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[140935]" value="1" /></td>
+				<td><a href="/packages/idnkit/">idnkit</a></td>
+		<td>2.3-4</td>
+		<td>5</td>
+		<td>0.05</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Provides functionalities about Internationalized Domain Name processing</td>
+		<td>
+						<a href="/account/dviktor" title="View account information for dviktor">dviktor</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[54694]" value="1" /></td>
+				<td><a href="/packages/icaclient/">icaclient</a></td>
+		<td>19.12-1</td>
+		<td>123</td>
+		<td>1.71</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Citrix Workspace App for x86_64 (64bit) Linux (ICAClient, Citrix Receiver)</td>
+		<td>
+						<a href="/account/hnws" title="View account information for hnws">hnws</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[89753]" value="1" /></td>
+				<td><a href="/packages/i8kutils/">i8kutils</a></td>
+		<td>1.43-3</td>
+		<td>33</td>
+		<td>0.95</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Fan control for Dell laptops</td>
+		<td>
+						<a href="/account/vitorafsr" title="View account information for vitorafsr">vitorafsr</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[137307]" value="1" /></td>
+				<td><a href="/packages/hunspell-th/">hunspell-th</a></td>
+		<td>1.0.0-1</td>
+		<td>2</td>
+		<td>0.03</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Thai hunspell dictionary</td>
+		<td>
+						<a href="/account/vheeze" title="View account information for vheeze">vheeze</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[44646]" value="1" /></td>
+				<td><a href="/packages/hplip-plugin/">hplip-plugin</a></td>
+		<td class="flagged">3.19.12-1</td>
+		<td>377</td>
+		<td>3.24</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Binary plugin for HPs hplip printer driver library</td>
+		<td>
+						<a href="/account/andmars" title="View account information for andmars">andmars</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[84565]" value="1" /></td>
+				<td><a href="/packages/hgsubversion/">hgsubversion</a></td>
+		<td>1.9.2-2</td>
+		<td>5</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">extension for Mercurial that allows using Mercurial as a Subversion client</td>
+		<td>
+						<a href="/account/drrossum" title="View account information for drrossum">drrossum</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[32407]" value="1" /></td>
+				<td><a href="/packages/hg-git-hg/">hg-git-hg</a></td>
+		<td>631.711baa274f78-1</td>
+		<td>45</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">the Hg-Git mercurial plugin</td>
+		<td>
+						<a href="/account/l4r" title="View account information for l4r">l4r</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[12017]" value="1" /></td>
+				<td><a href="/packages/hachoir-parser/">hachoir-parser</a></td>
+		<td>1.3.4-4</td>
+		<td>58</td>
+		<td>0.13</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Most common file format parsers written using hachoir-core.</td>
+		<td>
+						<a href="/account/ianux" title="View account information for ianux">ianux</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[12018]" value="1" /></td>
+				<td><a href="/packages/hachoir-metadata/">hachoir-metadata</a></td>
+		<td>1.3.3-4</td>
+		<td>38</td>
+		<td>0.13</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A tool to extract metadata from multimedia files.</td>
+		<td>
+						<a href="/account/ianux" title="View account information for ianux">ianux</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[12016]" value="1" /></td>
+				<td><a href="/packages/hachoir-core/">hachoir-core</a></td>
+		<td>1.3.3-4</td>
+		<td>61</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A library written in Python which allows to see and edit a binary files field per field.</td>
+		<td>
+						<a href="/account/ianux" title="View account information for ianux">ianux</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[75683]" value="1" /></td>
+				<td><a href="/packages/gopreload-git/">gopreload-git</a></td>
+		<td>r49.ebb83fe-2</td>
+		<td>27</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Preloads files needed for given programs</td>
+		<td>
+						<a href="/account/kokoko3k" title="View account information for kokoko3k">kokoko3k</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[15270]" value="1" /></td>
+				<td><a href="/packages/google-earth/">google-earth</a></td>
+		<td>7.1.8.3036-1</td>
+		<td>1004</td>
+		<td>0.53</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Semi-legacy 3D interface to explore the globe, terrain, streets, buildings and other planets</td>
+		<td>
+						<a href="/account/dbermond" title="View account information for dbermond">dbermond</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[82463]" value="1" /></td>
+				<td><a href="/packages/google-cloud-sdk/">google-cloud-sdk</a></td>
+		<td>282.0.0-1</td>
+		<td>134</td>
+		<td>2.92</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq.</td>
+		<td>
+						<a href="/account/sudoforge" title="View account information for sudoforge">sudoforge</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[994]" value="1" /></td>
+				<td><a href="/packages/gonvert/">gonvert</a></td>
+		<td>0.2.39-1</td>
+		<td>18</td>
+		<td>0.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">unit conversion utility with 51 categories and 972 units</td>
+		<td>
+						<a href="/account/Xyne" title="View account information for Xyne">Xyne</a>
+						</td>
+	</tr>
+
+		</tbody>
+		</table>
+
+				<div class="pkglist-stats">
+			<p>
+				62125 packages found.				Page 1 of 249.			</p>
+						<p class="pkglist-nav">
+															<span class="page">1</span>
+																				<a class="page" href="/packages/?O=250&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">2</a>
+																				<a class="page" href="/packages/?O=500&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">3</a>
+																				<a class="page" href="/packages/?O=750&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">4</a>
+																				<a class="page" href="/packages/?O=1000&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">5</a>
+																				<a class="page" href="/packages/?O=1250&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">6</a>
+																				<span class="page">... </span>
+																				<a class="page" href="/packages/?O=250&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">Next &rsaquo;</a>
+																				<a class="page" href="/packages/?O=62000&amp;SeB=nd&amp;SB=w&amp;SO=d&amp;PP=250&amp;do_Search=Go">Last &raquo;</a>
+												</p>
+					</div>
+
+					<p>
+				<select name="action">
+					<option>Actions</option>
+					<option value="do_UnFlag">Unflag Out-of-date</option>
+					<option value="do_Adopt">Adopt Packages</option>
+					<option value="do_Disown">Disown Packages</option>
+										<option value="do_Notify">Notify</option>
+					<option value="do_UnNotify">UnNotify</option>
+				</select>
+								<label class="confirmation"><input type="checkbox" name="confirm" value="1" /> Confirm</label>
+				<input type="submit" class="button" style="width: 80px" value="Go" />
+			</p>
+					</form>
+</div>
+			<!-- End of main content -->
+
+			<div id="footer">
+								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v4.8.0">v4.8.0</a></p>
+								<p>Copyright &copy; 2004-2020 aurweb Development Team.</p>
+				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+			</div>
+		</div>
+	</body>
+</html>

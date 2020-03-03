@@ -1,0 +1,51 @@
+Name,Version,Votes,Popularity?,Voted,Notify,Description,Maintainer
+dropbox,90.4.307-1,2301,7.22,Yes,,"A free service that lets you bring your photos, docs, and videos anywhere and share them easily.",mtorromeo
+ttf-ms-fonts,2.0-10,1934,10.89,Yes,,"Core TTF Fonts from Microsoft",birdflesh
+spotify,1:1.1.10.546-3,1903,27.46,,,"A proprietary music streaming service",AWhetter
+google-chrome,80.0.3987.116-1,1878,16.34,,,"The popular and trusted web browser by Google (Stable Channel)",luzifer
+android-sdk,26.1.1-1,1475,1.24,Yes,,"Google Android SDK",dreamingincode
+teamviewer,15.2.2756-1,1350,7.66,,,"All-In-One Software for Remote Support and Online Meetings",swiftgeek
+virtualbox-ext-oracle,6.1.2-1,1291,5.48,,,"Oracle VM VirtualBox Extension Pack",seblu
+android-sdk-platform-tools,29.0.5-1,1227,2.63,Yes,,"Platform-Tools for Google Android SDK (adb and fastboot)",dreamingincode
+package-query,1.10-1,1160,1.33,,,"Query ALPM and AUR",archlinuxfr
+google-talkplugin,5.41.3.0-1,1154,0.01,,,"Video chat browser plug-in for Google Hangouts",ava1ar
+aurvote-git,r27.fd413f1-2,1130,1.60,,,"Tool to vote for your favorite AUR packages (development version)",neersighted
+tor-browser,9.0.5-1,1078,17.68,,,"Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)",grufo
+google-earth,7.1.8.3036-1,1005,0.65,Yes,,"Semi-legacy 3D interface to explore the globe, terrain, streets, buildings and other planets",dbermond
+yay,9.4.4-1,969,63.00,Yes,,"Yet another yogurt. Pacman wrapper and AUR helper written in go.",jguer
+android-studio,3.5.3.0-1,894,7.84,Yes,,"The official Android IDE (Stable branch)",kordianbruck
+visual-studio-code-bin,1.42.1-1,874,8.59,,,"Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)",dcelasun
+acroread,9.5.5-13,857,1.52,,,"Adobe Acrobat Reader is a PDF file viewer",Geballin
+jdk,13.0.2-1,799,1.07,,,"Oracle Java Development Kit",dbermond
+rar,5.8.0-1,698,1.01,Yes,,"A command-line port of the rar compression utility",Musikolo
+telegram-desktop-bin,1.9.14-1,650,4.10,,,"Official desktop version of Telegram messaging app - Static binaries",ItachiSan
+minecraft,latest-29,644,0.86,,,"An open-world game whose gameplay revolves around breaking and placing blocks",BombStrike
+google-chrome-dev,81.0.4044.17-1,635,1.52,,,"The popular and trusted web browser by Google (Dev Channel)",luzifer
+android-udev-git,20180715.r2.gd19fdc3-1,617,0.00,,,"Udev rules to connect Android devices to your linux box",robertfoster
+vivaldi,2.11.1811.38-1,614,8.78,,,"An advanced browser made with the power user in mind.",BlackIkeEagle
+jre,13.0.2-1,601,1.34,,,"Oracle Java Runtime Environment",dbermond
+nautilus-dropbox,2019.02.14-4,581,0.94,,,"Dropbox for Linux - Nautilus extension",TheChickenMan
+firefox-nightly,75.0a1.20200214-1,566,2.84,,,"Standalone Web Browser from Mozilla — Nightly build (en-US)",Archange
+sublime-text2,2.0.2-1,558,0.15,Yes,,"Sophisticated text editor for code, html and prose (legacy version)",carstene1ns
+downgrade,6.2.4-1,543,4.41,,,"Bash script for downgrading one or more packages to a version in your cache or the A.L.A.",brisbin33
+ttf-google-fonts-git,1:r1704.59afb78a-1,536,0.36,,,"TrueType fonts from the Google Fonts project (git version)",andrewSC
+profile-sync-daemon,6.35-1,527,3.93,Yes,,"Syncs browser profiles to tmpfs reducing SSD/HDD calls and speeding-up browsers.",graysky
+ncurses5-compat-libs,6.1-1,514,3.16,,,"System V Release 4.0 curses emulation library, ABI 5",Barthalion
+sublime-text-dev,3.3211-1,499,1.77,,,"Sophisticated text editor for code, html and prose - dev build",sender
+chromium-snapshot-bin,82.0-1,498,0.31,,,"The open-source project behind Google Chrome (Latest Snapshot)",mrxx
+zuki-themes,3.34_2-1,490,0.59,,,"Zuki themes for GNOME, Xfce and more.",m8D2
+plymouth,0.9.4-4,482,3.04,,,"A graphical boot splash screen with kernel mode-setting support",nullptr_t
+dropbox-cli,2019.02.14-3,471,0.19,Yes,,"Command line interface for Dropbox",frealgagu
+freetype2-infinality,2.10.0-4,469,0.00,,,"Font rasterization library with Infinality patches and custom settings.",SolarAquarion
+freetype2-docs-infinality,2.10.0-4,469,0.00,,,"Freetype documentation with Infinality patches and custom settings",SolarAquarion
+freetype2-demos-infinality,2.10.0-4,469,0.00,,,"Freetype tools and demos with Infinality patches and custom settings",SolarAquarion
+android-sdk-build-tools,r29.0.3-1,461,1.32,Yes,,"Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)",somekool
+adobe-air-sdk,2.6-10,454,0.10,,,"Adobe Air Software Development Kit and Runtime Environment",cavernico
+foxitreader,2.4.4.0911-4,444,1.54,,,"A fast, secure and complete PDF viewer",Muflone
+wps-office-mime,11.1.0.9080-2,432,3.13,,,"Mime files provided by Kingsoft Office (WPS Office)",Universebenzene
+wps-office,11.1.0.9080-2,432,3.13,,,"Kingsoft Office (WPS Office) is an office productivity suite",Universebenzene
+skypeforlinux-preview-bin,8.57.76.109-1,432,0.93,,,"Skype for Linux - Preview/Insider Version",bulletmark
+ttf-vista-fonts,1-9,430,2.08,,,"Microsoft Vista and Office 2007 True Type Fonts",mrxx
+eclipse-android,23.0.7-1,424,0.00,,,"Eclipse plugin for Android",mesmer
+linux-ck-headers,5.5.4-1,423,4.10,,,"Headers and scripts for building modules for Linux-ck kernel",graysky
+linux-ck,5.5.4-1,423,4.10,,,"The Linux-ck kernel and modules with the ck1 patchset featuring MuQSS CPU scheduler",graysky

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xml:lang="en" lang="en">
+  <head>
+    <title>AUR (en) - pacman-mirrorup</title>
+	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
+	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
+	<link rel='shortcut icon' href='/images/favicon.ico' />
+	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="A service to retrieve the best and latest Pacman mirror list based on user's geography" />
+  </head>
+	<body>
+		<div id="archnavbar" class="anb-aur">
+			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
+			<div id="archnavbarmenu">
+				<ul id="archnavbarlist">
+					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+				</ul>
+			</div>
+		</div><!-- #archnavbar -->
+
+		<div id="content">
+			<div id="lang_sub">
+				<form method="post" action="/packages/pacman-mirrorup/">
+					<fieldset>
+						<div>
+							<select name="setlang" id="id_setlang">
+		<option value="ar">العربية</option>
+<option value="ast">Asturianu</option>
+<option value="ca">Català</option>
+<option value="cs">Český</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="en" selected="selected">English</option>
+<option value="el">Ελληνικά</option>
+<option value="es">Español</option>
+<option value="es_419">Español (Latinoamérica)</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="he">עברית</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt_BR">Português (Brasil)</option>
+<option value="pt_PT">Português (Portugal)</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sr">Srpski</option>
+<option value="tr">Türkçe</option>
+<option value="uk">Українська</option>
+<option value="zh_CN">简体中文</option>
+<option value="zh_TW">正體中文</option>
+							</select>
+							<input type="submit" value="Go" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="archdev-navbar">
+				<ul>
+											<li><a href="/">Dashboard</a></li>
+						<li><a href="/packages/">Packages</a></li>
+																		<li><a href="/account/bpetlert/edit/"> My Account</a></li>
+												<li><a href="/logout/">Logout</a></li>
+									</ul>
+			</div><!-- #archdev-navbar -->
+			<!-- Start of main content -->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript">
+function collapseDependsList(list) {
+	list = $(list);
+	// Hide everything past a given limit. Don't do anything if we don't have
+	// enough items, or the link already exists.
+	var limit = 20,
+		linkid = list.attr('id') + 'link',
+		items = list.find('li').slice(limit);
+	if (items.length <= 1 || $('#' + linkid).length > 0) {
+		return;
+	}
+	items.hide();
+	list.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	// add link and wire it up to show the hidden items
+	$('#' + linkid).click(function(event) {
+		event.preventDefault();
+		list.find('li').show();
+		// remove the full <p/> node from the DOM
+		$(this).parent().remove();
+	});
+}
+
+function collapseComment(div) {
+	var linkid = div.attr('id') + 'link',
+		inner = div.find('div'),
+		height = inner.height(),
+		maxheight = 200;
+
+	if (height <= maxheight)
+		return;
+
+	inner.css({ 'overflow': 'hidden', 'height': maxheight + 'px' });
+	inner.addClass('collapsed');
+	inner.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	$('#' + linkid).click(function(event) {
+		var inner = $(this).parent().parent().find('div');
+		var newheight;
+
+		if (inner.hasClass('collapsed')) {
+			inner.css({ 'height': 'auto' });
+			newheight = inner.height();
+			inner.css({ 'height': maxheight });
+			$(this).text('Collapse');
+		} else {
+			newheight = maxheight;
+			$(this).text('Show More…');
+		}
+
+		inner.animate({ 'height': newheight });
+		inner.toggleClass('collapsed');
+		event.preventDefault();
+	});
+}
+
+$(document).ready(function() {
+	collapseDependsList("#pkgdepslist");
+	collapseDependsList("#pkgreqslist");
+	collapseDependsList("#pkgsrcslist");
+	$(".article-content").each(function() {
+		collapseComment($(this));
+	});
+});
+</script>
+
+
+<div id="pkglist-search" class="box filter-criteria">
+<h2>Search Criteria</h2>
+
+<form action='/packages/' method='get'>
+	<p><input type='hidden' name='O' value='0' /></p>
+
+	<fieldset>
+		<legend>Enter search criteria</legend>
+		<div>
+			<label for="id_method">Search by</label>
+			<select name='SeB'>
+												<option value="nd">Name, Description</option>
+																<option value="n">Name Only</option>
+																<option value="b">Package Base</option>
+																<option value="N">Exact Name</option>
+																<option value="B">Exact Package Base</option>
+																<option value="k">Keywords</option>
+																<option value="m">Maintainer</option>
+																<option value="c">Co-maintainer</option>
+																<option value="M">Maintainer, Co-maintainer</option>
+																<option value="s">Submitter</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_q">Keywords</label>
+			<input type='text' name='K' size='30' value="" maxlength='35'  />
+		</div>
+		<div>
+			<label for="id_out_of_date">Out of Date</label>
+			<select name='outdated'>
+												<option value=''>All</option>
+																<option value='on'>Flagged</option>
+																<option value='off'>Not Flagged</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_sort_by">Sort by</label>
+			<select name='SB'>
+												<option value='n'>Name</option>
+																<option value='v'>Votes</option>
+																<option value='p'>Popularity</option>
+																<option value='w'>Voted</option>
+																<option value='o'>Notify</option>
+																<option value='m'>Maintainer</option>
+																<option value='l'>Last modified</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_order_by">Sort order</label>
+			<select name='SO'>
+												<option value='a'>Ascending</option>
+																<option value='d'>Descending</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_per_page">Per page</label>
+			<select name='PP'>
+												<option value="50">50</option>
+																<option value="100">100</option>
+																<option value="250">250</option>
+											</select>
+		</div>
+		<div>
+			<label>&nbsp;</label>
+			<input type='submit' class='button' name='do_Search' value='Go' />
+			<input type='submit' class='button' name='do_Orphans' value='Orphans' />
+		</div>
+	</fieldset>
+</form>
+</div>
+<div id="pkgdetails" class="box">
+	<h2>Package Details: pacman-mirrorup 0.3.0-1</h2>
+
+	<div id="detailslinks" class="listing">
+	<div id="actionlist">
+		<h4>Package Actions</h4>
+		<ul class="small">
+			<li>
+				<a href="/cgit/aur.git/tree/PKGBUILD?h=pacman-mirrorup">View PKGBUILD</a> /
+				<a href="/cgit/aur.git/log/?h=pacman-mirrorup">View Changes</a>
+			</li>
+			<li><a href="/cgit/aur.git/snapshot/pacman-mirrorup.tar.gz">Download snapshot</a>
+			<li><a href="https://wiki.archlinux.org/index.php/Special:Search?search=pacman-mirrorup">Search wiki</a></li>
+			<li><span class="flagged"></span></li>
+						<li><a href="/pkgbase/pacman-mirrorup/flag/">Flag package out-of-date</a></li>
+
+						<li><form action="/pkgbase/pacman-mirrorup/vote/" method="post"><input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" /><input type="submit" class="button text-button" name="do_Vote" value="Vote for this package" /></form></li>
+
+						<li><form action="/pkgbase/pacman-mirrorup/unnotify/" method="post"><input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" /><input type="submit" class="button text-button" name="do_UnNotify" value="Disable notifications" /></form></li>
+
+						<li><a href="/pkgbase/pacman-mirrorup/comaintainers/">Manage Co-Maintainers</a></li>
+
+			<li><span class="flagged"></span></li>
+			<li><a href="/pkgbase/pacman-mirrorup/request/">Submit Request</a></li>
+
+
+						<li><form action="/pkgbase/pacman-mirrorup/disown/" method="post"><input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" /><input type="submit" class="button text-button" name="do_Disown" value="Disown Package" /></form></li>
+					</ul>
+	</div>
+</div>
+
+	<table id="pkginfo">
+		<tr>
+			<th>Git Clone URL: </th>
+			<td>
+				<a class="copy" href="https://aur.archlinux.org/pacman-mirrorup.git">https://aur.archlinux.org/pacman-mirrorup.git</a> (read-only, click to copy)
+								<br /> <a class="copy" href="ssh://aur@aur.archlinux.org/pacman-mirrorup.git">ssh://aur@aur.archlinux.org/pacman-mirrorup.git</a> (click to copy)
+							</td>
+		</tr>
+		<tr>
+			<th>Package Base: </th>
+			<td class="wrap"><a href="/pkgbase/pacman-mirrorup/">pacman-mirrorup</a></td>
+		</tr>
+		<tr>
+			<th>Description: </th>
+			<td class="wrap">A service to retrieve the best and latest Pacman mirror list based on user's geography</td>
+		</tr>
+		<tr>
+			<th>Upstream URL: </th>
+			<td><a href="https://github.com/bpetlert/pacman-mirrorup" title="Visit the website for pacman-mirrorup">https://github.com/bpetlert/pacman-mirrorup</a></td>
+		</tr>
+		<tr>
+			<th>Keywords: </th>
+			<td>
+				<form method="post" action="/pkgbase/pacman-mirrorup/">
+					<div>
+						<input type="hidden" name="action" value="do_SetKeywords" />
+												<input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" />
+												<input type="text" name="keywords" value="mirrorlist rankmirrors service systemd"/>
+						<input type="submit" value="Update"/>
+					</div>
+				</form>
+			</td>
+		</tr>
+				<tr>
+			<th>Licenses: </th>
+			<td class="wrap">
+								<span class="related">
+										MIT									</span>
+							</td>
+		</tr>
+								<tr>
+			<th>Conflicts: </th>
+			<td class="wrap relatedto">
+								<span class="related">
+										pacman-mirrorup									</span>
+							</td>
+		</tr>
+						<tr>
+			<th>Provides: </th>
+			<td class="wrap relatedto">
+								<span class="related">
+										pacman-mirrorup									</span>
+							</td>
+		</tr>
+						<tr>
+			<th>Submitter: </th>
+			<td><a href="/account/bpetlert" title="View account information for bpetlert">bpetlert</a></td>
+		</tr>
+		<tr>
+			<th>Maintainer: </th>
+			<td><a href="/account/bpetlert" title="View account information for bpetlert">bpetlert</a></td>
+		</tr>
+		<tr>
+			<th>Last Packager: </th>
+			<td><a href="/account/bpetlert" title="View account information for bpetlert">bpetlert</a></td>
+		</tr>
+		<tr>
+			<th>Votes: </th>
+						<td>1</td>
+					</tr>
+		<tr>
+			<th>Popularity: </th>
+			<td>0.74</td>
+		</tr>
+		<tr>
+			<th>First Submitted: </th>
+			<td>2020-02-15 20:28</td>
+		</tr>
+		<tr>
+			<th>Last Updated: </th>
+			<td>2020-02-15 20:28</td>
+		</tr>
+	</table>
+
+	<div id="metadata">
+		<div id="pkgdeps" class="listing">
+			<h3>Dependencies (3)</h3>
+			<ul id="pkgdepslist">
+	<li><a href="https://www.archlinux.org/packages/?q=systemd" title="View packages details for systemd">systemd</a> <span class="virtual-dep">(<a href="/packages/eudev-git/" title="View packages details for eudev-git">eudev-git</a>, <a href="/packages/systemd-cdown-git/" title="View packages details for systemd-cdown-git">systemd-cdown-git</a>, <a href="/packages/systemd-git/" title="View packages details for systemd-git">systemd-git</a>, <a href="/packages/systemd-light/" title="View packages details for systemd-light">systemd-light</a>, <a href="/packages/systemd-selinux/" title="View packages details for systemd-selinux">systemd-selinux</a>)</span></li>
+	<li>cargo <span class="virtual-dep">(<a href="/packages/cargo-standalone-git/" title="View packages details for cargo-standalone-git">cargo-standalone-git</a>, <a href="/packages/cargo-nightly-bin/" title="View packages details for cargo-nightly-bin">cargo-nightly-bin</a>, <a href="/packages/cargo-git/" title="View packages details for cargo-git">cargo-git</a>, <a href="/packages/rust-nightly-bin/" title="View packages details for rust-nightly-bin">rust-nightly-bin</a>, <a href="/packages/rust-bin/" title="View packages details for rust-bin">rust-bin</a>, <a href="/packages/rustup-git/" title="View packages details for rustup-git">rustup-git</a>, <a href="https://www.archlinux.org/packages/?q=rust" title="View packages details for rust">rust</a>, <a href="https://www.archlinux.org/packages/?q=rustup" title="View packages details for rustup">rustup</a>)</span> <em>(make)</em></li>
+	<li><a href="https://www.archlinux.org/packages/?q=rust" title="View packages details for rust">rust</a> <span class="virtual-dep">(<a href="/packages/rust-i586-git/" title="View packages details for rust-i586-git">rust-i586-git</a>, <a href="/packages/rust-git/" title="View packages details for rust-git">rust-git</a>, <a href="/packages/rust-mrustc/" title="View packages details for rust-mrustc">rust-mrustc</a>, <a href="/packages/rust-nightly-bin/" title="View packages details for rust-nightly-bin">rust-nightly-bin</a>, <a href="/packages/rust-bin/" title="View packages details for rust-bin">rust-bin</a>, <a href="/packages/rustup-git/" title="View packages details for rustup-git">rustup-git</a>, <a href="/packages/rust-nightly/" title="View packages details for rust-nightly">rust-nightly</a>, <a href="https://www.archlinux.org/packages/?q=rustup" title="View packages details for rustup">rustup</a>)</span> <em>(make)</em></li>
+			</ul>
+		</div>
+		<div id="pkgreqs" class="listing">
+			<h3>Required by (0)</h3>
+		</div>
+		<div id="pkgfiles" class="listing">
+			<h3>Sources (1)</h3>
+		</div>
+				<div>
+			<ul id="pkgsrcslist">
+										<li><a href="https://github.com/bpetlert/pacman-mirrorup/archive/0.3.0.tar.gz">pacman-mirrorup-0.3.0.tar.gz</a></li>
+								</ul>
+		</div>
+			</div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$('.copy').click(function(e) {
+		var tmp = $("<input>");
+		$("body").append(tmp);
+		tmp.val($(this).text()).select();
+		document.execCommand("copy");
+		tmp.remove();
+		e.preventDefault();
+	});
+});
+</script>
+<div id="generic-form" class="box">
+	<h2>Add Comment</h2>
+		<form action="/pkgbase/pacman-mirrorup/" method="post">
+		<fieldset>
+			<div>
+				<input type="hidden" name="action" value="do_AddComment" />
+				<input type="hidden" name="ID" value="149150" />
+								<input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" />
+			</div>
+			<p>
+				Git commit identifiers referencing commits in the AUR package repository and URLs are converted to links automatically.				<a href="https://daringfireball.net/projects/markdown/syntax">Markdown syntax</a> is partially supported.			</p>
+			<p>
+				<textarea id="id_comment" name="comment" cols="80" rows="10"></textarea>
+			</p>
+			<p>
+				<input type="submit" value="Add Comment" />
+							</p>
+		</fieldset>
+	</form>
+</div>
+
+			<!-- End of main content -->
+
+			<div id="footer">
+								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v4.8.0">v4.8.0</a></p>
+								<p>Copyright &copy; 2004-2020 aurweb Development Team.</p>
+				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+			</div>
+		</div>
+	</body>
+</html>

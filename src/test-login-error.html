@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xml:lang="en" lang="en">
+  <head>
+    <title>AUR (en) - AUR Login</title>
+	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
+	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
+	<link rel='shortcut icon' href='/images/favicon.ico' />
+	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+	<body>
+		<div id="archnavbar" class="anb-aur">
+			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
+			<div id="archnavbarmenu">
+				<ul id="archnavbarlist">
+					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+				</ul>
+			</div>
+		</div><!-- #archnavbar -->
+
+		<div id="content">
+			<div id="lang_sub">
+				<form method="post" action="/login?remember_me=on&amp;user=test">
+					<fieldset>
+						<div>
+							<select name="setlang" id="id_setlang">
+		<option value="ar">العربية</option>
+<option value="ast">Asturianu</option>
+<option value="ca">Català</option>
+<option value="cs">Český</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="en" selected="selected">English</option>
+<option value="el">Ελληνικά</option>
+<option value="es">Español</option>
+<option value="es_419">Español (Latinoamérica)</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="he">עברית</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt_BR">Português (Brasil)</option>
+<option value="pt_PT">Português (Portugal)</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sr">Srpski</option>
+<option value="tr">Türkçe</option>
+<option value="uk">Українська</option>
+<option value="zh_CN">简体中文</option>
+<option value="zh_TW">正體中文</option>
+							</select>
+							<input type="submit" value="Go" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="archdev-navbar">
+				<ul>
+											<li><a href="/">AUR Home</a></li>
+						<li><a href="/packages/">Packages</a></li>
+						<li><a href="/register/">Register</a></li>
+												<li><a href="/login/">Login</a></li>
+															</ul>
+			</div><!-- #archdev-navbar -->
+			<!-- Start of main content -->
+
+<div id="dev-login" class="box">
+	<h2>AUR Login</h2>
+		<form method="post" action="/login">
+		<fieldset>
+			<legend>Enter login credentials</legend>
+						<ul class="errorlist"><li>Bad username or password.</li></ul>
+						<p>
+				<label for="id_username">User name or primary email address:</label>
+				<input id="id_username" type="text" name="user" size="30" maxlength="254" value="" autofocus="autofocus" />
+			</p>
+			<p>
+				<label for="id_password">Password:</label>
+				<input id="id_password" type="password" name="passwd" size="30" />
+			</p>
+			<p>
+				<input type="checkbox" name="remember_me" id="id_remember_me" />
+				<label for="id_remember_me">Remember me</label>
+			</p>
+			<p>
+				<input type="submit" class="button" value="Login" />
+				<a href="/passreset/">[Forgot Password]</a>
+							</p>
+		</fieldset>
+	</form>
+	</div>
+
+			<!-- End of main content -->
+
+			<div id="footer">
+								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v4.8.0">v4.8.0</a></p>
+								<p>Copyright &copy; 2004-2020 aurweb Development Team.</p>
+				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xml:lang="en" lang="en">
+  <head>
+    <title>AUR (en) - yay</title>
+	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
+	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
+	<link rel='shortcut icon' href='/images/favicon.ico' />
+	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="Yet another yogurt. Pacman wrapper and AUR helper written in go." />
+  </head>
+	<body>
+		<div id="archnavbar" class="anb-aur">
+			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
+			<div id="archnavbarmenu">
+				<ul id="archnavbarlist">
+					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+				</ul>
+			</div>
+		</div><!-- #archnavbar -->
+
+		<div id="content">
+			<div id="lang_sub">
+				<form method="post" action="/packages/yay/">
+					<fieldset>
+						<div>
+							<select name="setlang" id="id_setlang">
+		<option value="ar">العربية</option>
+<option value="ast">Asturianu</option>
+<option value="ca">Català</option>
+<option value="cs">Český</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="en" selected="selected">English</option>
+<option value="el">Ελληνικά</option>
+<option value="es">Español</option>
+<option value="es_419">Español (Latinoamérica)</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="he">עברית</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt_BR">Português (Brasil)</option>
+<option value="pt_PT">Português (Portugal)</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sr">Srpski</option>
+<option value="tr">Türkçe</option>
+<option value="uk">Українська</option>
+<option value="zh_CN">简体中文</option>
+<option value="zh_TW">正體中文</option>
+							</select>
+							<input type="submit" value="Go" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="archdev-navbar">
+				<ul>
+											<li><a href="/">Dashboard</a></li>
+						<li><a href="/packages/">Packages</a></li>
+																		<li><a href="/account/bpetlert/edit/"> My Account</a></li>
+												<li><a href="/logout/">Logout</a></li>
+									</ul>
+			</div><!-- #archdev-navbar -->
+			<!-- Start of main content -->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript">
+function collapseDependsList(list) {
+	list = $(list);
+	// Hide everything past a given limit. Don't do anything if we don't have
+	// enough items, or the link already exists.
+	var limit = 20,
+		linkid = list.attr('id') + 'link',
+		items = list.find('li').slice(limit);
+	if (items.length <= 1 || $('#' + linkid).length > 0) {
+		return;
+	}
+	items.hide();
+	list.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	// add link and wire it up to show the hidden items
+	$('#' + linkid).click(function(event) {
+		event.preventDefault();
+		list.find('li').show();
+		// remove the full <p/> node from the DOM
+		$(this).parent().remove();
+	});
+}
+
+function collapseComment(div) {
+	var linkid = div.attr('id') + 'link',
+		inner = div.find('div'),
+		height = inner.height(),
+		maxheight = 200;
+
+	if (height <= maxheight)
+		return;
+
+	inner.css({ 'overflow': 'hidden', 'height': maxheight + 'px' });
+	inner.addClass('collapsed');
+	inner.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	$('#' + linkid).click(function(event) {
+		var inner = $(this).parent().parent().find('div');
+		var newheight;
+
+		if (inner.hasClass('collapsed')) {
+			inner.css({ 'height': 'auto' });
+			newheight = inner.height();
+			inner.css({ 'height': maxheight });
+			$(this).text('Collapse');
+		} else {
+			newheight = maxheight;
+			$(this).text('Show More…');
+		}
+
+		inner.animate({ 'height': newheight });
+		inner.toggleClass('collapsed');
+		event.preventDefault();
+	});
+}
+
+$(document).ready(function() {
+	collapseDependsList("#pkgdepslist");
+	collapseDependsList("#pkgreqslist");
+	collapseDependsList("#pkgsrcslist");
+	$(".article-content").each(function() {
+		collapseComment($(this));
+	});
+});
+</script>
+
+
+<div id="pkglist-search" class="box filter-criteria">
+<h2>Search Criteria</h2>
+
+<form action='/packages/' method='get'>
+	<p><input type='hidden' name='O' value='0' /></p>
+
+	<fieldset>
+		<legend>Enter search criteria</legend>
+		<div>
+			<label for="id_method">Search by</label>
+			<select name='SeB'>
+												<option value="nd">Name, Description</option>
+																<option value="n">Name Only</option>
+																<option value="b">Package Base</option>
+																<option value="N">Exact Name</option>
+																<option value="B">Exact Package Base</option>
+																<option value="k">Keywords</option>
+																<option value="m">Maintainer</option>
+																<option value="c">Co-maintainer</option>
+																<option value="M">Maintainer, Co-maintainer</option>
+																<option value="s">Submitter</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_q">Keywords</label>
+			<input type='text' name='K' size='30' value="" maxlength='35'  />
+		</div>
+		<div>
+			<label for="id_out_of_date">Out of Date</label>
+			<select name='outdated'>
+												<option value=''>All</option>
+																<option value='on'>Flagged</option>
+																<option value='off'>Not Flagged</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_sort_by">Sort by</label>
+			<select name='SB'>
+												<option value='n'>Name</option>
+																<option value='v'>Votes</option>
+																<option value='p'>Popularity</option>
+																<option value='w'>Voted</option>
+																<option value='o'>Notify</option>
+																<option value='m'>Maintainer</option>
+																<option value='l'>Last modified</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_order_by">Sort order</label>
+			<select name='SO'>
+												<option value='a'>Ascending</option>
+																<option value='d'>Descending</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_per_page">Per page</label>
+			<select name='PP'>
+												<option value="50">50</option>
+																<option value="100">100</option>
+																<option value="250">250</option>
+											</select>
+		</div>
+		<div>
+			<label>&nbsp;</label>
+			<input type='submit' class='button' name='do_Search' value='Go' />
+			<input type='submit' class='button' name='do_Orphans' value='Orphans' />
+		</div>
+	</fieldset>
+</form>
+</div>
+<div id="pkgdetails" class="box">
+	<h2>Package Details: yay 9.4.6-2</h2>
+
+	<div id="detailslinks" class="listing">
+	<div id="actionlist">
+		<h4>Package Actions</h4>
+		<ul class="small">
+			<li>
+				<a href="/cgit/aur.git/tree/PKGBUILD?h=yay">View PKGBUILD</a> /
+				<a href="/cgit/aur.git/log/?h=yay">View Changes</a>
+			</li>
+			<li><a href="/cgit/aur.git/snapshot/yay.tar.gz">Download snapshot</a>
+			<li><a href="https://wiki.archlinux.org/index.php/Special:Search?search=yay">Search wiki</a></li>
+			<li><span class="flagged"></span></li>
+						<li><a href="/pkgbase/yay/flag/">Flag package out-of-date</a></li>
+
+						<li><form action="/pkgbase/yay/unvote/" method="post"><input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" /><input type="submit" class="button text-button" name="do_UnVote" value="Remove vote" /></form></li>
+
+						<li><form action="/pkgbase/yay/notify/" method="post"><input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" /><input type="submit" class="button text-button" name="do_Notify" value="Enable notifications" /></form></li>
+
+
+			<li><span class="flagged"></span></li>
+			<li><a href="/pkgbase/yay/request/">Submit Request</a></li>
+
+
+					</ul>
+	</div>
+</div>
+
+	<table id="pkginfo">
+		<tr>
+			<th>Git Clone URL: </th>
+			<td>
+				<a class="copy" href="https://aur.archlinux.org/yay.git">https://aur.archlinux.org/yay.git</a> (read-only, click to copy)
+							</td>
+		</tr>
+		<tr>
+			<th>Package Base: </th>
+			<td class="wrap"><a href="/pkgbase/yay/">yay</a></td>
+		</tr>
+		<tr>
+			<th>Description: </th>
+			<td class="wrap">Yet another yogurt. Pacman wrapper and AUR helper written in go.</td>
+		</tr>
+		<tr>
+			<th>Upstream URL: </th>
+			<td><a href="https://github.com/Jguer/yay" title="Visit the website for yay">https://github.com/Jguer/yay</a></td>
+		</tr>
+		<tr>
+			<th>Keywords: </th>
+			<td>
+<a class="keyword" href="/packages/?K=arm&amp;SB=p">arm</a>
+<a class="keyword" href="/packages/?K=AUR&amp;SB=p">AUR</a>
+<a class="keyword" href="/packages/?K=go&amp;SB=p">go</a>
+<a class="keyword" href="/packages/?K=helper&amp;SB=p">helper</a>
+<a class="keyword" href="/packages/?K=pacman&amp;SB=p">pacman</a>
+<a class="keyword" href="/packages/?K=wrapper&amp;SB=p">wrapper</a>
+<a class="keyword" href="/packages/?K=x86&amp;SB=p">x86</a>
+			</td>
+		</tr>
+				<tr>
+			<th>Licenses: </th>
+			<td class="wrap">
+								<span class="related">
+										GPL									</span>
+							</td>
+		</tr>
+												<tr>
+			<th>Submitter: </th>
+			<td><a href="/account/jguer" title="View account information for jguer">jguer</a></td>
+		</tr>
+		<tr>
+			<th>Maintainer: </th>
+			<td><a href="/account/jguer" title="View account information for jguer">jguer</a></td>
+		</tr>
+		<tr>
+			<th>Last Packager: </th>
+			<td><a href="/account/jguer" title="View account information for jguer">jguer</a></td>
+		</tr>
+		<tr>
+			<th>Votes: </th>
+						<td>977</td>
+					</tr>
+		<tr>
+			<th>Popularity: </th>
+			<td>59.21</td>
+		</tr>
+		<tr>
+			<th>First Submitted: </th>
+			<td>2016-10-06 00:20</td>
+		</tr>
+		<tr>
+			<th>Last Updated: </th>
+			<td>2020-03-01 06:37</td>
+		</tr>
+	</table>
+
+	<div id="metadata">
+		<div id="pkgdeps" class="listing">
+			<h3>Dependencies (4)</h3>
+			<ul id="pkgdepslist">
+	<li><a href="https://www.archlinux.org/packages/?q=git" title="View packages details for git">git</a> <span class="virtual-dep">(<a href="/packages/git-git/" title="View packages details for git-git">git-git</a>)</span></li>
+	<li><a href="https://www.archlinux.org/packages/?q=sudo" title="View packages details for sudo">sudo</a> <span class="virtual-dep">(<a href="/packages/nosudo/" title="View packages details for nosudo">nosudo</a>, <a href="/packages/sudo-masochist/" title="View packages details for sudo-masochist">sudo-masochist</a>, <a href="/packages/sudo-hg/" title="View packages details for sudo-hg">sudo-hg</a>, <a href="/packages/sudo-selinux/" title="View packages details for sudo-selinux">sudo-selinux</a>)</span></li>
+	<li><a href="https://www.archlinux.org/packages/?q=pacman" title="View packages details for pacman">pacman</a>&gt;=5.2 <span class="virtual-dep">(<a href="/packages/pacman-git/" title="View packages details for pacman-git">pacman-git</a>)</span></li>
+	<li><a href="https://www.archlinux.org/packages/?q=go" title="View packages details for go">go</a> <span class="virtual-dep">(<a href="/packages/gcc-go-git/" title="View packages details for gcc-go-git">gcc-go-git</a>, <a href="/packages/go-tip/" title="View packages details for go-tip">go-tip</a>, <a href="https://www.archlinux.org/packages/?q=gcc-go" title="View packages details for gcc-go">gcc-go</a>, <a href="https://www.archlinux.org/packages/?q=go-pie" title="View packages details for go-pie">go-pie</a>)</span> <em>(make)</em></li>
+			</ul>
+		</div>
+		<div id="pkgreqs" class="listing">
+			<h3>Required by (7)</h3>
+			<ul id="pkgreqslist">
+								<li><a href="/packages/aconfmgr-git/" title="View packages details for aconfmgr-git">aconfmgr-git</a> <em>(optional)</em></li>
+								<li><a href="/packages/cleanupdate-git/" title="View packages details for cleanupdate-git">cleanupdate-git</a> <em>(optional)</em></li>
+								<li><a href="/packages/octopi-dev/" title="View packages details for octopi-dev">octopi-dev</a> <em>(optional)</em></li>
+								<li><a href="/packages/pac-util/" title="View packages details for pac-util">pac-util</a> <em>(optional)</em></li>
+								<li><a href="/packages/pac-util-git/" title="View packages details for pac-util-git">pac-util-git</a> <em>(optional)</em></li>
+								<li><a href="/packages/puyo/" title="View packages details for puyo">puyo</a></li>
+								<li><a href="/packages/repkg/" title="View packages details for repkg">repkg</a> <em>(optional)</em></li>
+							</ul>
+		</div>
+		<div id="pkgfiles" class="listing">
+			<h3>Sources (1)</h3>
+		</div>
+				<div>
+			<ul id="pkgsrcslist">
+										<li><a href="https://github.com/Jguer/yay/archive/v9.4.6.tar.gz">yay-9.4.6.tar.gz</a></li>
+								</ul>
+		</div>
+			</div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$('.copy').click(function(e) {
+		var tmp = $("<input>");
+		$("body").append(tmp);
+		tmp.val($(this).text()).select();
+		document.execCommand("copy");
+		tmp.remove();
+		e.preventDefault();
+	});
+});
+</script>
+<div id="generic-form" class="box">
+	<h2>Add Comment</h2>
+		<form action="/pkgbase/yay/" method="post">
+		<fieldset>
+			<div>
+				<input type="hidden" name="action" value="do_AddComment" />
+				<input type="hidden" name="ID" value="115973" />
+								<input type="hidden" name="token" value="FAKETOKENFAKETOKENFAKETOKENFAKET" />
+			</div>
+			<p>
+				Git commit identifiers referencing commits in the AUR package repository and URLs are converted to links automatically.				<a href="https://daringfireball.net/projects/markdown/syntax">Markdown syntax</a> is partially supported.			</p>
+			<p>
+				<textarea id="id_comment" name="comment" cols="80" rows="10"></textarea>
+			</p>
+			<p>
+				<input type="submit" value="Add Comment" />
+									<span class="comment-enable-notifications">
+						<input type="checkbox" name="enable_notifications" id="id_enable_notifications" />
+						<label for="id_enable_notifications">Enable notifications</label>
+					</span>
+							</p>
+		</fieldset>
+	</form>
+</div>
+
+
+<div class="comments package-comments">
+	<div class="comments-header">
+		<h3>
+																	<span class="text">Pinned Comments</span>
+					<span class="arrow"></span>
+									</h3>
+
+			</div>
+
+					<h4 id="pinned-713049" class="comment-header">
+			<a href="/account/jguer" title="View account information for jguer">jguer</a> commented on <a href="#pinned-713049" class="date">2019-10-23 15:36</a> <span class="edited">(edited on 2019-10-23 15:45 by <a href="/account/jguer" title="View account information for jguer">jguer</a>)</span>
+
+
+
+					</h4>
+		<div id="pinned-713049-content" class="article-content">
+			<div>
+								<p>Having issues upgrading yay and pacman at the same time? Here is the proposed workaround for now.</p>
+<pre><code>yay -S yay-bin
+sudo pacman -Syu
+yay -S yay
+</code></pre>
+
+<p>yay-bin is a binary ready package with yay already compiled against v5.2, it does not require go to build.
+<a href="https://github.com/Jguer/yay/issues/1084">https://github.com/Jguer/yay/issues/1084</a></p>							</div>
+		</div>
+					<h4 id="pinned-690375" class="comment-header">
+			<a href="/account/jguer" title="View account information for jguer">jguer</a> commented on <a href="#pinned-690375" class="date">2019-04-16 21:08</a>
+
+
+
+					</h4>
+		<div id="pinned-690375-content" class="article-content">
+			<div>
+								<p>I cannot delete the spam comments appearing regularly in this page, which has also led me to disable notifications from here. I remind that the best way to receive support or report a problem is through the Upstream URL.</p>							</div>
+		</div>
+	</div>
+
+<script>
+$(document).ready(function() {
+	$('.edit-comment').click(function () {
+		var parent_element = this.parentElement,
+			parent_id = parent_element.id,
+			comment_id = parent_id.substr(parent_id.indexOf('-') + 1),
+			edit_form = $(parent_element).next(),
+			_this = $(this);
+		add_busy_indicator(_this);
+		$.getJSON('/rpc', {
+			type: 'get-comment-form',
+			arg: comment_id,
+			base_id: 115973,
+			pkgbase_name: "yay"		}, function (data) {
+			remove_busy_indicator(_this);
+			if (data.success) {
+				edit_form.html(data.form);
+				edit_form.find('textarea').focus();
+			} else {
+				alert(data.error);
+			}
+		});
+		return false;
+	});
+
+	function add_busy_indicator(sibling) {
+		sibling.after('<img src="/images/ajax-loader.gif" class="ajax-loader" width="16" height="11" alt="Busy…" />');
+	}
+
+	function remove_busy_indicator(sibling) {
+		sibling.next().remove();
+	}
+});
+</script>
+
+
+<div class="comments package-comments">
+	<div class="comments-header">
+		<h3>
+												<span class="text">Latest Comments</span>
+					<span class="arrow"></span>
+									</h3>
+
+					<p class="comments-header-nav">
+															<span class="page">1</span>
+																											<a class="page" href="/pkgbase/yay/?O=10&amp;PP=10">2</a>
+																																	<a class="page" href="/pkgbase/yay/?O=20&amp;PP=10">3</a>
+																																	<a class="page" href="/pkgbase/yay/?O=30&amp;PP=10">4</a>
+																																	<a class="page" href="/pkgbase/yay/?O=40&amp;PP=10">5</a>
+																																	<a class="page" href="/pkgbase/yay/?O=50&amp;PP=10">6</a>
+																										<span class="page">... </span>
+																											<a class="page" href="/pkgbase/yay/?O=10&amp;PP=10">Next &rsaquo;</a>
+																																	<a class="page" href="/pkgbase/yay/?O=110&amp;PP=10">Last &raquo;</a>
+																		</p>
+			</div>
+
+					<h4 id="comment-731633" class="comment-header">
+			<a href="/account/MagicAndWires" title="View account information for MagicAndWires">MagicAndWires</a> commented on <a href="#comment-731633" class="date">2020-03-01 09:19</a>
+
+
+
+					</h4>
+		<div id="comment-731633-content" class="article-content">
+			<div>
+								<p>Cheers! A final small change would be to change the trimpath  flags from <code>$PWD</code> to <code>$srcdir</code>, in order to clean up leftover references to <code>$GOPATH</code> from the binary.</p>							</div>
+		</div>
+					<h4 id="comment-731624" class="comment-header">
+			<a href="/account/chungy" title="View account information for chungy">chungy</a> commented on <a href="#comment-731624" class="date">2020-03-01 07:35</a>
+
+
+
+					</h4>
+		<div id="comment-731624-content" class="article-content">
+			<div>
+								<p>Fails to build with gccgo:</p>
+<pre><code>==&gt; Starting build()...
+go build -v -mod=mod -ldflags '-s -w -linkmode external -extldflags &quot;-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now&quot; -X &quot;main.version=9.4.6&quot;' -modcacherw -gcflags all=-trimpath=/home/chungy/.cache/yay/yay/src/yay-9.4.6 -asmflags all=-trimpath=/home/chungy/.cache/yay/yay/src/yay-9.4.6 -o yay
+flag provided but not defined: -modcacherw
+usage: go build [-o output] [-i] [build flags] [packages]
+Run 'go help build' for details.
+make: *** [Makefile:49: yay] Error 2
+</code></pre>							</div>
+		</div>
+					<h4 id="comment-731597" class="comment-header">
+			<a href="/account/MagicAndWires" title="View account information for MagicAndWires">MagicAndWires</a> commented on <a href="#comment-731597" class="date">2020-03-01 02:34</a>
+
+
+
+					</h4>
+		<div id="comment-731597-content" class="article-content">
+			<div>
+								<p>Currently go dependencies are currently still stored in the default GOPATH, (usually a <code>go</code> directory in <code>$HOME</code>). </p>
+<p>Please provide a custom <code>$GOPATH</code> variable to avoid contaminating home folders and building outside of srcdir.</p>							</div>
+		</div>
+					<h4 id="comment-731434" class="comment-header">
+			<a href="/account/mvertes" title="View account information for mvertes">mvertes</a> commented on <a href="#comment-731434" class="date">2020-02-28 23:59</a>
+
+
+
+					</h4>
+		<div id="comment-731434-content" class="article-content">
+			<div>
+								<p>Please add 'arm' to supported arch targets. Tested ok on a Tonido2.</p>							</div>
+		</div>
+					<h4 id="comment-731358" class="comment-header">
+			<a href="/account/surf.bluecrab" title="View account information for surf.bluecrab">surf.bluecrab</a> commented on <a href="#comment-731358" class="date">2020-02-28 11:06</a> <span class="edited">(edited on 2020-02-28 11:22 by <a href="/account/surf.bluecrab" title="View account information for surf.bluecrab">surf.bluecrab</a>)</span>
+
+
+
+					</h4>
+		<div id="comment-731358-content" class="article-content">
+			<div>
+								<p>Problem with go too:</p>
+<pre><code>
+==&gt; Making package: yay 9.4.5-1 (Fri 28 Feb 2020 12:02:50 AM)
+==&gt; Checking runtime dependencies...
+==&gt; Checking buildtime dependencies...
+==&gt; Retrieving sources...
+  -&gt; Found yay-9.4.5.tar.gz
+==&gt; Validating source files with sha1sums...
+    yay-9.4.5.tar.gz ... Passed
+==&gt; Removing existing $srcdir/ directory...
+==&gt; Extracting sources...
+  -&gt; Extracting yay-9.4.5.tar.gz with bsdtar
+==&gt; Sources are ready.
+==&gt; Making package: yay 9.4.5-1 (Fri 28 Feb 2020 12:02:56 AM)
+==&gt; Checking runtime dependencies...
+==&gt; Checking buildtime dependencies...
+==&gt; WARNING: Using existing $srcdir/ tree
+==&gt; Starting build()...
+go build -v -mod=vendor -ldflags '-s -w -linkmode external -extldflags "-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now" -X "main.version=9.4.5"' -gcflags all=-trimpath=/tmp/makepkg/yay/src/yay-9.4.5 -asmflags all=-trimpath=/tmp/makepkg/yay/src/yay-9.4.5 -o yay
+/usr/lib/go/src/internal/reflectlite/value.go:8:2: read /usr/lib/go/src/runtime/mgclarge.go: unexpected NUL in input
+/usr/lib/go/src/internal/syscall/unix/at.go:10:2: read /usr/lib/go/src/syscall/tables_nacljs.go: unexpected NUL in input
+/usr/lib/go/src/crypto/tls/key_schedule.go:16:2: read /usr/lib/go/src/vendor/golang.org/x/crypto/curve25519/ladderstep_amd64.s: unexpected NUL in input
+make: *** [Makefile:47: yay] Error 1
+==&gt; ERROR: A failure occurred in build().
+    Aborting...
+Error making: yay
+
+</code></pre>
+
+<p>Update:</p>
+<p>I uninstalled go then manualy removed * from /usr/lib/go then resintalled go and yay.  Seems to have fixed the problem.</p>							</div>
+		</div>
+					<h4 id="comment-731265" class="comment-header">
+			<a href="/account/jguer" title="View account information for jguer">jguer</a> commented on <a href="#comment-731265" class="date">2020-02-28 00:07</a>
+
+
+
+					</h4>
+		<div id="comment-731265-content" class="article-content">
+			<div>
+								<p>probably because of the new go version, I'll take a look at it</p>							</div>
+		</div>
+					<h4 id="comment-731256" class="comment-header">
+			<a href="/account/leanhtai01" title="View account information for leanhtai01">leanhtai01</a> commented on <a href="#comment-731256" class="date">2020-02-27 23:12</a>
+
+
+
+					</h4>
+		<div id="comment-731256-content" class="article-content">
+			<div>
+								<p>Having issues installing yay:
+</p><pre><code>
+==&gt; Making package: yay 9.4.4-1 (Thu 27 Feb 2020 11:10:31 PM +07)
+==&gt; Checking runtime dependencies...
+==&gt; Checking buildtime dependencies...
+==&gt; Retrieving sources...
+  -&gt; Found yay-9.4.4.tar.gz
+==&gt; Validating source files with sha1sums...
+    yay-9.4.4.tar.gz ... Passed
+==&gt; Extracting sources...
+  -&gt; Extracting yay-9.4.4.tar.gz with bsdtar
+==&gt; Removing existing $pkgdir/ directory...
+==&gt; Starting build()...
+go build -v -mod=vendor -ldflags '-s -w -linkmode external -extldflags "-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now" -X "main.version=9.4.4"' -gcflags all=-trimpath=/home/leanhtai01/Downloads/yay/src/yay-9.4.4 -asmflags all=-trimpath=/home/leanhtai01/Downloads/yay/src/yay-9.4.4 -o yay
+go: inconsistent vendoring in /home/leanhtai01/Downloads/yay/src/yay-9.4.4:
+    github.com/Jguer/go-alpm@v0.0.0-20191122171459-5cffc6e8fc69: is explicitly required in go.mod, but vendor/modules.txt indicates github.com/Jguer/go-alpm@v0.0.0-20191021114528-e11e8a60f385
+    github.com/mikkeloscar/aur@v0.0.0-20191216074712-ebecb34b95b4: is explicitly required in go.mod, but vendor/modules.txt indicates github.com/mikkeloscar/aur@v0.0.0-20190912174111-183f80a38525<p></p>
+</code><p><code>run 'go mod vendor' to sync, or use -mod=mod or -mod=readonly to ignore the vendor directory
+make: *** [Makefile:47: yay] Error 1
+==&gt; ERROR: A failure occurred in build().
+    Aborting...
+</code></p></pre><p></p>							</div>
+		</div>
+					<h4 id="comment-730667" class="comment-header">
+			<a href="/account/aniketd" title="View account information for aniketd">aniketd</a> commented on <a href="#comment-730667" class="date">2020-02-24 14:29</a> <span class="edited">(edited on 2020-02-24 14:31 by <a href="/account/aniketd" title="View account information for aniketd">aniketd</a>)</span>
+
+
+
+					</h4>
+		<div id="comment-730667-content" class="article-content">
+			<div>
+								<p><code>nerd-fonts-fantasque-sans-mono</code> package and other packages in the <code>nerd</code> family including <code>fira</code> etc, are no longer verifying correctly.</p>
+<pre><code>❯ yay -S nerd-fonts-fantasque-sans-mono
+:: Checking for conflicts...
+:: Checking for inner conflicts...
+[Aur: 1]  nerd-fonts-fantasque-sans-mono-2.1.0-1
+
+  1 nerd-fonts-fantasque-sans-mono           (Build Files Exist)
+==&gt; Packages to cleanBuild?
+==&gt; [N]one [A]ll [Ab]ort [I]nstalled [No]tInstalled or (1 2 3, 1-3, ^4)
+==&gt;
+:: PKGBUILD up to date, Skipping (1/1): nerd-fonts-fantasque-sans-mono
+  1 nerd-fonts-fantasque-sans-mono           (Build Files Exist)
+==&gt; Diffs to show?
+==&gt; [N]one [A]ll [Ab]ort [I]nstalled [No]tInstalled or (1 2 3, 1-3, ^4)
+==&gt;
+:: Parsing SRCINFO (1/1): nerd-fonts-fantasque-sans-mono
+
+==&gt; Making package: nerd-fonts-fantasque-sans-mono 2.1.0-1 (Sun 23 Feb 2020 08:27:56 PM IST)
+==&gt; Retrieving sources...
+  -&gt; Found FantasqueSansMono.zip
+  -&gt; Found LICENSE
+==&gt; Validating source files with sha1sums...
+    FantasqueSansMono.zip ... FAILED
+    LICENSE ... Passed
+==&gt; ERROR: One or more files did not pass the validity check!
+Error downloading sources: nerd-fonts-fantasque-sans-mono
+</code></pre>
+
+<p>The same package is installed without problems using the <code>aura</code> package manager</p>
+<pre><code>❯ sudo aura -A nerd-fonts-fantasque-sans-mono
+[sudo] password for aniketd:
+aura &gt;&gt;= Determining dependencies...
+aura &gt;&gt;= AUR Packages:
+nerd-fonts-fantasque-sans-mono
+aura &gt;&gt;= Continue? [Y/n]
+loading packages...
+warning: nerd-fonts-fantasque-sans-mono-2.1.0-1 is up to date -- reinstalling
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) nerd-fonts-fantasque-sans-mono-2.1.0-1
+
+Total Installed Size:  7.55 MiB
+Net Upgrade Size:      0.00 MiB
+
+:: Proceed with installation? [Y/n]
+(1/1) checking keys in keyring                                                                                                                  [########################################################################################] 100%
+(1/1) checking package integrity                                                                                                                [########################################################################################] 100%
+(1/1) loading package files                                                                                                                     [########################################################################################] 100%
+(1/1) checking for file conflicts                                                                                                               [########################################################################################] 100%
+(1/1) checking available disk space                                                                                                             [########################################################################################] 100%
+:: Processing package changes...
+(1/1) reinstalling nerd-fonts-fantasque-sans-mono                                                                                               [########################################################################################] 100%
+:: Running post-transaction hooks...
+(1/4) Arming ConditionNeedsUpdate...
+(2/4) Updating fontconfig cache...
+(3/4) Updating 32-bit fontconfig cache...
+(4/4) Updating X fontdir indices...
+</code></pre>							</div>
+		</div>
+					<h4 id="comment-729241" class="comment-header">
+			<a href="/account/redfanglicker" title="View account information for redfanglicker">redfanglicker</a> commented on <a href="#comment-729241" class="date">2020-02-14 22:18</a>
+
+
+
+					</h4>
+		<div id="comment-729241-content" class="article-content">
+			<div>
+								<p>I am not able to upgrade development packages, shows cannot rm permission denied when trying to remove cache of it </p>							</div>
+		</div>
+					<h4 id="comment-725930" class="comment-header">
+			<a href="/account/editicalu" title="View account information for editicalu">editicalu</a> commented on <a href="#comment-725930" class="date">2020-01-22 22:03</a>
+
+
+
+					</h4>
+		<div id="comment-725930-content" class="article-content">
+			<div>
+								<p>@hugo you need to install base-devel. This is assumed hence make is not a dependency.</p>							</div>
+		</div>
+	</div>
+
+<script>
+$(document).ready(function() {
+	$('.edit-comment').click(function () {
+		var parent_element = this.parentElement,
+			parent_id = parent_element.id,
+			comment_id = parent_id.substr(parent_id.indexOf('-') + 1),
+			edit_form = $(parent_element).next(),
+			_this = $(this);
+		add_busy_indicator(_this);
+		$.getJSON('/rpc', {
+			type: 'get-comment-form',
+			arg: comment_id,
+			base_id: 115973,
+			pkgbase_name: "yay"		}, function (data) {
+			remove_busy_indicator(_this);
+			if (data.success) {
+				edit_form.html(data.form);
+				edit_form.find('textarea').focus();
+			} else {
+				alert(data.error);
+			}
+		});
+		return false;
+	});
+
+	function add_busy_indicator(sibling) {
+		sibling.after('<img src="/images/ajax-loader.gif" class="ajax-loader" width="16" height="11" alt="Busy…" />');
+	}
+
+	function remove_busy_indicator(sibling) {
+		sibling.next().remove();
+	}
+});
+</script>
+
+			<!-- End of main content -->
+
+			<div id="footer">
+								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v4.8.0">v4.8.0</a></p>
+								<p>Copyright &copy; 2004-2020 aurweb Development Team.</p>
+				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+			</div>
+		</div>
+	</body>
+</html>

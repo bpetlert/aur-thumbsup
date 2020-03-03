@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xml:lang="en" lang="en">
+  <head>
+    <title>AUR (en) - Dashboard</title>
+	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
+	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
+	<link rel='shortcut icon' href='/images/favicon.ico' />
+	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+	<body>
+		<div id="archnavbar" class="anb-aur">
+			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
+			<div id="archnavbarmenu">
+				<ul id="archnavbarlist">
+					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+				</ul>
+			</div>
+		</div><!-- #archnavbar -->
+
+		<div id="content">
+			<div id="lang_sub">
+				<form method="post" action="/">
+					<fieldset>
+						<div>
+							<select name="setlang" id="id_setlang">
+		<option value="ar">العربية</option>
+<option value="ast">Asturianu</option>
+<option value="ca">Català</option>
+<option value="cs">Český</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="en" selected="selected">English</option>
+<option value="el">Ελληνικά</option>
+<option value="es">Español</option>
+<option value="es_419">Español (Latinoamérica)</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="he">עברית</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt_BR">Português (Brasil)</option>
+<option value="pt_PT">Português (Portugal)</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sr">Srpski</option>
+<option value="tr">Türkçe</option>
+<option value="uk">Українська</option>
+<option value="zh_CN">简体中文</option>
+<option value="zh_TW">正體中文</option>
+							</select>
+							<input type="submit" value="Go" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="archdev-navbar">
+				<ul>
+											<li><a href="/">Dashboard</a></li>
+						<li><a href="/packages/">Packages</a></li>
+																		<li><a href="/account/bpetlert/edit/"> My Account</a></li>
+												<li><a href="/logout/">Logout</a></li>
+									</ul>
+			</div><!-- #archdev-navbar -->
+			<!-- Start of main content -->
+
+
+<div id="content-left-wrapper">
+	<div id="content-left">
+				<div id="intro" class="box">
+			<h2>Dashboard</h2>
+			<h3>My Flagged Packages</h3>
+				<p>No packages matched your search criteria.</p>
+			<h3>My Requests</h3>
+			<p>No requests matched your search criteria.</p>
+		</div>
+		<div id="intro" class="box">
+			<h2>My Packages</h2>
+			<p><a href="/packages/?SeB=m&amp;K=bpetlert">Search for packages I maintain</a></p>
+				
+	<form id="pkglist-results-form" method="post" action="/pkgbase/?">
+		<table class="results">
+		<thead>
+			<tr>
+								<th>Name</th>				<th>Version</th>				<th>Votes</th>				<th>Popularity</th>								<th>Voted</th>				<th>Notify</th>								<th>Description</th>				<th>Maintainer</th>			</tr>
+		</thead>
+		<tbody>
+
+			<tr class="odd">
+				<td><a href="/packages/networkd-broker/">networkd-broker</a></td>
+		<td>0.3.0-2</td>
+		<td>0</td>
+		<td>0.00</td>
+				<td>
+				</td>
+		<td>
+				Yes				</td>
+				<td class="wrap">An event broker daemon for systemd-networkd</td>
+		<td>
+						<a href="/account/bpetlert" title="View account information for bpetlert">bpetlert</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><a href="/packages/pacman-mirrorup/">pacman-mirrorup</a></td>
+		<td>0.3.0-1</td>
+		<td>1</td>
+		<td>0.77</td>
+				<td>
+				</td>
+		<td>
+				Yes				</td>
+				<td class="wrap">A service to retrieve the best and latest Pacman mirror list based on user&#039;s geography</td>
+		<td>
+						<a href="/account/bpetlert" title="View account information for bpetlert">bpetlert</a>
+						</td>
+	</tr>
+	
+		</tbody>
+		</table>
+
+			</form>
+		</div>
+		<div id="intro" class="box">
+			<h2>Co-Maintained Packages</h2>
+			<p><a href="/packages/?SeB=c&amp;K=bpetlert">Search for packages I co-maintain</a></p>
+				<p>No packages matched your search criteria.</p>
+		</div>
+			</div>
+</div>
+<div id="content-right">
+	<div id="pkgsearch" class="widget">
+		<form id="pkgsearch-form" method="get" action="/packages/">
+			<fieldset>
+				<label for="pkgsearch-field">Package Search:</label>
+				<input type="hidden" name="O" value="0" />
+				<input id="pkgsearch-field" type="text" name="K" size="30" value="" maxlength="35" />
+			</fieldset>
+		</form>
+	</div>
+	<div id="pkg-updates" class="widget box">
+		<h3>Recent Updates <span class="more">(<a href="/packages/?SB=l&amp;SO=d">more</a>)</span></h3>
+
+<a href="/rss/" title="Arch Package Updates RSS Feed" class="rss-icon"><img src="/images/rss.svg" alt="RSS Feed" /></a>
+
+<table>
+	<tbody>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/dwarftherapist/" title="dwarftherapist 41.1.4-1">dwarftherapist 41.1.4-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:54</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/pyright/" title="pyright 1.1.25-1">pyright 1.1.25-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:51</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/microsip/" title="microsip 3.19.27-1">microsip 3.19.27-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:50</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/hip-nvcc/" title="hip-nvcc 3.1.0-1">hip-nvcc 3.1.0-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:49</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/madagascar/" title="madagascar 3.0.1-3">madagascar 3.0.1-3</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:49</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/pomodoro/" title="pomodoro r13.a7c9aea-1">pomodoro r13.a7c9aea-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:43</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/rednotebook/" title="rednotebook 2.17-1">rednotebook 2.17-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:41</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/nodejs-serverless/" title="nodejs-serverless 1.65.0-1">nodejs-serverless 1.65.0-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:37</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/python-ipympl/" title="python-ipympl 0.5.2-1">python-ipympl 0.5.2-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:33</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/balena-cli/" title="balena-cli 11.28.7-1">balena-cli 11.28.7-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:30</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/rakudo-star/" title="rakudo-star 2020.01-2">rakudo-star 2020.01-2</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:08</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/v8-r/" title="v8-r 8.2.213-1">v8-r 8.2.213-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:03</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/star-meta/" title="star-meta 0.1-1.1">star-meta 0.1-1.1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:02</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/eolie-stable-git/" title="eolie-stable-git 0.9.97.r58.g66b14ff2-1">eolie-stable-git 0.9.97.r58.g66b14ff2-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:00</span>
+			</td>
+		</tr>
+				<tr>
+			<td class="pkg-name">
+				<a href="/packages/lollypop-next-git/" title="lollypop-next-git 1.2.23.r71.g1d9411b4-1">lollypop-next-git 1.2.23.r71.g1d9411b4-1</a>
+			</td>
+			<td class="pkg-date">
+				<span>2020-02-28 23:00</span>
+			</td>
+		</tr>
+			</tbody>
+</table>
+	</div>
+	<div id="pkg-stats" class="widget box">
+		<h3>Statistics</h3>
+
+<table>
+	<tr>
+		<td class="stat-desc">Packages</td>
+		<td>58410</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Orphan Packages</td>
+		<td>6225</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Packages added in the past 7 days</td>
+		<td>248</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Packages updated in the past 7 days</td>
+		<td>1296</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Packages updated in the past year</td>
+		<td>18452</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Packages never updated</td>
+		<td>14526</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Registered Users</td>
+		<td>70399</td>
+	</tr>
+	<tr>
+		<td class="stat-desc">Trusted Users</td>
+		<td>55</td>
+	</tr>
+</table>
+	</div>
+		<div id="pkg-stats" class="widget box">
+		
+<h3>My Statistics</h3>
+
+<table>
+	<tr>
+		<td>
+			<a href="/packages/?SeB=m&amp;K=bpetlert">
+Packages</a>
+		</td>
+		<td>2</td>
+	</tr>
+	<tr>
+		<td>
+			<a href="/packages/?SeB=m&amp;outdated=on&amp;K=bpetlert">Out of Date</a>
+		</td>
+		<td>0</td>
+	</tr>
+</table>
+	</div>
+	
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-typeahead.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#pkgsearch-field').typeahead({
+        source: function(query, callback) {
+            $.getJSON('/rpc', {type: "suggest", arg: query}, function(data) {
+                callback(data);
+            });
+        },
+        matcher: function(item) { return true; },
+        sorter: function(items) { return items; },
+        menu: '<ul class="pkgsearch-typeahead"></ul>',
+        items: 20,
+        updater: function(item) {
+            document.location = '/packages/' + item;
+            return item;
+	}
+    }).attr('autocomplete', 'off');
+
+    $('#pkgsearch-field').keydown(function(e) {
+        if (e.keyCode == 13) {
+            var selectedItem = $('ul.pkgsearch-typeahead li.active');
+            if (selectedItem.length == 0) {
+                $('#pkgsearch-form').submit();
+            }
+        }
+    });
+});
+</script>
+
+			<!-- End of main content -->
+
+			<div id="footer">
+								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v4.8.0">v4.8.0</a></p>
+								<p>Copyright &copy; 2004-2020 aurweb Development Team.</p>
+				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+			</div>
+		</div>
+	</body>
+</html>

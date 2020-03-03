@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xml:lang="en" lang="en">
+  <head>
+    <title>AUR (en) - Packages</title>
+	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
+	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
+	<link rel='shortcut icon' href='/images/favicon.ico' />
+	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+	<body>
+		<div id="archnavbar" class="anb-aur">
+			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
+			<div id="archnavbarmenu">
+				<ul id="archnavbarlist">
+					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+				</ul>
+			</div>
+		</div><!-- #archnavbar -->
+
+		<div id="content">
+			<div id="lang_sub">
+				<form method="post" action="/packages/?SB=v&amp;SO=d">
+					<fieldset>
+						<div>
+							<select name="setlang" id="id_setlang">
+		<option value="ar">العربية</option>
+<option value="ast">Asturianu</option>
+<option value="ca">Català</option>
+<option value="cs">Český</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="en" selected="selected">English</option>
+<option value="el">Ελληνικά</option>
+<option value="es">Español</option>
+<option value="es_419">Español (Latinoamérica)</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="he">עברית</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt_BR">Português (Brasil)</option>
+<option value="pt_PT">Português (Portugal)</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sr">Srpski</option>
+<option value="tr">Türkçe</option>
+<option value="uk">Українська</option>
+<option value="zh_CN">简体中文</option>
+<option value="zh_TW">正體中文</option>
+							</select>
+							<input type="submit" value="Go" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div id="archdev-navbar">
+				<ul>
+											<li><a href="/">Dashboard</a></li>
+						<li><a href="/packages/">Packages</a></li>
+																		<li><a href="/account/bpetlert/edit/"> My Account</a></li>
+												<li><a href="/logout/">Logout</a></li>
+									</ul>
+			</div><!-- #archdev-navbar -->
+			<!-- Start of main content -->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript">
+function collapseDependsList(list) {
+	list = $(list);
+	// Hide everything past a given limit. Don't do anything if we don't have
+	// enough items, or the link already exists.
+	var limit = 20,
+		linkid = list.attr('id') + 'link',
+		items = list.find('li').slice(limit);
+	if (items.length <= 1 || $('#' + linkid).length > 0) {
+		return;
+	}
+	items.hide();
+	list.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	// add link and wire it up to show the hidden items
+	$('#' + linkid).click(function(event) {
+		event.preventDefault();
+		list.find('li').show();
+		// remove the full <p/> node from the DOM
+		$(this).parent().remove();
+	});
+}
+
+function collapseComment(div) {
+	var linkid = div.attr('id') + 'link',
+		inner = div.find('div'),
+		height = inner.height(),
+		maxheight = 200;
+
+	if (height <= maxheight)
+		return;
+
+	inner.css({ 'overflow': 'hidden', 'height': maxheight + 'px' });
+	inner.addClass('collapsed');
+	inner.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+
+	$('#' + linkid).click(function(event) {
+		var inner = $(this).parent().parent().find('div');
+		var newheight;
+
+		if (inner.hasClass('collapsed')) {
+			inner.css({ 'height': 'auto' });
+			newheight = inner.height();
+			inner.css({ 'height': maxheight });
+			$(this).text('Collapse');
+		} else {
+			newheight = maxheight;
+			$(this).text('Show More…');
+		}
+
+		inner.animate({ 'height': newheight });
+		inner.toggleClass('collapsed');
+		event.preventDefault();
+	});
+}
+
+$(document).ready(function() {
+	collapseDependsList("#pkgdepslist");
+	collapseDependsList("#pkgreqslist");
+	collapseDependsList("#pkgsrcslist");
+	$(".article-content").each(function() {
+		collapseComment($(this));
+	});
+});
+</script>
+
+
+<div id="pkglist-search" class="box filter-criteria">
+<h2>Search Criteria</h2>
+
+<form action='/packages/' method='get'>
+	<p><input type='hidden' name='O' value='0' /></p>
+
+	<fieldset>
+		<legend>Enter search criteria</legend>
+		<div>
+			<label for="id_method">Search by</label>
+			<select name='SeB'>
+												<option value="nd">Name, Description</option>
+																<option value="n">Name Only</option>
+																<option value="b">Package Base</option>
+																<option value="N">Exact Name</option>
+																<option value="B">Exact Package Base</option>
+																<option value="k">Keywords</option>
+																<option value="m">Maintainer</option>
+																<option value="c">Co-maintainer</option>
+																<option value="M">Maintainer, Co-maintainer</option>
+																<option value="s">Submitter</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_q">Keywords</label>
+			<input type='text' name='K' size='30' value="" maxlength='35'  />
+		</div>
+		<div>
+			<label for="id_out_of_date">Out of Date</label>
+			<select name='outdated'>
+												<option value=''>All</option>
+																<option value='on'>Flagged</option>
+																<option value='off'>Not Flagged</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_sort_by">Sort by</label>
+			<select name='SB'>
+												<option value='n'>Name</option>
+																<option value='v' selected="selected">Votes</option>
+																<option value='p'>Popularity</option>
+																<option value='w'>Voted</option>
+																<option value='o'>Notify</option>
+																<option value='m'>Maintainer</option>
+																<option value='l'>Last modified</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_order_by">Sort order</label>
+			<select name='SO'>
+												<option value='a'>Ascending</option>
+																<option value='d' selected="selected">Descending</option>
+											</select>
+		</div>
+		<div>
+			<label for="id_per_page">Per page</label>
+			<select name='PP'>
+												<option value="50">50</option>
+																<option value="100">100</option>
+																<option value="250">250</option>
+											</select>
+		</div>
+		<div>
+			<label>&nbsp;</label>
+			<input type='submit' class='button' name='do_Search' value='Go' />
+			<input type='submit' class='button' name='do_Orphans' value='Orphans' />
+		</div>
+	</fieldset>
+</form>
+</div>
+<div id="pkglist-results" class="box">		<div class="pkglist-stats">
+		<p>
+			62034 packages found.			Page 1 of 1241.		</p>
+				<p class="pkglist-nav">
+												<span class="page">1</span>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=50">2</a>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=100">3</a>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=150">4</a>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=200">5</a>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=250">6</a>
+																<span class="page">... </span>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=50">Next &rsaquo;</a>
+																<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=62000">Last &raquo;</a>
+									</p>
+			</div>
+	
+	<form id="pkglist-results-form" method="post" action="/pkgbase/?SB=v&amp;SO=d">
+		<table class="results">
+		<thead>
+			<tr>
+								<th>&nbsp;</th>
+								<th><a href="?SB=n&amp;SO=a">Name</a></th>				<th>Version</th>				<th><a href="?SB=v&amp;SO=a">Votes</a></th>				<th><a href="?SB=p&amp;SO=a">Popularity</a><span title="Popularity is calculated as the sum of all votes with each vote being weighted with a factor of 0.98 per day since its creation." class="hover-help"><sup>?</sup></span></th>								<th><a href="?SB=w&amp;SO=a">Voted</a></th>				<th><a href="?SB=o&amp;SO=a">Notify</a></th>								<th>Description</th>				<th><a href="?SB=m&amp;SO=a">Maintainer</a></th>			</tr>
+		</thead>
+		<tbody>
+
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[23363]" value="1" /></td>
+				<td><a href="/packages/dropbox/">dropbox</a></td>
+		<td>90.4.307-1</td>
+		<td>2301</td>
+		<td>7.22</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A free service that lets you bring your photos, docs, and videos anywhere and share them easily.</td>
+		<td>
+						<a href="/account/mtorromeo" title="View account information for mtorromeo">mtorromeo</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[13030]" value="1" /></td>
+				<td><a href="/packages/ttf-ms-fonts/">ttf-ms-fonts</a></td>
+		<td>2.0-10</td>
+		<td>1934</td>
+		<td>10.89</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Core TTF Fonts from Microsoft</td>
+		<td>
+						<a href="/account/birdflesh" title="View account information for birdflesh">birdflesh</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[38847]" value="1" /></td>
+				<td><a href="/packages/spotify/">spotify</a></td>
+		<td>1:1.1.10.546-3</td>
+		<td>1903</td>
+		<td>27.46</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">A proprietary music streaming service</td>
+		<td>
+						<a href="/account/AWhetter" title="View account information for AWhetter">AWhetter</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[37469]" value="1" /></td>
+				<td><a href="/packages/google-chrome/">google-chrome</a></td>
+		<td>80.0.3987.116-1</td>
+		<td>1878</td>
+		<td>16.34</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">The popular and trusted web browser by Google (Stable Channel)</td>
+		<td>
+						<a href="/account/luzifer" title="View account information for luzifer">luzifer</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[13751]" value="1" /></td>
+				<td><a href="/packages/android-sdk/">android-sdk</a></td>
+		<td>26.1.1-1</td>
+		<td>1475</td>
+		<td>1.24</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Google Android SDK</td>
+		<td>
+						<a href="/account/dreamingincode" title="View account information for dreamingincode">dreamingincode</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[36481]" value="1" /></td>
+				<td><a href="/packages/teamviewer/">teamviewer</a></td>
+		<td>15.2.2756-1</td>
+		<td>1350</td>
+		<td>7.66</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">All-In-One Software for Remote Support and Online Meetings</td>
+		<td>
+						<a href="/account/swiftgeek" title="View account information for swiftgeek">swiftgeek</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[44761]" value="1" /></td>
+				<td><a href="/packages/virtualbox-ext-oracle/">virtualbox-ext-oracle</a></td>
+		<td>6.1.2-1</td>
+		<td>1291</td>
+		<td>5.48</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Oracle VM VirtualBox Extension Pack</td>
+		<td>
+						<a href="/account/seblu" title="View account information for seblu">seblu</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[45904]" value="1" /></td>
+				<td><a href="/packages/android-sdk-platform-tools/">android-sdk-platform-tools</a></td>
+		<td>29.0.5-1</td>
+		<td>1227</td>
+		<td>2.63</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Platform-Tools for Google Android SDK (adb and fastboot)</td>
+		<td>
+						<a href="/account/dreamingincode" title="View account information for dreamingincode">dreamingincode</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[35915]" value="1" /></td>
+				<td><a href="/packages/package-query/">package-query</a></td>
+		<td>1.10-1</td>
+		<td>1160</td>
+		<td>1.33</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Query ALPM and AUR</td>
+		<td>
+						<a href="/account/archlinuxfr" title="View account information for archlinuxfr">archlinuxfr</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[40056]" value="1" /></td>
+				<td><a href="/packages/google-talkplugin/">google-talkplugin</a></td>
+		<td>5.41.3.0-1</td>
+		<td>1154</td>
+		<td>0.01</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Video chat browser plug-in for Google Hangouts</td>
+		<td>
+						<a href="/account/ava1ar" title="View account information for ava1ar">ava1ar</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[67617]" value="1" /></td>
+				<td><a href="/packages/aurvote-git/">aurvote-git</a></td>
+		<td>r27.fd413f1-2</td>
+		<td>1130</td>
+		<td>1.60</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Tool to vote for your favorite AUR packages (development version)</td>
+		<td>
+						<a href="/account/neersighted" title="View account information for neersighted">neersighted</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[120918]" value="1" /></td>
+				<td><a href="/packages/tor-browser/">tor-browser</a></td>
+		<td>9.0.5-1</td>
+		<td>1078</td>
+		<td>17.68</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)</td>
+		<td>
+						<a href="/account/grufo" title="View account information for grufo">grufo</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[15270]" value="1" /></td>
+				<td><a href="/packages/google-earth/">google-earth</a></td>
+		<td>7.1.8.3036-1</td>
+		<td>1005</td>
+		<td>0.65</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Semi-legacy 3D interface to explore the globe, terrain, streets, buildings and other planets</td>
+		<td>
+						<a href="/account/dbermond" title="View account information for dbermond">dbermond</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[115973]" value="1" /></td>
+				<td><a href="/packages/yay/">yay</a></td>
+		<td>9.4.4-1</td>
+		<td>969</td>
+		<td>63.00</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Yet another yogurt. Pacman wrapper and AUR helper written in go.</td>
+		<td>
+						<a href="/account/jguer" title="View account information for jguer">jguer</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[69975]" value="1" /></td>
+				<td><a href="/packages/android-studio/">android-studio</a></td>
+		<td>3.5.3.0-1</td>
+		<td>894</td>
+		<td>7.84</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">The official Android IDE (Stable branch)</td>
+		<td>
+						<a href="/account/kordianbruck" title="View account information for kordianbruck">kordianbruck</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[128020]" value="1" /></td>
+				<td><a href="/packages/visual-studio-code-bin/">visual-studio-code-bin</a></td>
+		<td>1.42.1-1</td>
+		<td>874</td>
+		<td>8.59</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)</td>
+		<td>
+						<a href="/account/dcelasun" title="View account information for dcelasun">dcelasun</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[16980]" value="1" /></td>
+				<td><a href="/packages/acroread/">acroread</a></td>
+		<td>9.5.5-13</td>
+		<td>857</td>
+		<td>1.52</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Adobe Acrobat Reader is a PDF file viewer</td>
+		<td>
+						<a href="/account/Geballin" title="View account information for Geballin">Geballin</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[51906]" value="1" /></td>
+				<td><a href="/packages/jdk/">jdk</a></td>
+		<td>13.0.2-1</td>
+		<td>799</td>
+		<td>1.07</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Oracle Java Development Kit</td>
+		<td>
+						<a href="/account/dbermond" title="View account information for dbermond">dbermond</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[20760]" value="1" /></td>
+				<td><a href="/packages/rar/">rar</a></td>
+		<td>5.8.0-1</td>
+		<td>698</td>
+		<td>1.01</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">A command-line port of the rar compression utility</td>
+		<td>
+						<a href="/account/Musikolo" title="View account information for Musikolo">Musikolo</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[95688]" value="1" /></td>
+				<td><a href="/packages/telegram-desktop-bin/">telegram-desktop-bin</a></td>
+		<td>1.9.14-1</td>
+		<td>650</td>
+		<td>4.10</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Official desktop version of Telegram messaging app - Static binaries</td>
+		<td>
+						<a href="/account/ItachiSan" title="View account information for ItachiSan">ItachiSan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[39434]" value="1" /></td>
+				<td><a href="/packages/minecraft/">minecraft</a></td>
+		<td class="flagged">latest-29</td>
+		<td>644</td>
+		<td>0.86</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">An open-world game whose gameplay revolves around breaking and placing blocks</td>
+		<td>
+						<a href="/account/BombStrike" title="View account information for BombStrike">BombStrike</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[27031]" value="1" /></td>
+				<td><a href="/packages/google-chrome-dev/">google-chrome-dev</a></td>
+		<td>81.0.4044.17-1</td>
+		<td>635</td>
+		<td>1.52</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">The popular and trusted web browser by Google (Dev Channel)</td>
+		<td>
+						<a href="/account/luzifer" title="View account information for luzifer">luzifer</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[81302]" value="1" /></td>
+				<td><a href="/packages/android-udev-git/">android-udev-git</a></td>
+		<td>20180715.r2.gd19fdc3-1</td>
+		<td>617</td>
+		<td>0.00</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Udev rules to connect Android devices to your linux box</td>
+		<td>
+						<a href="/account/robertfoster" title="View account information for robertfoster">robertfoster</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[89827]" value="1" /></td>
+				<td><a href="/packages/vivaldi/">vivaldi</a></td>
+		<td>2.11.1811.38-1</td>
+		<td>614</td>
+		<td>8.78</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">An advanced browser made with the power user in mind.</td>
+		<td>
+						<a href="/account/BlackIkeEagle" title="View account information for BlackIkeEagle">BlackIkeEagle</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[51908]" value="1" /></td>
+				<td><a href="/packages/jre/">jre</a></td>
+		<td>13.0.2-1</td>
+		<td>601</td>
+		<td>1.34</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Oracle Java Runtime Environment</td>
+		<td>
+						<a href="/account/dbermond" title="View account information for dbermond">dbermond</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[19615]" value="1" /></td>
+				<td><a href="/packages/nautilus-dropbox/">nautilus-dropbox</a></td>
+		<td>2019.02.14-4</td>
+		<td>581</td>
+		<td>0.94</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Dropbox for Linux - Nautilus extension</td>
+		<td>
+						<a href="/account/TheChickenMan" title="View account information for TheChickenMan">TheChickenMan</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[19830]" value="1" /></td>
+				<td><a href="/packages/firefox-nightly/">firefox-nightly</a></td>
+		<td>75.0a1.20200214-1</td>
+		<td>566</td>
+		<td>2.84</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Standalone Web Browser from Mozilla — Nightly build (en-US)</td>
+		<td>
+						<a href="/account/Archange" title="View account information for Archange">Archange</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[126082]" value="1" /></td>
+				<td><a href="/packages/sublime-text2/">sublime-text2</a></td>
+		<td>2.0.2-1</td>
+		<td>558</td>
+		<td>0.15</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Sophisticated text editor for code, html and prose (legacy version)</td>
+		<td>
+						<a href="/account/carstene1ns" title="View account information for carstene1ns">carstene1ns</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[31937]" value="1" /></td>
+				<td><a href="/packages/downgrade/">downgrade</a></td>
+		<td>6.2.4-1</td>
+		<td>543</td>
+		<td>4.41</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Bash script for downgrading one or more packages to a version in your cache or the A.L.A.</td>
+		<td>
+						<a href="/account/brisbin33" title="View account information for brisbin33">brisbin33</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[69480]" value="1" /></td>
+				<td><a href="/packages/ttf-google-fonts-git/">ttf-google-fonts-git</a></td>
+		<td>1:r1704.59afb78a-1</td>
+		<td>536</td>
+		<td>0.36</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">TrueType fonts from the Google Fonts project (git version)</td>
+		<td>
+						<a href="/account/andrewSC" title="View account information for andrewSC">andrewSC</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[54516]" value="1" /></td>
+				<td><a href="/packages/profile-sync-daemon/">profile-sync-daemon</a></td>
+		<td>6.35-1</td>
+		<td>527</td>
+		<td>3.93</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Syncs browser profiles to tmpfs reducing SSD/HDD calls and speeding-up browsers.</td>
+		<td>
+						<a href="/account/graysky" title="View account information for graysky">graysky</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[100280]" value="1" /></td>
+				<td><a href="/packages/ncurses5-compat-libs/">ncurses5-compat-libs</a></td>
+		<td>6.1-1</td>
+		<td>514</td>
+		<td>3.16</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">System V Release 4.0 curses emulation library, ABI 5</td>
+		<td>
+						<a href="/account/Barthalion" title="View account information for Barthalion">Barthalion</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[53896]" value="1" /></td>
+				<td><a href="/packages/sublime-text-dev/">sublime-text-dev</a></td>
+		<td>3.3211-1</td>
+		<td>499</td>
+		<td>1.77</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Sophisticated text editor for code, html and prose - dev build</td>
+		<td>
+						<a href="/account/sender" title="View account information for sender">sender</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[92365]" value="1" /></td>
+				<td><a href="/packages/chromium-snapshot-bin/">chromium-snapshot-bin</a></td>
+		<td>82.0-1</td>
+		<td>498</td>
+		<td>0.31</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">The open-source project behind Google Chrome (Latest Snapshot)</td>
+		<td>
+						<a href="/account/mrxx" title="View account information for mrxx">mrxx</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[111557]" value="1" /></td>
+				<td><a href="/packages/zuki-themes/">zuki-themes</a></td>
+		<td>3.34_2-1</td>
+		<td>490</td>
+		<td>0.59</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Zuki themes for GNOME, Xfce and more.</td>
+		<td>
+						<a href="/account/m8D2" title="View account information for m8D2">m8D2</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[29184]" value="1" /></td>
+				<td><a href="/packages/plymouth/">plymouth</a></td>
+		<td>0.9.4-4</td>
+		<td>482</td>
+		<td>3.04</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">A graphical boot splash screen with kernel mode-setting support</td>
+		<td>
+						<a href="/account/nullptr_t" title="View account information for nullptr_t">nullptr_t</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[34310]" value="1" /></td>
+				<td><a href="/packages/dropbox-cli/">dropbox-cli</a></td>
+		<td>2019.02.14-3</td>
+		<td>471</td>
+		<td>0.19</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Command line interface for Dropbox</td>
+		<td>
+						<a href="/account/frealgagu" title="View account information for frealgagu">frealgagu</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[38888]" value="1" /></td>
+				<td><a href="/packages/freetype2-infinality/">freetype2-infinality</a></td>
+		<td>2.10.0-4</td>
+		<td>469</td>
+		<td>0.00</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Font rasterization library with Infinality patches and custom settings.</td>
+		<td>
+						<a href="/account/SolarAquarion" title="View account information for SolarAquarion">SolarAquarion</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[38888]" value="1" /></td>
+				<td><a href="/packages/freetype2-docs-infinality/">freetype2-docs-infinality</a></td>
+		<td>2.10.0-4</td>
+		<td>469</td>
+		<td>0.00</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Freetype documentation with Infinality patches and custom settings</td>
+		<td>
+						<a href="/account/SolarAquarion" title="View account information for SolarAquarion">SolarAquarion</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[38888]" value="1" /></td>
+				<td><a href="/packages/freetype2-demos-infinality/">freetype2-demos-infinality</a></td>
+		<td>2.10.0-4</td>
+		<td>469</td>
+		<td>0.00</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Freetype tools and demos with Infinality patches and custom settings</td>
+		<td>
+						<a href="/account/SolarAquarion" title="View account information for SolarAquarion">SolarAquarion</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[69983]" value="1" /></td>
+				<td><a href="/packages/android-sdk-build-tools/">android-sdk-build-tools</a></td>
+		<td>r29.0.3-1</td>
+		<td>461</td>
+		<td>1.32</td>
+				<td>
+				Yes				</td>
+		<td>
+				</td>
+				<td class="wrap">Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)</td>
+		<td>
+						<a href="/account/somekool" title="View account information for somekool">somekool</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[25633]" value="1" /></td>
+				<td><a href="/packages/adobe-air-sdk/">adobe-air-sdk</a></td>
+		<td>2.6-10</td>
+		<td>454</td>
+		<td>0.10</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Adobe Air Software Development Kit and Runtime Environment</td>
+		<td>
+						<a href="/account/cavernico" title="View account information for cavernico">cavernico</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[23344]" value="1" /></td>
+				<td><a href="/packages/foxitreader/">foxitreader</a></td>
+		<td>2.4.4.0911-4</td>
+		<td>444</td>
+		<td>1.54</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">A fast, secure and complete PDF viewer</td>
+		<td>
+						<a href="/account/Muflone" title="View account information for Muflone">Muflone</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[84670]" value="1" /></td>
+				<td><a href="/packages/wps-office-mime/">wps-office-mime</a></td>
+		<td>11.1.0.9080-2</td>
+		<td>432</td>
+		<td>3.13</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Mime files provided by Kingsoft Office (WPS Office)</td>
+		<td>
+						<a href="/account/Universebenzene" title="View account information for Universebenzene">Universebenzene</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[84670]" value="1" /></td>
+				<td><a href="/packages/wps-office/">wps-office</a></td>
+		<td>11.1.0.9080-2</td>
+		<td>432</td>
+		<td>3.13</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Kingsoft Office (WPS Office) is an office productivity suite</td>
+		<td>
+						<a href="/account/Universebenzene" title="View account information for Universebenzene">Universebenzene</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[129124]" value="1" /></td>
+				<td><a href="/packages/skypeforlinux-preview-bin/">skypeforlinux-preview-bin</a></td>
+		<td>8.57.76.109-1</td>
+		<td>432</td>
+		<td>0.93</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Skype for Linux - Preview/Insider Version</td>
+		<td>
+						<a href="/account/bulletmark" title="View account information for bulletmark">bulletmark</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[10408]" value="1" /></td>
+				<td><a href="/packages/ttf-vista-fonts/">ttf-vista-fonts</a></td>
+		<td>1-9</td>
+		<td>430</td>
+		<td>2.08</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Microsoft Vista and Office 2007 True Type Fonts</td>
+		<td>
+						<a href="/account/mrxx" title="View account information for mrxx">mrxx</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[14544]" value="1" /></td>
+				<td><a href="/packages/eclipse-android/">eclipse-android</a></td>
+		<td class="flagged">23.0.7-1</td>
+		<td>424</td>
+		<td>0.00</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Eclipse plugin for Android</td>
+		<td>
+						<a href="/account/mesmer" title="View account information for mesmer">mesmer</a>
+						</td>
+	</tr>
+			<tr class="odd">
+				<td><input type="checkbox" name="IDs[50911]" value="1" /></td>
+				<td><a href="/packages/linux-ck-headers/">linux-ck-headers</a></td>
+		<td>5.5.4-1</td>
+		<td>423</td>
+		<td>4.10</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">Headers and scripts for building modules for Linux-ck kernel</td>
+		<td>
+						<a href="/account/graysky" title="View account information for graysky">graysky</a>
+						</td>
+	</tr>
+			<tr class="even">
+				<td><input type="checkbox" name="IDs[50911]" value="1" /></td>
+				<td><a href="/packages/linux-ck/">linux-ck</a></td>
+		<td>5.5.4-1</td>
+		<td>423</td>
+		<td>4.10</td>
+				<td>
+				</td>
+		<td>
+				</td>
+				<td class="wrap">The Linux-ck kernel and modules with the ck1 patchset featuring MuQSS CPU scheduler</td>
+		<td>
+						<a href="/account/graysky" title="View account information for graysky">graysky</a>
+						</td>
+	</tr>
+	
+		</tbody>
+		</table>
+
+				<div class="pkglist-stats">
+			<p>
+				62034 packages found.				Page 1 of 1241.			</p>
+						<p class="pkglist-nav">
+															<span class="page">1</span>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=50">2</a>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=100">3</a>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=150">4</a>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=200">5</a>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=250">6</a>
+																				<span class="page">... </span>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=50">Next &rsaquo;</a>
+																				<a class="page" href="/packages/?SB=v&amp;SO=d&amp;O=62000">Last &raquo;</a>
+												</p>
+					</div>
+
+					<p>
+				<select name="action">
+					<option>Actions</option>
+					<option value="do_UnFlag">Unflag Out-of-date</option>
+					<option value="do_Adopt">Adopt Packages</option>
+					<option value="do_Disown">Disown Packages</option>
+										<option value="do_Notify">Notify</option>
+					<option value="do_UnNotify">UnNotify</option>
+				</select>
+								<label class="confirmation"><input type="checkbox" name="confirm" value="1" /> Confirm</label>
+				<input type="submit" class="button" style="width: 80px" value="Go" />
+			</p>
+					</form>
+</div>
+			<!-- End of main content -->
+
+			<div id="footer">
+								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v4.8.0">v4.8.0</a></p>
+								<p>Copyright &copy; 2004-2020 aurweb Development Team.</p>
+				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+			</div>
+		</div>
+	</body>
+</html>
