@@ -2,7 +2,7 @@
 name = "aur-thumbsup"
 version = "0.2.0"
 authors = ["Bhanupong Petchlert <bpetlert@gmail.com>"]
-description = "A program to vote for favorite AUR packages"
+description = "A tool to manage voting for favorite AUR packages"
 documentation = "https://github.com/bpetlert/aur-thumbsup"
 homepage = "https://github.com/bpetlert/aur-thumbsup"
 repository = "https://github.com/bpetlert/aur-thumbsup"

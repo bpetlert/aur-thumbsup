@@ -1,0 +1,40 @@
+# Maintainer: Bhanupong Petchlert <bpetlert@gmail.com>
+pkgname=aur-thumbsup
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="A tool to manage voting for favorite AUR packages (including systemd service for auto vote)"
+arch=('x86_64')
+url="https://github.com/bpetlert/aur-thumbsup"
+license=('MIT')
+depends=('gawk' 'grep' 'pacman' 'systemd')
+makedepends=('cargo' 'rust')
+provides=("${pkgname}")
+conflicts=("${pkgname}")
+
+# Build from local directory
+source=()
+
+# Using the most recent annotated tag reachable from the last commit.
+pkgver() {
+  cd "$startdir"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "$startdir"
+
+  # Ignore target-dir in ~/.cargo/config, reset it to default: "target".
+  # Add "$srcdir" to support BUILDDIR variable in makepkg.
+  cargo build --release --locked --target-dir "$srcdir/target"
+}
+
+package() {
+  cd "$srcdir"
+  install -Dm755 "target/release/aur-thumbsup" "$pkgdir/usr/bin/aur-thumbsup"
+
+  install -Dm644 "$startdir/aur-thumbsup.service" "$pkgdir/usr/lib/systemd/system/aur-thumbsup.service"
+  install -Dm644 "$startdir/aur-thumbsup.timer" "$pkgdir/usr/lib/systemd/system/aur-thumbsup.timer"
+
+  install -Dm644 "$startdir/README.md" "$pkgdir/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 "$startdir/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}

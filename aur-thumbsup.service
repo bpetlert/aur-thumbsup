@@ -1,0 +1,10 @@
+[Unit]
+Description=AUR Thumbsup - autovote
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Environment='AUR_THUMBSUP_ARGS=--quiet --config /etc/aur-thumbsup.toml'
+ExecStart=/usr/bin/aur-thumbsup $AUR_THUMBSUP_ARGS autovote
