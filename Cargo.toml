@@ -1,6 +1,6 @@
 [package]
 name = "aur-thumbsup"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Bhanupong Petchlert <bpetlert@gmail.com>"]
 description = "A program to vote for favorite AUR packages"
 documentation = "https://github.com/bpetlert/aur-thumbsup"
