@@ -3,24 +3,30 @@ use colored::Colorize;
 use std::collections::HashMap;
 use std::path::Path;
 
-use crate::aur::{AurPackage, Authentication};
+use crate::aur::{AurPackageResultItem, Authentication};
 use crate::config::Configuration;
 use crate::helper::{list_installed_pkgs, vercmp, PkgName, PkgVersion, Versioning};
 
-pub fn list<P: AsRef<Path>>(config_path: P) -> Result<()> {
+pub fn list<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
     let config = Configuration::load_and_verify_config(&config_path)?;
     let mut auth = Authentication::new();
     auth.login(&config.account)?;
     let voted_pkgs = auth.list_voted_pkgs()?;
     let installed_pkgs: HashMap<PkgName, PkgVersion> = list_installed_pkgs()?;
-    for pkg in &voted_pkgs {
-        println!("{}", fancy(pkg, &installed_pkgs)?);
+
+    if !quiet {
+        for pkg in &voted_pkgs {
+            println!("{}", fancy(pkg, &installed_pkgs)?);
+        }
     }
 
     Ok(())
 }
 
-fn fancy(aur_pkg: &AurPackage, installed_pkgs: &HashMap<PkgName, PkgVersion>) -> Result<String> {
+fn fancy(
+    aur_pkg: &AurPackageResultItem,
+    installed_pkgs: &HashMap<PkgName, PkgVersion>,
+) -> Result<String> {
     let mut status: Vec<String> = Vec::new();
 
     // Install?
@@ -57,7 +63,7 @@ mod tests {
 
     #[test]
     fn test_fancy() {
-        let mut aur_pkg = AurPackage {
+        let mut aur_pkg = AurPackageResultItem {
             name: "pacman-mirrorup".to_owned(),
             version: "0.3.0-1".to_owned(),
             votes: 1,

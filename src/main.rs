@@ -40,14 +40,14 @@ fn run_app() -> Result<()> {
 
     if let Some(cmd) = arguments.cmd {
         match cmd {
-            Commands::Vote { packages } => vote(arguments.config, packages)?,
-            Commands::Unvote { packages } => unvote(arguments.config, packages)?,
-            Commands::UnvoteAll {} => unvote_all(arguments.config)?,
-            Commands::Check { packages } => check(arguments.config, packages)?,
-            Commands::List {} => list(arguments.config)?,
-            Commands::Autovote {} => autovote(arguments.config)?,
-            Commands::CreateConfig { path } => create_config(path)?,
-            Commands::CheckConfig { path } => check_config(path)?,
+            Commands::Vote { packages } => vote(arguments.config, packages, arguments.quiet)?,
+            Commands::Unvote { packages } => unvote(arguments.config, packages, arguments.quiet)?,
+            Commands::UnvoteAll {} => unvote_all(arguments.config, arguments.quiet)?,
+            Commands::Check { packages } => check(arguments.config, packages, arguments.quiet)?,
+            Commands::List {} => list(arguments.config, arguments.quiet)?,
+            Commands::Autovote {} => autovote(arguments.config, arguments.quiet)?,
+            Commands::CreateConfig { path } => create_config(path, arguments.quiet)?,
+            Commands::CheckConfig { path } => check_config(path, arguments.quiet)?,
         }
     }
 

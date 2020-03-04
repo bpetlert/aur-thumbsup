@@ -5,19 +5,22 @@ use std::path::Path;
 use crate::aur::{Authentication, VoteResult};
 use crate::config::Configuration;
 
-pub fn vote<P: AsRef<Path>>(config_path: P, packages: Vec<String>) -> Result<()> {
+pub fn vote<P: AsRef<Path>>(config_path: P, packages: Vec<String>, quiet: bool) -> Result<()> {
     let config = Configuration::load_and_verify_config(&config_path)?;
     let mut auth = Authentication::new();
     auth.login(&config.account)?;
     let results = auth.vote(&packages)?;
-    for result in results.iter() {
-        println!("{}", fancy(&result)?);
+
+    if !quiet {
+        for result in results.iter() {
+            println!("{}", fancy(&result)?);
+        }
     }
 
     Ok(())
 }
 
-fn fancy(status: &(String, VoteResult)) -> Result<String> {
+pub fn fancy(status: &(String, VoteResult)) -> Result<String> {
     Ok(format!(
         "{}    {}",
         status.0.bold().white(),

@@ -20,6 +20,10 @@ pub struct Arguments {
     )]
     pub config: PathBuf,
 
+    /// Suppress stdout
+    #[structopt(short = "q", long = "quiet")]
+    pub quiet: bool,
+
     /// Increment verbosity level once per call
     /// [error, -v: warn, -vv: info, -vvv: debug, -vvvv: trace]
     #[structopt(short = "v", long = "verbose", parse(from_occurrences))]
@@ -80,6 +84,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 0,
                 cmd: None
             },
@@ -89,6 +94,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: PathBuf::from(r"/etc/aur-thumbsup.toml"),
+                quiet: false,
                 verbose: 0,
                 cmd: None
             },
@@ -102,6 +108,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: PathBuf::from(r"/etc/aur-thumbsup.toml"),
+                quiet: false,
                 verbose: 0,
                 cmd: None
             },
@@ -115,6 +122,27 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: true,
+                verbose: 0,
+                cmd: None
+            },
+            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "-q"]))
+        );
+
+        assert_eq!(
+            Arguments {
+                config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: true,
+                verbose: 0,
+                cmd: None
+            },
+            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "--quiet"]))
+        );
+
+        assert_eq!(
+            Arguments {
+                config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 4,
                 cmd: None
             },
@@ -124,6 +152,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 4,
                 cmd: None
             },
@@ -135,6 +164,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 4,
                 cmd: None
             },
@@ -153,6 +183,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 0,
                 cmd: Some(Commands::Vote {
                     packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
@@ -169,6 +200,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 0,
                 cmd: Some(Commands::Unvote {
                     packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
@@ -185,6 +217,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 0,
                 cmd: Some(Commands::Check {
                     packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
@@ -201,6 +234,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 0,
                 cmd: Some(Commands::List {})
             },
@@ -213,6 +247,7 @@ mod tests {
         assert_eq!(
             Arguments {
                 config: DEFAULT_CONFIG_FILE.to_path_buf(),
+                quiet: false,
                 verbose: 0,
                 cmd: Some(Commands::Autovote {})
             },

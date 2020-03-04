@@ -15,12 +15,12 @@ use std::path::{Path, PathBuf};
 use time::OffsetDateTime;
 
 lazy_static! {
-    static ref AUR_URL: String = String::from("https://aur.archlinux.org/");
-    static ref AUR_URL_LOGIN: String = AUR_URL.to_string() + "login/";
-    static ref AUR_URL_PKG_PAGE: String = AUR_URL.to_string() + "packages/<PKG>";
-    static ref AUR_URL_PKG_INFO: String = AUR_URL.to_string() + "rpc.php?type=info&arg=";
+    static ref AUR_URL: String = String::from("https://aur.archlinux.org");
+    static ref AUR_URL_LOGIN: String = AUR_URL.to_string() + "/login/";
+    static ref AUR_URL_PKG_PAGE: String = AUR_URL.to_string() + "/packages/<PKG>";
+    static ref AUR_URL_PKG_INFO: String = AUR_URL.to_string() + "/rpc/?v=5&type=info";
     static ref AUR_URL_SORT_VOTED_PKG: String =
-        AUR_URL.to_string() + "packages/?O=<OFFSET>&SeB=nd&SB=w&SO=d&PP=250&do_Search=Go";
+        AUR_URL.to_string() + "/packages/?O=<OFFSET>&SeB=nd&SB=w&SO=d&PP=250&do_Search=Go";
 }
 
 static APP_USER_AGENT: &str = concat!(
@@ -32,8 +32,12 @@ static APP_USER_AGENT: &str = concat!(
     ")"
 );
 
+/// See: https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#Limitations
+const PACKAGE_QUERY_LIMIT: usize = 160;
+
+/// For result table from https://aur.archlinux.org/packages/ page
 #[derive(Default, Deserialize, PartialEq, Debug)]
-pub struct AurPackage {
+pub struct AurPackageResultItem {
     #[serde(rename = "Name")]
     pub name: String,
 
@@ -67,16 +71,16 @@ where
     Ok(s == "Yes")
 }
 
-pub type AurPackages = Vec<AurPackage>;
+pub type AurPackageResults = Vec<AurPackageResultItem>;
 
 pub trait Extraction<T> {
     fn from_html(html: &Html) -> Result<T>;
 }
 
-impl Extraction<AurPackages> for AurPackages {
+impl Extraction<AurPackageResults> for AurPackageResults {
     /// Extract package list from AUR packages page
-    fn from_html(html: &Html) -> Result<AurPackages> {
-        let mut aur_packages = AurPackages::new();
+    fn from_html(html: &Html) -> Result<AurPackageResults> {
+        let mut aur_packages = AurPackageResults::new();
 
         let table_selector = match Selector::parse("div#pkglist-results table.results tbody tr") {
             Ok(selector) => selector,
@@ -130,7 +134,7 @@ impl Extraction<AurPackages> for AurPackages {
                 },
             };
 
-            aur_packages.push(AurPackage {
+            aur_packages.push(AurPackageResultItem {
                 name,
                 version,
                 votes,
@@ -278,11 +282,11 @@ impl Authentication {
         Ok(result)
     }
 
-    pub fn list_voted_pkgs(&self) -> Result<AurPackages> {
+    pub fn list_voted_pkgs(&self) -> Result<AurPackageResults> {
         self.is_login()?;
         let session = self.session.as_ref().unwrap();
 
-        let mut voted_pkgs = AurPackages::new();
+        let mut voted_pkgs = AurPackageResults::new();
         let mut offset: i32 = -250;
         loop {
             offset += 250;
@@ -293,7 +297,7 @@ impl Authentication {
             )?;
             let response = session.get(url).send()?;
             let page = Html::parse_document(response.text()?.as_str());
-            let packages = AurPackages::from_html(&page)?;
+            let packages = AurPackageResults::from_html(&page)?;
 
             if packages.is_empty() {
                 return Ok(voted_pkgs);
@@ -321,7 +325,7 @@ impl Authentication {
         // Stop redirect to https://aur.archlinux.org/ after logged in
         let login_no_redirect = redirect::Policy::custom(|attempt| {
             if attempt.status() == StatusCode::FOUND {
-                if attempt.url().to_string() == AUR_URL.to_string() {
+                if attempt.url().to_string() == (AUR_URL.to_string() + "/") {
                     return attempt.stop();
                 }
             }
@@ -546,7 +550,7 @@ impl Authentication {
 
         let url = Url::parse(
             &(AUR_URL.to_string()
-                + pkgbase.trim_start_matches('/')
+                + &pkgbase
                 + match vote {
                     true => "vote/",
                     false => "unvote/",
@@ -615,6 +619,55 @@ impl Extraction<LoginErrorList> for LoginErrorList {
     }
 }
 
+/// For data from https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=pkg1&arg[]=pkg2&…
+/// See: https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#info_2
+#[derive(Deserialize)]
+struct AurPackageInfoResult {
+    #[serde(rename(deserialize = "results"))]
+    results: AurPackageInfo,
+}
+
+/// For data from https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=pkg1&arg[]=pkg2&…
+/// See: https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#info_2
+#[derive(Deserialize, Default, Debug)]
+pub struct AurPackageInfoItem {
+    #[serde(rename(deserialize = "Name"))]
+    pub name: String,
+
+    #[serde(rename(deserialize = "Version"))]
+    pub version: String,
+}
+
+pub type AurPackageInfo = Vec<AurPackageInfoItem>;
+
+pub trait AurInfoQuery<T> {
+    fn info_query(pkgs: &Vec<String>) -> Result<T>;
+}
+
+impl AurInfoQuery<AurPackageInfo> for AurPackageInfo {
+    fn info_query(pkgs: &Vec<String>) -> Result<AurPackageInfo> {
+        let client = Client::builder()
+            .user_agent(APP_USER_AGENT)
+            .gzip(true)
+            .http2_prior_knowledge()
+            .tcp_nodelay()
+            .use_rustls_tls()
+            .build()?;
+
+        let mut results: AurPackageInfo = Vec::new();
+        for chunk in pkgs.chunks(PACKAGE_QUERY_LIMIT) {
+            let queries: Vec<(&str, &str)> =
+                chunk.iter().map(|pkg| ("arg[]", pkg.as_str())).collect();
+            let url = Url::parse_with_params(&AUR_URL_PKG_INFO, &queries)?;
+            let response = client.get(url).send()?;
+            let mut info_results: AurPackageInfoResult = response.json()?;
+            results.append(&mut info_results.results);
+        }
+
+        Ok(results)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -624,13 +677,13 @@ mod tests {
         // Extract package list from html
         let html_raw = include_str!("test-user-no-sort-voted-packages.html");
         let page = Html::parse_document(html_raw);
-        let aur_packages = AurPackages::from_html(&page).unwrap();
+        let aur_packages = AurPackageResults::from_html(&page).unwrap();
         assert_eq!(aur_packages.len(), 50);
 
         // Compare with the same data in CSV format
         let pkglist_csv = include_str!("test-user-no-sort-voted-packages.csv");
         let mut pkglist = csv::Reader::from_reader(pkglist_csv.as_bytes());
-        let pkgs: AurPackages = pkglist
+        let pkgs: AurPackageResults = pkglist
             .deserialize()
             .map(|result| result.unwrap())
             .collect();
@@ -639,7 +692,8 @@ mod tests {
         }
 
         // Check voted pkgs
-        let voted_pkg: AurPackages = aur_packages.into_iter().filter(|pkg| pkg.voted).collect();
+        let voted_pkg: AurPackageResults =
+            aur_packages.into_iter().filter(|pkg| pkg.voted).collect();
         assert_eq!(voted_pkg.len(), 12);
     }
 
@@ -648,11 +702,11 @@ mod tests {
         // Extract package list from html
         let html_raw = include_str!("test-aur-pkgs-sort-voted-with-orphan.html");
         let page = Html::parse_document(html_raw);
-        let aur_packages = AurPackages::from_html(&page).unwrap();
+        let aur_packages = AurPackageResults::from_html(&page).unwrap();
         assert_eq!(aur_packages.len(), 250);
 
         // Check orphan packages
-        let orphan_pkgs: AurPackages = aur_packages
+        let orphan_pkgs: AurPackageResults = aur_packages
             .into_iter()
             .filter(|pkg| pkg.maintainer == "orphan")
             .collect();
@@ -729,5 +783,14 @@ mod tests {
         let token = auth.extract_token(&page).unwrap();
         let expect = "".to_owned();
         assert_eq!(token, expect, "`{}` != `{}`", token, expect);
+    }
+
+    #[test]
+    fn test_aur_info_query() {
+        let pkgs = vec!["pacman-mirrorup".to_owned(), "networkd-broker".to_owned()];
+        let aur_pkg_info: AurPackageInfo = AurPackageInfo::info_query(&pkgs).unwrap();
+        assert_eq!(aur_pkg_info.len(), 2);
+        assert_eq!(aur_pkg_info[0].name, "networkd-broker");
+        assert_eq!(aur_pkg_info[1].name, "pacman-mirrorup");
     }
 }

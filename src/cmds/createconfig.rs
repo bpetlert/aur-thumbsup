@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use crate::config::Configuration;
 
-pub fn create_config<P: AsRef<Path>>(path: P) -> Result<()> {
+pub fn create_config<P: AsRef<Path>>(path: P, quiet: bool) -> Result<()> {
     if path.as_ref().exists() {
         return Err(anyhow!("`{}` is exist.", path.as_ref().to_str().unwrap()));
     }
@@ -22,6 +22,9 @@ pub fn create_config<P: AsRef<Path>>(path: P) -> Result<()> {
         PathBuf::from(format!("/var/tmp/aur-thumbsup-{}.cookie", sys_username));
     config.to_file(&path)?;
 
-    println!("Created `{}`", &path.as_ref().to_str().unwrap());
+    if !quiet {
+        println!("Created `{}`", &path.as_ref().to_str().unwrap());
+    }
+
     Ok(())
 }

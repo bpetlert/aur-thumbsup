@@ -19,7 +19,7 @@ log = "0.4.8"
 pretty_env_logger = "0.4.0"
 anyhow = "1.0.26"
 toml = "0.5.6"
-reqwest = { version = "0.10.3", features = ["blocking", "cookies", "gzip", "json", "rustls-tls"] }
+reqwest = { version = "0.10.4", features = ["blocking", "cookies", "gzip", "json", "rustls-tls"] }
 cookie = { version = "0.13.3", features = ["percent-encode"] }
 time = { version = "0.2.7", features = ["std"] }
 scraper = "0.11.0"
