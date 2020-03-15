@@ -10,6 +10,6 @@ Type=oneshot
 User=root
 Restart=on-failure
 RestartSec=10
-RestartPreventExitStatus=1 6 SIGABRT
+RestartPreventExitStatus=6 SIGABRT
 Environment='AUR_THUMBSUP_ARGS=--quiet --config /etc/aur-thumbsup.toml'
 ExecStart=/usr/bin/aur-thumbsup $AUR_THUMBSUP_ARGS autovote
