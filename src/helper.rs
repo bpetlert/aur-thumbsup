@@ -95,7 +95,7 @@ pub fn list_repos(select: SelectRepository) -> Result<Vec<String>> {
         .filter(|repo| !repo.is_empty())
         .filter(|repo| match select {
             SelectRepository::Official => {
-                (repo == &"core" || repo == &"extra" || repo == &"community" || repo == &"multilib")
+                repo == &"core" || repo == &"extra" || repo == &"community" || repo == &"multilib"
             }
             SelectRepository::NonOfficial => {
                 !(repo == &"core"
