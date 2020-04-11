@@ -1,1 +1,2 @@
 *.rs linguist-detectable
+*.html -linguist-detectable
