@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use dialoguer::{Input, PasswordInput};
+use dialoguer::{Input, Password};
 use std::path::{Path, PathBuf};
 
 use crate::config::Configuration;
@@ -12,7 +12,7 @@ pub fn create_config<P: AsRef<Path>>(path: P, quiet: bool) -> Result<()> {
     let aur_user = Input::<String>::new()
         .with_prompt("AUR user name")
         .interact()?;
-    let password = PasswordInput::new().with_prompt("Password").interact()?;
+    let password = Password::new().with_prompt("Password").interact()?;
     let sys_username = std::env::var("USER")?;
 
     let mut config = Configuration::default();

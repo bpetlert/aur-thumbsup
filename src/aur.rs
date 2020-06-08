@@ -337,7 +337,6 @@ impl Authentication {
             .redirect(login_no_redirect)
             .gzip(true)
             .http2_prior_knowledge()
-            .tcp_nodelay()
             .use_rustls_tls()
             .build()?;
         let login_response = login_client.get(login_url).send()?;
@@ -418,7 +417,7 @@ impl Authentication {
         // AURTZ
         if let Some(aurtz) = self.cookie_jar.get("AURTZ") {
             if let Some(expire_time) = aurtz.expires() {
-                if OffsetDateTime::now() > expire_time {
+                if OffsetDateTime::now_utc() > expire_time {
                     debug!("Cookies were expired.");
                     return Err(anyhow!("Cookies were expired."));
                 }
@@ -444,7 +443,6 @@ impl Authentication {
             .cookie_store(true)
             .gzip(true)
             .http2_prior_knowledge()
-            .tcp_nodelay()
             .use_rustls_tls()
             .build()?;
         let aur_url = Url::parse(&AUR_URL)?;
@@ -650,7 +648,6 @@ impl AurInfoQuery<AurPackageInfo> for AurPackageInfo {
             .user_agent(APP_USER_AGENT)
             .gzip(true)
             .http2_prior_knowledge()
-            .tcp_nodelay()
             .use_rustls_tls()
             .build()?;
 
