@@ -1,6 +1,6 @@
 [Unit]
 Description=AUR Thumbsup - autovote
-StartLimitIntervalSec=55
+StartLimitIntervalSec=26min
 StartLimitBurst=5
 Wants=network-online.target
 After=network-online.target
@@ -9,7 +9,7 @@ After=network-online.target
 Type=oneshot
 User=root
 Restart=on-failure
-RestartSec=10
+RestartSec=5min
 RestartPreventExitStatus=6 SIGABRT
 Environment='AUR_THUMBSUP_ARGS=--quiet --config /etc/aur-thumbsup.toml'
 ExecStart=/usr/bin/aur-thumbsup $AUR_THUMBSUP_ARGS autovote
