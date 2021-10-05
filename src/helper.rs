@@ -44,11 +44,11 @@ pub fn list_installed_pkgs() -> Result<HashMap<PkgName, PkgVersion>> {
     let pacman_output = packman_child.wait_with_output()?;
     let lines = String::from_utf8(pacman_output.stdout)?;
     let pkglist: HashMap<PkgName, PkgVersion> = lines
-        .split("\n")
+        .split('\n')
         .into_iter()
         .filter(|line| !line.is_empty())
         .map(|line| {
-            let cols: Vec<&str> = line.split(" ").collect();
+            let cols: Vec<&str> = line.split(' ').collect();
             (cols[0].to_owned(), cols[1].to_owned())
         })
         .collect();
@@ -90,7 +90,7 @@ pub fn list_repos(select: SelectRepository) -> Result<Vec<String>> {
 
     let lines = String::from_utf8(output.stdout)?;
     let repolist: Vec<String> = lines
-        .split("\n")
+        .split('\n')
         .into_iter()
         .filter(|repo| !repo.is_empty())
         .filter(|repo| match select {
@@ -134,12 +134,12 @@ pub fn list_installed_pkgs_repo<S: AsRef<str>>(repo: S) -> Result<HashMap<PkgNam
             grep_child.wait()?;
             let awk_output = awk_child.wait_with_output()?;
             let lines = String::from_utf8(awk_output.stdout)?;
-            let pkglist: Vec<&str> = lines.split("\n").collect();
+            let pkglist: Vec<&str> = lines.split('\n').collect();
             let pkgs: HashMap<PkgName, PkgVersion> = pkglist
                 .iter()
                 .filter(|pkg| !pkg.is_empty())
                 .map(|pkg| {
-                    let pkg_info: Vec<&str> = pkg.split(" ").collect();
+                    let pkg_info: Vec<&str> = pkg.split(' ').collect();
                     (pkg_info[0].to_owned(), pkg_info[1].to_owned())
                 })
                 .collect();

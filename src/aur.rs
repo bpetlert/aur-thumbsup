@@ -183,10 +183,10 @@ impl Authentication {
     }
 
     pub fn login(&mut self, account: &Account) -> Result<()> {
-        if let Err(_) = self.login_with_cookie_file(&account.cookie_file) {
+        if self.login_with_cookie_file(&account.cookie_file).is_err() {
             debug!("Failed to login using cookies.");
 
-            self.login_with_user_pass(&account)?;
+            self.login_with_user_pass(account)?;
             debug!("Logged in using user, pass.");
 
             self.save_cookie(&account.cookie_file)?;
@@ -207,7 +207,7 @@ impl Authentication {
         Err(anyhow!("Not logged in."))
     }
 
-    pub fn check_vote(&self, packages: &Vec<String>) -> Result<Vec<(String, Option<bool>)>> {
+    pub fn check_vote(&self, packages: &[String]) -> Result<Vec<(String, Option<bool>)>> {
         self.is_login()?;
         let session = self.session.as_ref().unwrap();
 
@@ -223,7 +223,7 @@ impl Authentication {
         Ok(voted)
     }
 
-    pub fn vote(&self, packages: &Vec<String>) -> Result<Vec<(String, VoteResult)>> {
+    pub fn vote(&self, packages: &[String]) -> Result<Vec<(String, VoteResult)>> {
         self.is_login()?;
         let session = self.session.as_ref().unwrap();
 
@@ -236,7 +236,7 @@ impl Authentication {
                 match status {
                     true => result.push((pkg.to_owned(), VoteResult::AlreadyVoted)),
                     false => {
-                        if let Err(err) = self.do_vote(&pkg, true, &page) {
+                        if let Err(err) = self.do_vote(pkg, true, &page) {
                             debug!("{}", err);
                             result.push((pkg.to_owned(), VoteResult::Failed));
                             continue;
@@ -253,7 +253,7 @@ impl Authentication {
         Ok(result)
     }
 
-    pub fn unvote(&self, packages: &Vec<String>) -> Result<Vec<(String, VoteResult)>> {
+    pub fn unvote(&self, packages: &[String]) -> Result<Vec<(String, VoteResult)>> {
         self.is_login()?;
         let session = self.session.as_ref().unwrap();
 
@@ -265,7 +265,7 @@ impl Authentication {
             if let Some(status) = self.is_vote_html(&page)? {
                 match status {
                     true => {
-                        if let Err(err) = self.do_vote(&pkg, false, &page) {
+                        if let Err(err) = self.do_vote(pkg, false, &page) {
                             debug!("{}", err);
                             result.push((pkg.to_owned(), VoteResult::Failed));
                             continue;
@@ -325,10 +325,10 @@ impl Authentication {
 
         // Stop redirect to https://aur.archlinux.org/ after logged in
         let login_no_redirect = redirect::Policy::custom(|attempt| {
-            if attempt.status() == StatusCode::FOUND {
-                if attempt.url().to_string() == (AUR_URL.to_string() + "/") {
-                    return attempt.stop();
-                }
+            if attempt.status() == StatusCode::FOUND
+                && attempt.url().to_string() == (AUR_URL.to_string() + "/")
+            {
+                return attempt.stop();
             }
             redirect::Policy::default().redirect(attempt)
         });
@@ -389,7 +389,7 @@ impl Authentication {
         // Login failed, get error messages
         let page = Html::parse_document(login_response.text()?.as_str());
         let error_list = LoginErrorList::from_html(&page)?;
-        if error_list.errors.len() > 0 {
+        if !error_list.errors.is_empty() {
             return Err(anyhow!("Login failed: {}", error_list.errors.join(", ")));
         }
 
@@ -499,7 +499,7 @@ impl Authentication {
             Err(err) => return Err(anyhow!("{:?}", err)),
         };
 
-        if let Some(_) = html.select(&do_unvote_selector).next() {
+        if html.select(&do_unvote_selector).next().is_some() {
             return Ok(Some(true));
         }
 
@@ -511,7 +511,7 @@ impl Authentication {
             Err(err) => return Err(anyhow!("{:?}", err)),
         };
 
-        if let Some(_) = html.select(&do_vote_selector).next() {
+        if html.select(&do_vote_selector).next().is_some() {
             return Ok(Some(false));
         }
 
@@ -533,10 +533,10 @@ impl Authentication {
         Ok(String::new())
     }
 
-    pub(self) fn do_vote(&self, pkg: &String, vote: bool, page: &Html) -> Result<()> {
+    pub(self) fn do_vote(&self, pkg: &str, vote: bool, page: &Html) -> Result<()> {
         let session = self.session.as_ref().unwrap();
         // Get token
-        let token = self.extract_token(&page)?;
+        let token = self.extract_token(page)?;
 
         // Get pkgbase for pkg
         let pkgbase_selector = match Selector::parse("table#pkginfo tr td a[href*=\"/pkgbase/\"]") {
@@ -645,11 +645,11 @@ pub struct AurPackageInfoItem {
 pub type AurPackageInfo = Vec<AurPackageInfoItem>;
 
 pub trait AurInfoQuery<T> {
-    fn info_query(pkgs: &Vec<String>) -> Result<T>;
+    fn info_query(pkgs: &[String]) -> Result<T>;
 }
 
 impl AurInfoQuery<AurPackageInfo> for AurPackageInfo {
-    fn info_query(pkgs: &Vec<String>) -> Result<AurPackageInfo> {
+    fn info_query(pkgs: &[std::string::String]) -> Result<AurPackageInfo> {
         let client = Client::builder()
             .user_agent(APP_USER_AGENT)
             .gzip(true)
@@ -695,9 +695,7 @@ mod tests {
         }
 
         // Check voted pkgs
-        let voted_pkg: AurPackageResults =
-            aur_packages.into_iter().filter(|pkg| pkg.voted).collect();
-        assert_eq!(voted_pkg.len(), 12);
+        assert_eq!(aur_packages.into_iter().filter(|pkg| pkg.voted).count(), 12);
     }
 
     #[test]
@@ -709,11 +707,13 @@ mod tests {
         assert_eq!(aur_packages.len(), 250);
 
         // Check orphan packages
-        let orphan_pkgs: AurPackageResults = aur_packages
-            .into_iter()
-            .filter(|pkg| pkg.maintainer == "orphan")
-            .collect();
-        assert_eq!(orphan_pkgs.len(), 12);
+        assert_eq!(
+            aur_packages
+                .into_iter()
+                .filter(|pkg| pkg.maintainer == "orphan")
+                .count(),
+            12
+        );
     }
 
     #[test]

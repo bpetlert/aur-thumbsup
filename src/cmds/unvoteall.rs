@@ -15,7 +15,7 @@ pub fn unvote_all<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
 
     if !quiet {
         for result in results.iter() {
-            println!("{}", fancy(&result)?);
+            println!("{}", fancy(result)?);
         }
     }
 

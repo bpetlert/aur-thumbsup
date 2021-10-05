@@ -4,6 +4,7 @@
     "AURLANG",
     "AURSID",
     "AURTZ",
+    "cmds",
     "FAKETOKENFAKETOKENFAKETOKENFAKET",
     "mirrorup",
     "networkd",
@@ -11,8 +12,11 @@
     "repolist",
     "repos",
     "rustls",
+    "structopt",
     "tbody",
     "unvote",
-    "Unvoted"
+    "unvoteall",
+    "Unvoted",
+    "vercmp"
   ]
 }

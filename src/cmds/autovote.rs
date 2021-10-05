@@ -54,7 +54,7 @@ pub fn autovote<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
 
     if !quiet {
         for result in results.iter() {
-            println!("{}", vote::fancy(&result)?);
+            println!("{}", vote::fancy(result)?);
         }
     }
 
@@ -64,7 +64,7 @@ pub fn autovote<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
 
     if !quiet {
         for result in results.iter() {
-            println!("{}", unvote::fancy(&result)?);
+            println!("{}", unvote::fancy(result)?);
         }
     }
 

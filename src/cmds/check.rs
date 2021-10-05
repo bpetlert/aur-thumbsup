@@ -13,7 +13,7 @@ pub fn check<P: AsRef<Path>>(config_path: P, packages: Vec<String>, quiet: bool)
 
     if !quiet {
         for v in voted.iter() {
-            println!("{}", fancy(&v)?);
+            println!("{}", fancy(v)?);
         }
     }
 

@@ -74,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_load_configuration() {
-        const CONFIG_FILE: &'static str = concat!(
+        const CONFIG_FILE: &str = concat!(
             env!("CARGO_MANIFEST_DIR"),
             "/src",
             "/test-aur-thumbsup.toml"
