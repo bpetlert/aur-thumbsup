@@ -7,7 +7,7 @@ arch=('x86_64')
 url="https://github.com/bpetlert/aur-thumbsup"
 license=('MIT')
 depends=('gawk' 'grep' 'pacman' 'systemd')
-makedepends=('cargo' 'rust')
+makedepends=(cargo)
 provides=("${pkgname}")
 conflicts=("${pkgname}")
 
