@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use cookie::Expiration;
 use cookie::{Cookie, CookieJar};
 use lazy_static::lazy_static;
 use log::debug;
@@ -417,9 +418,14 @@ impl Authentication {
         // AURTZ
         if let Some(aurtz) = self.cookie_jar.get("AURTZ") {
             if let Some(expire_time) = aurtz.expires() {
-                if OffsetDateTime::now_utc() > expire_time {
-                    debug!("Cookies were expired.");
-                    return Err(anyhow!("Cookies were expired."));
+                match expire_time {
+                    Expiration::DateTime(d) => {
+                        if d.unix_timestamp() < OffsetDateTime::now_utc().unix_timestamp() {
+                            debug!("Cookies were expired.");
+                            return Err(anyhow!("Cookies were expired."));
+                        }
+                    }
+                    Expiration::Session => (),
                 }
             }
 

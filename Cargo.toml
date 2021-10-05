@@ -14,21 +14,21 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-structopt = { version = "0.3.21", default-features = true }
-log = "0.4.11"
+structopt = { version = "0.3.23", default-features = true }
+log = "0.4.14"
 pretty_env_logger = "0.4.0"
-anyhow = "1.0.34"
-toml = "0.5.7"
-reqwest = { version = "0.10.9", features = ["blocking", "cookies", "gzip", "json", "rustls-tls"], default-features = false }
-cookie = { version = "0.14.3", features = ["percent-encode"] }
-time = { version = "0.2.23", features = ["std"] }
+anyhow = "1.0.44"
+toml = "0.5.8"
+reqwest = { version = "0.11.4", features = ["blocking", "cookies", "gzip", "json", "rustls-tls"], default-features = false }
+cookie = { version = "0.15.1", features = ["percent-encode"] }
+time = { version = "0.3.3", features = ["std"] }
 scraper = "0.12.0"
-serde = { version = "1.0.117", features = ["derive"] }
-serde_json = "1.0.59"
-dialoguer = "0.7.1"
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0.68"
+dialoguer = "0.8.0"
 lazy_static = "1.4.0"
 colored = "2.0.0"
 
 [dev-dependencies]
-csv = "1.1.5"
-tempfile = "3.1.0"
+csv = "1.1.6"
+tempfile = "3.2.0"
