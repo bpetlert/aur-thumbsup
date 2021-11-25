@@ -3,7 +3,7 @@
 
 # Run with debug log
 run-debug +ARGS='':
-  RUST_BACKTRACE=1 AUR_THUMBSUP_LOG=aur_thumbsup=debug cargo run -- {{ARGS}}
+  RUST_BACKTRACE=1 RUST_LOG=aur_thumbsup=debug cargo run -- {{ARGS}}
 
 # Run test
 test +CASES='':
