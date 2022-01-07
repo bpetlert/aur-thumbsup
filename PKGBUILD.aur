@@ -1,6 +1,6 @@
 # Maintainer: Bhanupong Petchlert <bpetlert@gmail.com>
 pkgname=aur-thumbsup
-pkgver=0.3.2
+pkgver=0.4.0
 pkgrel=1
 pkgdesc="A tool to manage voting for favorite AUR packages (including systemd service for auto vote)"
 arch=('x86_64')
