@@ -1,7 +1,7 @@
 use anyhow::Result;
-use log::{debug, error, LevelFilter};
+use clap::Parser;
+use log::{debug, error};
 use std::{env, process};
-use structopt::StructOpt;
 
 mod args;
 mod aur;
@@ -20,35 +20,27 @@ use crate::cmds::unvoteall::unvote_all;
 use crate::cmds::vote::vote;
 
 fn run_app() -> Result<()> {
-    let arguments = Arguments::from_args();
-    let log_level = match arguments.verbose {
-        0 => LevelFilter::Error,
-        1 => LevelFilter::Warn,
-        2 => LevelFilter::Info,
-        3 => LevelFilter::Debug,
-        4 => LevelFilter::Trace,
-        _ => LevelFilter::Trace,
-    };
+    let arguments = Arguments::parse();
 
     let mut log_builder = pretty_env_logger::formatted_builder();
     if let Ok(value) = env::var("RUST_LOG") {
         log_builder.parse_filters(&value);
     } else {
-        log_builder.filter_level(log_level);
+        log_builder.filter_level(arguments.verbose.log_level().unwrap().to_level_filter());
     }
-    log_builder.init();
+
     debug!("Run with {:?}", arguments);
 
     if let Some(cmd) = arguments.cmd {
         match cmd {
-            Commands::Vote { packages } => vote(arguments.config, packages, arguments.quiet)?,
-            Commands::Unvote { packages } => unvote(arguments.config, packages, arguments.quiet)?,
-            Commands::UnvoteAll {} => unvote_all(arguments.config, arguments.quiet)?,
-            Commands::Check { packages } => check(arguments.config, packages, arguments.quiet)?,
-            Commands::List {} => list(arguments.config, arguments.quiet)?,
-            Commands::Autovote {} => autovote(arguments.config, arguments.quiet)?,
-            Commands::CreateConfig { path } => create_config(path, arguments.quiet)?,
-            Commands::CheckConfig { path } => check_config(path, arguments.quiet)?,
+            Commands::Vote { packages } => vote(arguments.config, packages)?,
+            Commands::Unvote { packages } => unvote(arguments.config, packages)?,
+            Commands::UnvoteAll {} => unvote_all(arguments.config)?,
+            Commands::Check { packages } => check(arguments.config, packages)?,
+            Commands::List {} => list(arguments.config)?,
+            Commands::Autovote {} => autovote(arguments.config)?,
+            Commands::CreateConfig { path } => create_config(path)?,
+            Commands::CheckConfig { path } => check_config(path)?,
         }
     }
 

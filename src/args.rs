@@ -1,76 +1,71 @@
+use clap::{Parser, Subcommand};
+use clap_verbosity_flag::Verbosity;
 use lazy_static::lazy_static;
 use std::path::PathBuf;
-use structopt::StructOpt;
 
 lazy_static! {
     static ref DEFAULT_CONFIG_FILE: PathBuf =
         PathBuf::from(std::env::var("HOME").unwrap() + "/.config/aur-thumbsup.toml");
 }
 
-#[derive(StructOpt, PartialEq, Debug)]
-#[structopt(author, about)]
+#[derive(Parser, Debug)]
+#[clap(about, version, author)]
 pub struct Arguments {
     /// Configuration file
     ///
-    #[structopt(
-        short = "c",
-        long = "config",
+    #[clap(
+        short = 'c',
+        long,
         parse(from_os_str),
         default_value = DEFAULT_CONFIG_FILE.to_str().unwrap()
     )]
     pub config: PathBuf,
 
-    /// Suppress stdout
-    #[structopt(short = "q", long = "quiet")]
-    pub quiet: bool,
+    #[clap(flatten)]
+    pub verbose: Verbosity,
 
-    /// Increment verbosity level once per call
-    /// [error, -v: warn, -vv: info, -vvv: debug, -vvvv: trace]
-    #[structopt(short = "v", long = "verbose", parse(from_occurrences))]
-    pub verbose: u8,
-
-    #[structopt(subcommand)]
+    #[clap(subcommand)]
     pub cmd: Option<Commands>,
 }
 
-#[derive(StructOpt, PartialEq, Debug)]
+#[derive(Subcommand, PartialEq, Debug)]
 pub enum Commands {
-    #[structopt(about = "Vote for packages")]
+    #[clap(about = "Vote for packages")]
     Vote {
-        #[structopt(required = true)]
+        #[clap(required = true)]
         packages: Vec<String>,
     },
 
-    #[structopt(about = "Unvote packages")]
+    #[clap(about = "Unvote packages")]
     Unvote {
-        #[structopt(required = true)]
+        #[clap(required = true)]
         packages: Vec<String>,
     },
 
-    #[structopt(about = "Unvote for all installed packages")]
+    #[clap(about = "Unvote for all installed packages")]
     UnvoteAll {},
 
-    #[structopt(about = "Check for voted packages")]
+    #[clap(about = "Check for voted packages")]
     Check {
-        #[structopt(required = true)]
+        #[clap(required = true)]
         packages: Vec<String>,
     },
 
-    #[structopt(about = "List all voted packages")]
+    #[clap(about = "List all voted packages")]
     List {},
 
-    #[structopt(about = "Vote/Unvote for installed packages")]
+    #[clap(about = "Vote/Unvote for installed packages")]
     Autovote {},
 
-    #[structopt(about = "Create configuration file")]
+    #[clap(about = "Create configuration file")]
     CreateConfig {
-        #[structopt(required = true, parse(from_os_str))]
+        #[clap(required = true, parse(from_os_str))]
         path: PathBuf,
     },
 
-    #[structopt(about = "Check configuration file")]
+    #[clap(about = "Check configuration file")]
     CheckConfig {
-        #[structopt(required = true, parse(from_os_str))]
+        #[clap(required = true, parse(from_os_str))]
         path: PathBuf,
     },
 }
@@ -78,180 +73,159 @@ pub enum Commands {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use clap::{FromArgMatches, IntoApp};
 
     #[test]
-    fn test_main_flags() {
-        assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 0,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test"]))
-        );
+    fn main_flags() {
+        Arguments::into_app().debug_assert();
 
-        assert_eq!(
-            Arguments {
-                config: PathBuf::from(r"/etc/aur-thumbsup.toml"),
-                quiet: false,
-                verbose: 0,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&[
-                "test",
-                "-c",
-                "/etc/aur-thumbsup.toml"
-            ]))
-        );
+        // No argument
+        let args =
+            Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec!["test"]))
+                .unwrap();
+        assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
+        assert_eq!(args.verbose.log_level(), Some(log::Level::Error));
+        assert_eq!(args.cmd, None);
 
-        assert_eq!(
-            Arguments {
-                config: PathBuf::from(r"/etc/aur-thumbsup.toml"),
-                quiet: false,
-                verbose: 0,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&[
-                "test",
-                "--config",
-                "/etc/aur-thumbsup.toml"
-            ]))
-        );
+        // short config flag
+        let args = Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec![
+            "test",
+            "-c",
+            "/etc/aur-thumbsup.toml",
+        ]))
+        .unwrap();
+        assert_eq!(args.config, PathBuf::from(r"/etc/aur-thumbsup.toml"));
+        assert_eq!(args.verbose.log_level(), Some(log::Level::Error));
+        assert_eq!(args.cmd, None);
 
-        assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: true,
-                verbose: 0,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "-q"]))
-        );
+        // long config flag
+        let args = Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec![
+            "test",
+            "--config",
+            "/etc/aur-thumbsup.toml",
+        ]))
+        .unwrap();
+        assert_eq!(args.config, PathBuf::from(r"/etc/aur-thumbsup.toml"));
+        assert_eq!(args.verbose.log_level(), Some(log::Level::Error));
+        assert_eq!(args.cmd, None);
 
-        assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: true,
-                verbose: 0,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "--quiet"]))
-        );
+        // quiet flag
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "--quiet"]),
+        )
+        .unwrap();
+        assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
+        assert_eq!(args.verbose.log_level(), None);
+        assert_eq!(args.cmd, None);
 
-        assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 4,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "-vvvv"]))
-        );
+        // verbose flag
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "-vvvv"]),
+        )
+        .unwrap();
+        assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
+        assert_eq!(args.verbose.log_level(), Some(log::Level::Trace));
+        assert_eq!(args.cmd, None);
+    }
 
+    #[test]
+    fn vote_cmd() {
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "vote", "pkg1", "pkg2"]),
+        )
+        .unwrap();
         assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 4,
-                cmd: None
-            },
-            Arguments::from_clap(
-                &Arguments::clap().get_matches_from(&["test", "-v", "-v", "-v", "-v"])
-            )
-        );
-
-        assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 4,
-                cmd: None
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&[
-                "test",
-                "--verbose",
-                "--verbose",
-                "--verbose",
-                "--verbose"
-            ]))
+            args.cmd,
+            Some(Commands::Vote {
+                packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
+            })
         );
     }
 
     #[test]
-    fn test_vote() {
+    fn unvote_cmd() {
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "unvote", "pkg1", "pkg2"]),
+        )
+        .unwrap();
         assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 0,
-                cmd: Some(Commands::Vote {
-                    packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
-                })
-            },
-            Arguments::from_clap(
-                &Arguments::clap().get_matches_from(&["test", "vote", "pkg1", "pkg2"])
-            )
+            args.cmd,
+            Some(Commands::Unvote {
+                packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
+            })
         );
     }
 
     #[test]
-    fn test_unvote() {
+    fn unvote_all_cmd() {
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "unvote-all"]),
+        )
+        .unwrap();
+        assert_eq!(args.cmd, Some(Commands::UnvoteAll {}));
+    }
+
+    #[test]
+    fn check_cmd() {
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "check", "pkg1", "pkg2"]),
+        )
+        .unwrap();
         assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 0,
-                cmd: Some(Commands::Unvote {
-                    packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
-                })
-            },
-            Arguments::from_clap(
-                &Arguments::clap().get_matches_from(&["test", "unvote", "pkg1", "pkg2"])
-            )
+            args.cmd,
+            Some(Commands::Check {
+                packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
+            })
         );
     }
 
     #[test]
-    fn test_check() {
+    fn list_cmd() {
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "list"]),
+        )
+        .unwrap();
+        assert_eq!(args.cmd, Some(Commands::List {}));
+    }
+
+    #[test]
+    fn autovote_cmd() {
+        let args = Arguments::from_arg_matches(
+            &Arguments::into_app().get_matches_from(vec!["test", "autovote"]),
+        )
+        .unwrap();
+        assert_eq!(args.cmd, Some(Commands::Autovote {}));
+    }
+
+    #[test]
+    fn create_config_cmd() {
+        let args = Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec![
+            "test",
+            "create-config",
+            "/etc/aur-thumbsup.toml",
+        ]))
+        .unwrap();
         assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 0,
-                cmd: Some(Commands::Check {
-                    packages: vec!["pkg1".to_owned(), "pkg2".to_owned()]
-                })
-            },
-            Arguments::from_clap(
-                &Arguments::clap().get_matches_from(&["test", "check", "pkg1", "pkg2"])
-            )
+            args.cmd,
+            Some(Commands::CreateConfig {
+                path: PathBuf::from(r"/etc/aur-thumbsup.toml")
+            })
         );
     }
 
     #[test]
-    fn test_list() {
+    fn check_config_cmd() {
+        let args = Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec![
+            "test",
+            "check-config",
+            "/etc/aur-thumbsup.toml",
+        ]))
+        .unwrap();
         assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 0,
-                cmd: Some(Commands::List {})
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "list"]))
-        );
-    }
-
-    #[test]
-    fn test_autovote() {
-        assert_eq!(
-            Arguments {
-                config: DEFAULT_CONFIG_FILE.to_path_buf(),
-                quiet: false,
-                verbose: 0,
-                cmd: Some(Commands::Autovote {})
-            },
-            Arguments::from_clap(&Arguments::clap().get_matches_from(&["test", "autovote"]))
+            args.cmd,
+            Some(Commands::CheckConfig {
+                path: PathBuf::from(r"/etc/aur-thumbsup.toml")
+            })
         );
     }
 }

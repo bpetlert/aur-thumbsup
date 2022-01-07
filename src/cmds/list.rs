@@ -7,17 +7,15 @@ use crate::aur::{AurPackageResultItem, Authentication};
 use crate::config::Configuration;
 use crate::helper::{list_installed_pkgs, vercmp, PkgName, PkgVersion, Versioning};
 
-pub fn list<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
+pub fn list<P: AsRef<Path>>(config_path: P) -> Result<()> {
     let config = Configuration::load_and_verify_config(&config_path)?;
     let mut auth = Authentication::new();
     auth.login(&config.account)?;
     let voted_pkgs = auth.list_voted_pkgs()?;
     let installed_pkgs: HashMap<PkgName, PkgVersion> = list_installed_pkgs()?;
 
-    if !quiet {
-        for pkg in &voted_pkgs {
-            println!("{}", fancy(pkg, &installed_pkgs)?);
-        }
+    for pkg in &voted_pkgs {
+        println!("{}", fancy(pkg, &installed_pkgs)?);
     }
 
     Ok(())

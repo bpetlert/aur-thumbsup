@@ -7,7 +7,7 @@ use crate::cmds::{unvote, vote};
 use crate::config::Configuration;
 use crate::helper::{list_installed_pkgs_repo, list_repos, PkgName, PkgVersion, SelectRepository};
 
-pub fn autovote<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
+pub fn autovote<P: AsRef<Path>>(config_path: P) -> Result<()> {
     // [1] Get non-official repositories
     let non_official = list_repos(SelectRepository::NonOfficial)?;
 
@@ -52,20 +52,16 @@ pub fn autovote<P: AsRef<Path>>(config_path: P, quiet: bool) -> Result<()> {
         .collect();
     let results = auth.vote(&pkgs)?;
 
-    if !quiet {
-        for result in results.iter() {
-            println!("{}", vote::fancy(result)?);
-        }
+    for result in results.iter() {
+        println!("{}", vote::fancy(result)?);
     }
 
     // [7] Unvote the left packages in voted_pkgs
     let pkgs: Vec<PkgName> = voted_pkgs.iter().map(|pkg| pkg.name.to_owned()).collect();
     let results = auth.unvote(&pkgs)?;
 
-    if !quiet {
-        for result in results.iter() {
-            println!("{}", unvote::fancy(result)?);
-        }
+    for result in results.iter() {
+        println!("{}", unvote::fancy(result)?);
     }
 
     Ok(())
