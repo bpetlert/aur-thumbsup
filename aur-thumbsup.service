@@ -8,8 +8,10 @@ After=network-online.target
 [Service]
 Type=oneshot
 User=root
+StandardOutput=null
+StandardError=journal
 Restart=on-failure
 RestartSec=5min
 RestartPreventExitStatus=6 SIGABRT
-Environment='AUR_THUMBSUP_ARGS=--quiet --config /etc/aur-thumbsup.toml'
+Environment='AUR_THUMBSUP_ARGS=--config /etc/aur-thumbsup.toml'
 ExecStart=/usr/bin/aur-thumbsup $AUR_THUMBSUP_ARGS autovote
