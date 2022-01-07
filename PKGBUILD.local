@@ -44,6 +44,6 @@ package() {
   install -Dm644 "$startdir/aur-thumbsup.service" "$pkgdir/usr/lib/systemd/system/aur-thumbsup.service"
   install -Dm644 "$startdir/aur-thumbsup.timer" "$pkgdir/usr/lib/systemd/system/aur-thumbsup.timer"
 
-  install -Dm644 "$startdir/README.md" "$pkgdir/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 "$startdir/README.adoc" "$pkgdir/usr/share/doc/${pkgname}/README.adoc"
   install -Dm644 "$startdir/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 }
