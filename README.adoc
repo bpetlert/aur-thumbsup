@@ -1,37 +1,43 @@
 [[aur-thumbsup-]]
-== AUR-Thumbsup 👍
+= AUR-Thumbsup 👍
+:toc:
+:toc-placement!:
 
-https://github.com/bpetlert/aur-thumbsup/releases/latest[image:https://img.shields.io/github/v/tag/bpetlert/aur-thumbsup?include_prereleases&label=release&style=flat-square[Release]]
-https://aur.archlinux.org/packages/aur-thumbsup/[image:https://img.shields.io/aur/version/aur-thumbsup?style=flat-square[AUR:aur-thumbsup]]
-link:./LICENSE[image:https://img.shields.io/github/license/bpetlert/aur-thumbsup?style=flat-square[License:MIT]]
+image:https://img.shields.io/github/v/tag/bpetlert/aur-thumbsup?include_prereleases&label=release&style=flat-square[Release,link=https://github.com/bpetlert/aur-thumbsup/releases/latest]
+image:https://img.shields.io/aur/version/aur-thumbsup?style=flat-square["AUR:aur-thumbsup",link=https://aur.archlinux.org/packages/aur-thumbsup/]
+image:https://img.shields.io/github/license/bpetlert/aur-thumbsup?style=flat-square["License: MIT",link=./LICENSE]
 
 A tool to manage voting for favorite AUR packages (including systemd service for auto vote for installed packages)
 
-=== How Does Auto-Vote Works
+toc::[]
+
+== How Does Auto-Vote Works
 
 `aur-thumbsup` will vote/unvote only for non-official installed packages.
 It starts by querying all installed packages that do not exist in official repositories (`core`, `extra`, `community`, and `multilib`)
 and then filter out any packages that do not exist in AUR.
 Finally, vote for any packages that not yet vote and unvote any packages that are not installed anymore.
 
-=== Installation and Configuration
+== Installation
 
-==== Arch Linux
+=== Arch Linux
 
 It is available on AUR as https://aur.archlinux.org/packages/aur-thumbsup/[aur-thumbsup].
 To build and install arch package from GIT source:
 
-[source,sh]
+[source,shell]
 ----
-git clone https://github.com/bpetlert/aur-thumbsup.git
-cd aur-thumbsup
-makepkg -p PKGBUILD.local
-pacman -U aur-thumbsup-xxxx-1-x86_64.pkg.tar
+$ git clone https://github.com/bpetlert/aur-thumbsup.git
+$ cd aur-thumbsup
+$ makepkg -p PKGBUILD.local
+$ pacman -U aur-thumbsup-xxxx-1-x86_64.pkg.tar
 ----
+
+=== Configuration
 
 Setup user and password for aur-thumbsup service:
 
-[source,sh]
+[source,shell]
 ----
 $ aur-thumbsup create-config /etc/aur-thumbsup.toml
 AUR user name:
@@ -41,25 +47,24 @@ Created `/etc/aur-thumbsup.toml`
 
 Then enable/start aur-thumbsup.timer
 
-[source,sh]
+[source,shell]
 ----
-systemctl enable aur-thumbsup.timer
-systemctl start aur-thumbsup.timer
+$ systemctl enable aur-thumbsup.timer
+$ systemctl start aur-thumbsup.timer
 ----
 
 To change the options of aur-thumbsup timer, run
 `systemctl edit aur-thumbsup.timer`
 
+./etc/systemd/system/aur-thumbsup.timer.d/override.conf
 [source,ini]
 ----
-/etc/systemd/system/aur-thumbsup.timer.d/override.conf
--------------------------------------------------------------------------
-
 [Timer]
+OnCalendar=
 OnCalendar=daily
 ----
 
-=== Use as Cli
+== Use as Cli
 
 To run aur-thumbsup as a user, it requires to create configuration file for user.
 Use `aur-thumbsup create-config` to create default configuration file: `~/.config/aur-thumbsup.toml`.
@@ -74,7 +79,7 @@ Support sub-commands are:
 * `unvote-all` Unvote for all installed packages
 * `vote` Vote for packages
 
-==== Example Usages
+=== Example Usages
 
 image:docs/assets/list.png[List]
 
@@ -82,6 +87,6 @@ image:docs/assets/check.png[Check]
 
 image:docs/assets/vote.png[Vote]
 
-=== License
+== License
 
 *link:./LICENSE[MIT license]*
