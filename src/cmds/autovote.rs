@@ -1,11 +1,12 @@
 use anyhow::Result;
-use std::collections::HashMap;
-use std::path::Path;
+use std::{collections::HashMap, fmt::Write, path::Path};
 
-use crate::aur::{AurInfoQuery, AurPackageInfo, Authentication};
-use crate::cmds::{unvote, vote};
-use crate::config::Configuration;
-use crate::helper::{list_installed_pkgs_repo, list_repos, PkgName, PkgVersion, SelectRepository};
+use crate::{
+    aur::{AurInfoQuery, AurPackageInfo, Authentication},
+    cmds::{unvote, vote},
+    config::Configuration,
+    helper::{list_installed_pkgs_repo, list_repos, PkgName, PkgVersion, SelectRepository},
+};
 
 pub fn autovote<P: AsRef<Path>>(config_path: P) -> Result<()> {
     // [1] Get non-official repositories
@@ -52,17 +53,21 @@ pub fn autovote<P: AsRef<Path>>(config_path: P) -> Result<()> {
         .collect();
     let results = auth.vote(&pkgs)?;
 
+    let mut output = String::new();
     for result in results.iter() {
-        println!("{}", vote::fancy(result)?);
+        writeln!(output, "{}", vote::fancy(result)?)?;
     }
+    print!("{}", output);
 
     // [7] Unvote the left packages in voted_pkgs
     let pkgs: Vec<PkgName> = voted_pkgs.iter().map(|pkg| pkg.name.to_owned()).collect();
     let results = auth.unvote(&pkgs)?;
 
+    let mut output = String::new();
     for result in results.iter() {
-        println!("{}", unvote::fancy(result)?);
+        writeln!(output, "{}", unvote::fancy(result)?)?;
     }
+    print!("{}", output);
 
     Ok(())
 }

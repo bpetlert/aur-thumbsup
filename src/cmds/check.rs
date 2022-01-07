@@ -1,9 +1,8 @@
 use anyhow::Result;
 use colored::Colorize;
-use std::path::Path;
+use std::{fmt::Write, path::Path};
 
-use crate::aur::Authentication;
-use crate::config::Configuration;
+use crate::{aur::Authentication, config::Configuration};
 
 pub fn check<P: AsRef<Path>>(config_path: P, packages: Vec<String>) -> Result<()> {
     let config = Configuration::load_and_verify_config(&config_path)?;
@@ -11,9 +10,11 @@ pub fn check<P: AsRef<Path>>(config_path: P, packages: Vec<String>) -> Result<()
     auth.login(&config.account)?;
     let voted = auth.check_vote(&packages)?;
 
+    let mut output = String::new();
     for v in voted.iter() {
-        println!("{}", fancy(v)?);
+        writeln!(output, "{}", fancy(v)?)?;
     }
+    print!("{}", output);
 
     Ok(())
 }

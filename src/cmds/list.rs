@@ -1,11 +1,12 @@
 use anyhow::Result;
 use colored::Colorize;
-use std::collections::HashMap;
-use std::path::Path;
+use std::{collections::HashMap, fmt::Write, path::Path};
 
-use crate::aur::{AurPackageResultItem, Authentication};
-use crate::config::Configuration;
-use crate::helper::{list_installed_pkgs, vercmp, PkgName, PkgVersion, Versioning};
+use crate::{
+    aur::{AurPackageResultItem, Authentication},
+    config::Configuration,
+    helper::{list_installed_pkgs, vercmp, PkgName, PkgVersion, Versioning},
+};
 
 pub fn list<P: AsRef<Path>>(config_path: P) -> Result<()> {
     let config = Configuration::load_and_verify_config(&config_path)?;
@@ -14,9 +15,11 @@ pub fn list<P: AsRef<Path>>(config_path: P) -> Result<()> {
     let voted_pkgs = auth.list_voted_pkgs()?;
     let installed_pkgs: HashMap<PkgName, PkgVersion> = list_installed_pkgs()?;
 
+    let mut output = String::new();
     for pkg in &voted_pkgs {
-        println!("{}", fancy(pkg, &installed_pkgs)?);
+        writeln!(output, "{}", fancy(pkg, &installed_pkgs)?)?;
     }
+    print!("{}", output);
 
     Ok(())
 }
