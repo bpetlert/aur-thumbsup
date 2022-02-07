@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 lazy_static! {
     static ref DEFAULT_CONFIG_FILE: PathBuf =
-        PathBuf::from(std::env::var("HOME").unwrap() + "/.config/aur-thumbsup.toml");
+        PathBuf::from(std::env::var("HOME").expect("Get HOME env") + "/.config/aur-thumbsup.toml");
 }
 
 #[derive(Parser, Debug)]
@@ -16,7 +16,7 @@ pub struct Arguments {
         short = 'c',
         long,
         parse(from_os_str),
-        default_value = DEFAULT_CONFIG_FILE.to_str().unwrap()
+        default_value = DEFAULT_CONFIG_FILE.to_str().expect("To str")
     )]
     pub config: PathBuf,
 
@@ -78,7 +78,7 @@ mod tests {
         // No argument
         let args =
             Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec!["test"]))
-                .unwrap();
+                .expect("Paring argument");
         assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
         assert_eq!(args.cmd, None);
 
@@ -88,7 +88,7 @@ mod tests {
             "-c",
             "/etc/aur-thumbsup.toml",
         ]))
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(args.config, PathBuf::from(r"/etc/aur-thumbsup.toml"));
         assert_eq!(args.cmd, None);
 
@@ -98,7 +98,7 @@ mod tests {
             "--config",
             "/etc/aur-thumbsup.toml",
         ]))
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(args.config, PathBuf::from(r"/etc/aur-thumbsup.toml"));
         assert_eq!(args.cmd, None);
     }
@@ -108,7 +108,7 @@ mod tests {
         let args = Arguments::from_arg_matches(
             &Arguments::into_app().get_matches_from(vec!["test", "vote", "pkg1", "pkg2"]),
         )
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(
             args.cmd,
             Some(Commands::Vote {
@@ -122,7 +122,7 @@ mod tests {
         let args = Arguments::from_arg_matches(
             &Arguments::into_app().get_matches_from(vec!["test", "unvote", "pkg1", "pkg2"]),
         )
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(
             args.cmd,
             Some(Commands::Unvote {
@@ -136,7 +136,7 @@ mod tests {
         let args = Arguments::from_arg_matches(
             &Arguments::into_app().get_matches_from(vec!["test", "unvote-all"]),
         )
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(args.cmd, Some(Commands::UnvoteAll {}));
     }
 
@@ -145,7 +145,7 @@ mod tests {
         let args = Arguments::from_arg_matches(
             &Arguments::into_app().get_matches_from(vec!["test", "check", "pkg1", "pkg2"]),
         )
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(
             args.cmd,
             Some(Commands::Check {
@@ -159,7 +159,7 @@ mod tests {
         let args = Arguments::from_arg_matches(
             &Arguments::into_app().get_matches_from(vec!["test", "list"]),
         )
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(args.cmd, Some(Commands::List {}));
     }
 
@@ -168,7 +168,7 @@ mod tests {
         let args = Arguments::from_arg_matches(
             &Arguments::into_app().get_matches_from(vec!["test", "autovote"]),
         )
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(args.cmd, Some(Commands::Autovote {}));
     }
 
@@ -179,7 +179,7 @@ mod tests {
             "create-config",
             "/etc/aur-thumbsup.toml",
         ]))
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(
             args.cmd,
             Some(Commands::CreateConfig {
@@ -195,7 +195,7 @@ mod tests {
             "check-config",
             "/etc/aur-thumbsup.toml",
         ]))
-        .unwrap();
+        .expect("Paring argument");
         assert_eq!(
             args.cmd,
             Some(Commands::CheckConfig {

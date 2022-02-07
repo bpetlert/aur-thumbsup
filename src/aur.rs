@@ -19,9 +19,9 @@ use tracing::debug;
 
 lazy_static! {
     static ref AUR_URL: String = String::from("https://aur.archlinux.org");
-    static ref AUR_URL_LOGIN: String = AUR_URL.to_string() + "/login/";
+    static ref AUR_URL_LOGIN: String = AUR_URL.to_string() + "/login?next=/";
     static ref AUR_URL_PKG_PAGE: String = AUR_URL.to_string() + "/packages/<PKG>";
-    static ref AUR_URL_PKG_INFO: String = AUR_URL.to_string() + "/rpc/?v=5&type=info";
+    static ref AUR_URL_PKG_INFO: String = AUR_URL.to_string() + "/rpc?v=5&type=info";
     static ref AUR_URL_SORT_VOTED_PKG: String =
         AUR_URL.to_string() + "/packages/?O=<OFFSET>&SeB=nd&SB=w&SO=d&PP=250&do_Search=Go";
 }
@@ -104,7 +104,7 @@ impl Extraction<AurPackageResults> for AurPackageResults {
                 .collect();
 
             let name: String = match Html::parse_fragment(cols[1].as_str())
-                .select(&Selector::parse("a").unwrap())
+                .select(&Selector::parse("a").expect("Paring selector"))
                 .next()
             {
                 Some(n) => n.inner_html(),
@@ -119,7 +119,7 @@ impl Extraction<AurPackageResults> for AurPackageResults {
             let description: String = cols[7].to_owned();
 
             let maintainer: String = match Html::parse_fragment(cols[8].as_str())
-                .select(&Selector::parse("a").unwrap())
+                .select(&Selector::parse("a").expect("Paring selector"))
                 .next()
             {
                 // Maintainer with link
@@ -129,7 +129,7 @@ impl Extraction<AurPackageResults> for AurPackageResults {
                 // Orphan
                 // <span>orphan</span>
                 None => match Html::parse_fragment(cols[8].as_str())
-                    .select(&Selector::parse("span").unwrap())
+                    .select(&Selector::parse("span").expect("Paring selector"))
                     .next()
                 {
                     Some(s) => s.inner_html(),
@@ -194,7 +194,7 @@ impl Authentication {
             self.save_cookie(&account.cookie_file)?;
             debug!(
                 "Save cookie to `{}`",
-                &account.cookie_file.to_str().unwrap()
+                &account.cookie_file.to_str().expect("To str")
             );
         }
 
@@ -211,7 +211,7 @@ impl Authentication {
 
     pub fn check_vote(&self, packages: &[String]) -> Result<Vec<(String, Option<bool>)>> {
         self.is_login()?;
-        let session = self.session.as_ref().unwrap();
+        let session = self.session.as_ref().expect("as ref");
 
         let mut voted: Vec<(String, Option<bool>)> = Vec::new();
         for pkg in packages.iter() {
@@ -227,7 +227,7 @@ impl Authentication {
 
     pub fn vote(&self, packages: &[String]) -> Result<Vec<(String, VoteResult)>> {
         self.is_login()?;
-        let session = self.session.as_ref().unwrap();
+        let session = self.session.as_ref().expect("as ref");
 
         let mut result: Vec<(String, VoteResult)> = Vec::new();
         for pkg in packages.iter() {
@@ -257,7 +257,7 @@ impl Authentication {
 
     pub fn unvote(&self, packages: &[String]) -> Result<Vec<(String, VoteResult)>> {
         self.is_login()?;
-        let session = self.session.as_ref().unwrap();
+        let session = self.session.as_ref().expect("as ref");
 
         let mut result: Vec<(String, VoteResult)> = Vec::new();
         for pkg in packages.iter() {
@@ -287,7 +287,7 @@ impl Authentication {
 
     pub fn list_voted_pkgs(&self) -> Result<AurPackageResults> {
         self.is_login()?;
-        let session = self.session.as_ref().unwrap();
+        let session = self.session.as_ref().expect("as ref");
 
         let mut voted_pkgs = AurPackageResults::new();
         let mut offset: i32 = -250;
@@ -316,6 +316,8 @@ impl Authentication {
     }
 
     pub(self) fn login_with_user_pass(&mut self, account: &Account) -> Result<()> {
+        debug!("Attempt to login using user and password.");
+
         let login_url = Url::parse_with_params(
             &AUR_URL_LOGIN,
             &[
@@ -324,6 +326,7 @@ impl Authentication {
                 ("remember_me", "on"),
             ],
         )?;
+        debug!("Login URL: {login_url}");
 
         // Stop redirect to https://aur.archlinux.org/ after logged in
         let login_no_redirect = redirect::Policy::custom(|attempt| {
@@ -343,6 +346,7 @@ impl Authentication {
             .use_rustls_tls()
             .build()?;
         let login_response = login_client.get(login_url).send()?;
+        debug!("Login response: {login_response:?}");
 
         // Login success
         if login_response.status() == StatusCode::FOUND
@@ -399,6 +403,8 @@ impl Authentication {
     }
 
     pub(self) fn login_with_cookie_file<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
+        debug!("Attemp to login using cookies.");
+
         // Load cookies from file
         let cookie_file = File::open(path)?;
         let reader = BufReader::new(cookie_file);
@@ -536,7 +542,7 @@ impl Authentication {
     }
 
     pub(self) fn do_vote(&self, pkg: &str, vote: bool, page: &Html) -> Result<()> {
-        let session = self.session.as_ref().unwrap();
+        let session = self.session.as_ref().expect("as ref");
         // Get token
         let token = self.extract_token(page)?;
 
@@ -625,7 +631,7 @@ impl Extraction<LoginErrorList> for LoginErrorList {
     }
 }
 
-/// For data from https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=pkg1&arg[]=pkg2&…
+/// For data from https://aur.archlinux.org/rpc?v=5&type=info&arg[]=pkg1&arg[]=pkg2&…
 /// See: https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#info_2
 #[derive(Deserialize)]
 struct AurPackageInfoResult {
@@ -633,7 +639,7 @@ struct AurPackageInfoResult {
     results: AurPackageInfo,
 }
 
-/// For data from https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=pkg1&arg[]=pkg2&…
+/// For data from https://aur.archlinux.org/rpc?v=5&type=info&arg[]=pkg1&arg[]=pkg2&…
 /// See: https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#info_2
 #[derive(Deserialize, Default, Debug)]
 pub struct AurPackageInfoItem {
@@ -686,7 +692,7 @@ mod tests {
             "test-user-no-sort-voted-packages.html"
         ));
         let page = Html::parse_document(html_raw);
-        let aur_packages = AurPackageResults::from_html(&page).unwrap();
+        let aur_packages = AurPackageResults::from_html(&page).expect("Paring AUR package results");
         assert_eq!(aur_packages.len(), 50);
 
         // Compare with the same data in CSV format
@@ -698,7 +704,7 @@ mod tests {
         let mut pkglist = csv::Reader::from_reader(pkglist_csv.as_bytes());
         let pkgs: AurPackageResults = pkglist
             .deserialize()
-            .map(|result| result.unwrap())
+            .map(|result| result.expect("AurPackageResultItem"))
             .collect();
         for n in 0..pkgs.len() {
             assert_eq!(aur_packages[n], pkgs[n], "Failed at record: {}", n);
@@ -717,7 +723,7 @@ mod tests {
             "test-aur-pkgs-sort-voted-with-orphan.html"
         ));
         let page = Html::parse_document(html_raw);
-        let aur_packages = AurPackageResults::from_html(&page).unwrap();
+        let aur_packages = AurPackageResults::from_html(&page).expect("Paring AUR package results");
         assert_eq!(aur_packages.len(), 250);
 
         // Check orphan packages
@@ -739,7 +745,7 @@ mod tests {
             "test-user-no-sort-voted-packages.html"
         ));
         let page = Html::parse_document(html_raw);
-        let error_list = LoginErrorList::from_html(&page).unwrap();
+        let error_list = LoginErrorList::from_html(&page).expect("Paring login error");
         assert_eq!(error_list.errors.len(), 0);
 
         // Login failed
@@ -749,7 +755,7 @@ mod tests {
             "test-login-error.html"
         ));
         let page = Html::parse_document(html_raw);
-        let error_list = LoginErrorList::from_html(&page).unwrap();
+        let error_list = LoginErrorList::from_html(&page).expect("Paring login error");
         assert_eq!(error_list.errors.len(), 1);
         assert_eq!(error_list.errors[0], "Bad username or password.");
     }
