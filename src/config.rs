@@ -76,8 +76,8 @@ mod tests {
     fn test_load_configuration() {
         const CONFIG_FILE: &str = concat!(
             env!("CARGO_MANIFEST_DIR"),
-            "/src",
-            "/test-aur-thumbsup.toml"
+            "/tests/",
+            "test-aur-thumbsup.toml"
         );
         let config = Configuration::from_file(CONFIG_FILE).unwrap();
 

@@ -475,15 +475,15 @@ impl Authentication {
 
         // AURTZ
         if let Some(aurtz) = self.cookie_jar.get("AURTZ") {
-            writeln!(cookie_file, "{}", aurtz.encoded().to_string())?;
+            writeln!(cookie_file, "{}", aurtz.encoded())?;
         }
         // AURLANG
         if let Some(aurlang) = self.cookie_jar.get("AURLANG") {
-            writeln!(cookie_file, "{}", aurlang.encoded().to_string())?;
+            writeln!(cookie_file, "{}", aurlang.encoded())?;
         }
         // AURSID
         if let Some(aursid) = self.cookie_jar.get("AURSID") {
-            writeln!(cookie_file, "{}", aursid.encoded().to_string())?;
+            writeln!(cookie_file, "{}", aursid.encoded())?;
         }
 
         Ok(())
@@ -678,13 +678,21 @@ mod tests {
     #[test]
     fn test_extract_aur_pkgs_no_sort_voted() {
         // Extract package list from html
-        let html_raw = include_str!("test-user-no-sort-voted-packages.html");
+        let html_raw = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-user-no-sort-voted-packages.html"
+        ));
         let page = Html::parse_document(html_raw);
         let aur_packages = AurPackageResults::from_html(&page).unwrap();
         assert_eq!(aur_packages.len(), 50);
 
         // Compare with the same data in CSV format
-        let pkglist_csv = include_str!("test-user-no-sort-voted-packages.csv");
+        let pkglist_csv = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-user-no-sort-voted-packages.csv"
+        ));
         let mut pkglist = csv::Reader::from_reader(pkglist_csv.as_bytes());
         let pkgs: AurPackageResults = pkglist
             .deserialize()
@@ -701,7 +709,11 @@ mod tests {
     #[test]
     fn test_extract_aur_pkgs_sort_voted_with_orphan() {
         // Extract package list from html
-        let html_raw = include_str!("test-aur-pkgs-sort-voted-with-orphan.html");
+        let html_raw = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-aur-pkgs-sort-voted-with-orphan.html"
+        ));
         let page = Html::parse_document(html_raw);
         let aur_packages = AurPackageResults::from_html(&page).unwrap();
         assert_eq!(aur_packages.len(), 250);
@@ -719,13 +731,21 @@ mod tests {
     #[test]
     fn test_extract_login_error_page() {
         // Login success
-        let html_raw = include_str!("test-user-no-sort-voted-packages.html");
+        let html_raw = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-user-no-sort-voted-packages.html"
+        ));
         let page = Html::parse_document(html_raw);
         let error_list = LoginErrorList::from_html(&page).unwrap();
         assert_eq!(error_list.errors.len(), 0);
 
         // Login failed
-        let html_raw = include_str!("test-login-error.html");
+        let html_raw = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-login-error.html"
+        ));
         let page = Html::parse_document(html_raw);
         let error_list = LoginErrorList::from_html(&page).unwrap();
         assert_eq!(error_list.errors.len(), 1);
@@ -734,7 +754,11 @@ mod tests {
 
     #[test]
     fn test_check_login_page() {
-        let html_raw = include_str!("test-logged-in-page.html");
+        let html_raw = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-logged-in-page.html"
+        ));
         let page = Html::parse_document(html_raw);
         let auth = Authentication::new();
         assert!(auth.is_login_html(&page).is_ok());
@@ -743,19 +767,31 @@ mod tests {
     #[test]
     fn test_is_vote_html() {
         // Voted package
-        let voted_pkg_page = include_str!("test-logged-pkg-info-voted.html");
+        let voted_pkg_page = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-logged-pkg-info-voted.html"
+        ));
         let page = Html::parse_document(voted_pkg_page);
         let auth = Authentication::new();
         assert_eq!(auth.is_vote_html(&page).unwrap(), Some(true));
 
         // Unvoted package
-        let unvoted_pkg_page = include_str!("test-logged-pkg-info-unvoted.html");
+        let unvoted_pkg_page = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-logged-pkg-info-unvoted.html"
+        ));
         let page = Html::parse_document(unvoted_pkg_page);
         let auth = Authentication::new();
         assert_eq!(auth.is_vote_html(&page).unwrap(), Some(false));
 
         // N/A
-        let not_pkg_info_page = include_str!("test-logged-in-page.html");
+        let not_pkg_info_page = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-logged-in-page.html"
+        ));
         let page = Html::parse_document(not_pkg_info_page);
         let auth = Authentication::new();
         assert_eq!(auth.is_vote_html(&page).unwrap(), None);
@@ -764,7 +800,11 @@ mod tests {
     #[test]
     fn test_extract_token() {
         // From voted package
-        let voted_pkg_page = include_str!("test-logged-pkg-info-voted.html");
+        let voted_pkg_page = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-logged-pkg-info-voted.html"
+        ));
         let page = Html::parse_document(voted_pkg_page);
         let auth = Authentication::new();
         let token = auth.extract_token(&page).unwrap();
@@ -772,7 +812,11 @@ mod tests {
         assert_eq!(token, expect, "`{}` != `{}`", token, expect);
 
         // From unvoted package
-        let unvoted_pkg_page = include_str!("test-logged-pkg-info-unvoted.html");
+        let unvoted_pkg_page = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-logged-pkg-info-unvoted.html"
+        ));
         let page = Html::parse_document(unvoted_pkg_page);
         let auth = Authentication::new();
         let token = auth.extract_token(&page).unwrap();
@@ -780,7 +824,11 @@ mod tests {
         assert_eq!(token, expect, "`{}` != `{}`", token, expect);
 
         // N/A
-        let na_pkg_page = include_str!("test-login-error.html");
+        let na_pkg_page = include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/",
+            "test-login-error.html"
+        ));
         let page = Html::parse_document(na_pkg_page);
         let auth = Authentication::new();
         let token = auth.extract_token(&page).unwrap();
