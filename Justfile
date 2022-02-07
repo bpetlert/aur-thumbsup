@@ -1,6 +1,9 @@
 @_default:
   just --list
 
+run +ARGS='':
+  cargo run -- {{ARGS}}
+
 # Run with debug log
 run-debug +ARGS='':
   RUST_BACKTRACE=1 RUST_LOG=aur_thumbsup=debug cargo run -- {{ARGS}}

@@ -1,5 +1,4 @@
 use clap::{Parser, Subcommand};
-use clap_verbosity_flag::Verbosity;
 use lazy_static::lazy_static;
 use std::path::PathBuf;
 
@@ -20,9 +19,6 @@ pub struct Arguments {
         default_value = DEFAULT_CONFIG_FILE.to_str().unwrap()
     )]
     pub config: PathBuf,
-
-    #[clap(flatten)]
-    pub verbose: Verbosity,
 
     #[clap(subcommand)]
     pub cmd: Option<Commands>,
@@ -84,7 +80,6 @@ mod tests {
             Arguments::from_arg_matches(&Arguments::into_app().get_matches_from(vec!["test"]))
                 .unwrap();
         assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
-        assert_eq!(args.verbose.log_level(), Some(log::Level::Error));
         assert_eq!(args.cmd, None);
 
         // short config flag
@@ -95,7 +90,6 @@ mod tests {
         ]))
         .unwrap();
         assert_eq!(args.config, PathBuf::from(r"/etc/aur-thumbsup.toml"));
-        assert_eq!(args.verbose.log_level(), Some(log::Level::Error));
         assert_eq!(args.cmd, None);
 
         // long config flag
@@ -106,25 +100,6 @@ mod tests {
         ]))
         .unwrap();
         assert_eq!(args.config, PathBuf::from(r"/etc/aur-thumbsup.toml"));
-        assert_eq!(args.verbose.log_level(), Some(log::Level::Error));
-        assert_eq!(args.cmd, None);
-
-        // quiet flag
-        let args = Arguments::from_arg_matches(
-            &Arguments::into_app().get_matches_from(vec!["test", "--quiet"]),
-        )
-        .unwrap();
-        assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
-        assert_eq!(args.verbose.log_level(), None);
-        assert_eq!(args.cmd, None);
-
-        // verbose flag
-        let args = Arguments::from_arg_matches(
-            &Arguments::into_app().get_matches_from(vec!["test", "-vvvv"]),
-        )
-        .unwrap();
-        assert_eq!(args.config, DEFAULT_CONFIG_FILE.to_path_buf());
-        assert_eq!(args.verbose.log_level(), Some(log::Level::Trace));
         assert_eq!(args.cmd, None);
     }
 

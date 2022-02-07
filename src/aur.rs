@@ -1,19 +1,21 @@
 use anyhow::{anyhow, Result};
-use cookie::Expiration;
-use cookie::{Cookie, CookieJar};
+use cookie::{Cookie, CookieJar, Expiration};
 use lazy_static::lazy_static;
-use log::debug;
-use reqwest::blocking::{Client, Response};
-use reqwest::{header, redirect, StatusCode, Url};
+use reqwest::{
+    blocking::{Client, Response},
+    header, redirect, StatusCode, Url,
+};
 use scraper::{Html, Selector};
 use serde::{Deserialize, Deserializer, Serialize};
-use std::collections::HashMap;
-use std::fs;
-use std::fs::File;
-use std::io::{BufRead, BufReader, Write};
-use std::os::unix::fs::OpenOptionsExt;
-use std::path::{Path, PathBuf};
+use std::{
+    collections::HashMap,
+    fs::{self, File},
+    io::{BufRead, BufReader, Write},
+    os::unix::fs::OpenOptionsExt,
+    path::{Path, PathBuf},
+};
 use time::OffsetDateTime;
+use tracing::debug;
 
 lazy_static! {
     static ref AUR_URL: String = String::from("https://aur.archlinux.org");

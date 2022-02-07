@@ -1,7 +1,8 @@
 use anyhow::Result;
 use clap::Parser;
-use log::{debug, error};
-use std::{env, process};
+use std::process;
+use tracing::{debug, error};
+use tracing_subscriber::EnvFilter;
 
 mod args;
 mod aur;
@@ -19,16 +20,22 @@ use crate::cmds::unvote::unvote;
 use crate::cmds::unvoteall::unvote_all;
 use crate::cmds::vote::vote;
 
+fn init_log() -> Result<()> {
+    let filter = match EnvFilter::try_from_env("RUST_LOG") {
+        Ok(f) => f,
+        Err(_) => EnvFilter::try_new("aur_thumbsup=warn")?,
+    };
+    tracing_subscriber::fmt()
+        .with_env_filter(filter)
+        .without_time()
+        .try_init()
+        .expect("Initialize tracing-subscriber");
+    Ok(())
+}
+
 fn run_app() -> Result<()> {
     let arguments = Arguments::parse();
-
-    let mut log_builder = pretty_env_logger::formatted_builder();
-    if let Ok(value) = env::var("RUST_LOG") {
-        log_builder.parse_filters(&value);
-    } else {
-        log_builder.filter_level(arguments.verbose.log_level().unwrap().to_level_filter());
-    }
-
+    init_log().expect("Initialize logging");
     debug!("Run with {:?}", arguments);
 
     if let Some(cmd) = arguments.cmd {

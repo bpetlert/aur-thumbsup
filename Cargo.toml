@@ -17,16 +17,13 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.52"
-clap = { version = "3.0.5", features = ["derive"] }
-clap-verbosity-flag = "0.4.0"
+anyhow = "1.0.53"
+clap = { version = "3.0.14", features = ["derive"] }
 colored = "2.0.0"
 cookie = { version = "0.16.0", features = ["percent-encode"] }
 dialoguer = "0.9.0"
 lazy_static = "1.4.0"
-log = "0.4.14"
-pretty_env_logger = "0.4.0"
-reqwest = { version = "0.11.8", features = [
+reqwest = { version = "0.11.9", features = [
   "blocking",
   "cookies",
   "gzip",
@@ -34,11 +31,16 @@ reqwest = { version = "0.11.8", features = [
   "rustls-tls",
 ], default-features = false }
 scraper = "0.12.0"
-serde = { version = "1.0.133", features = ["derive"] }
-serde_json = "1.0.74"
-time = { version = "0.3.5", features = ["std"] }
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.78"
+time = { version = "0.3.7", features = ["std"] }
 toml = "0.5.8"
+tracing = { version = "0.1.30", features = [
+  "max_level_debug",
+  "release_max_level_info",
+] }
+tracing-subscriber = { version = "0.3.8", features = ["env-filter"] }
 
 [dev-dependencies]
 csv = "1.1.6"
-tempfile = "3.2.0"
+tempfile = "3.3.0"
